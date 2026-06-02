@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stack-chan · Setup</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">STACK-CHAN<span class="dot"></span>SETUP</div>
+  <div class="meta" id="meta">v1 · 192.168.4.1</div>
+</header>
+
+<main>
+
+  <div class="banner" id="apBanner">
+    AP MODE · Connected to <strong id="apSsidLabel">Stackchan-Setup</strong> · Voice pipeline paused
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="status">Status</button>
+    <button class="tab" data-tab="wifi">WiFi</button>
+    <button class="tab" data-tab="chat"    data-cat="chat">Chat</button>
+    <button class="tab" data-tab="stt"     data-cat="stt">STT</button>
+    <button class="tab" data-tab="tts"     data-cat="tts">TTS</button>
+    <button class="tab" data-tab="ota"     data-cat="ota">OTA</button>
+    <button class="tab" data-tab="persona" data-cat="persona">Persona</button>
+  </nav>
+
+  <!-- STATUS -->
+  <section class="panel active" data-panel="status">
+    <div class="status-grid" id="statusGrid">
+      <!-- populated by JS -->
+    </div>
+    <div class="section">
+      <h2><span>::</span> Actions</h2>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <button class="btn" id="exitBtn">Exit Config Mode</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- WIFI -->
+  <section class="panel" data-panel="wifi">
+    <div class="section">
+      <h2><span>::</span> Saved Networks</h2>
+      <div class="wifi-list" id="savedList">
+        <div class="empty">Loading...</div>
+      </div>
+    </div>
+    <div class="section">
+      <h2><span>::</span> Available Networks
+        <span style="display: flex; gap: 6px;">
+          <button class="btn ghost mini" id="manualBtn">+ SSID</button>
+          <button class="btn ghost mini" id="rescanBtn">Rescan</button>
+        </span>
+      </h2>
+      <div class="wifi-list" id="scanList">
+        <div class="empty">Tap Rescan to search for networks, or "+ SSID" to enter one manually</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Schema-driven panels: rendered by JS into #panel-{cat} -->
+  <section class="panel" data-panel="chat">
+    <div class="section"><h2><span>::</span> Chat / LLM</h2><div id="panel-chat"></div></div>
+  </section>
+  <section class="panel" data-panel="stt">
+    <div class="section"><h2><span>::</span> Speech-to-Text</h2><div id="panel-stt"></div></div>
+  </section>
+  <section class="panel" data-panel="tts">
+    <div class="section"><h2><span>::</span> Text-to-Speech</h2><div id="panel-tts"></div></div>
+  </section>
+  <section class="panel" data-panel="ota">
+    <div class="section"><h2><span>::</span> OTA Update</h2><div id="panel-ota"></div></div>
+  </section>
+  <section class="panel" data-panel="persona">
+    <div class="section"><h2><span>::</span> Persona</h2><div id="panel-persona"></div></div>
+  </section>
+
+</main>
+
+<!-- WiFi password modal -->
+<div class="modal" id="wifiModal">
+  <div class="modal-card">
+    <h3 id="wifiModalTitle">Connect to Network</h3>
+    <input type="text" id="wifiSsidInput" placeholder="SSID" autocomplete="off"
+           autocapitalize="off" spellcheck="false" style="margin-bottom: 8px;">
+    <input type="password" id="wifiPassword" placeholder="Password" autocomplete="off">
+    <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end;">
+      <button class="btn ghost" id="wifiCancel">Cancel</button>
+      <button class="btn" id="wifiSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notifications -->
+<div class="toast" id="toast"></div>
+
+<!-- Save bar (appears when there are unsaved changes) -->
+<div class="savebar" id="savebar">
+  <div class="status" id="saveStatus">Unsaved changes</div>
+  <div style="display: flex; gap: 8px;">
+    <button class="btn ghost" id="discardBtn">Discard</button>
+    <button class="btn" id="saveBtn">Save</button>
+  </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>

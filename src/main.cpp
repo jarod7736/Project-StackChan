@@ -4,6 +4,7 @@
 #include <M5CoreS3.h>
 #include "config.h"
 #include "services/NvsStore.h"
+#include "services/CaptivePortal.h"
 #include "net/WifiManager.h"
 #include "net/ConnectivityTier.h"
 
@@ -14,6 +15,8 @@ void setup() {
   delay(200);
   Serial.println();
   Serial.println("=== Stack-chan v1 boot ===");
+
+  // T3: NVS smoke-test
   if (!stkchan::nvs.begin()) {
     Serial.println("WARN: NVS open failed");
   } else {
@@ -23,12 +26,25 @@ void setup() {
   Serial.printf("PSRAM: %u bytes\n", (unsigned)ESP.getPsramSize());
   Serial.printf("Free heap: %u bytes\n", (unsigned)ESP.getFreeHeap());
 
-  stkchan::wifi.begin();  // non-blocking slot-priority connect + NTP kick
+  // T6: First-run captive portal — if no WiFi creds are saved, bring up AP
+  // provisioning at 192.168.4.1 so a phone can configure the device.
+  if (stkchan::nvs.getString(stkchan::kNvsSsid1, "").isEmpty()) {
+    Serial.println("No WiFi creds — entering captive portal");
+    stkchan::portal.begin();
+    // portal.tick() runs in loop(); the T4/T5 ticks below are harmless
+    // during the portal lifetime (wifi.begin() will find no creds and
+    // stand idle, connectivity will stay OFFLINE).
+  }
+
+  // T4: WiFi slot-priority connect + NTP kick
+  stkchan::wifi.begin();
+  // T5: Connectivity tier probe
   stkchan::connectivity.begin();
 }
 
 void loop() {
   M5.update();
+  stkchan::portal.tick();  // T6: drain DNS catch-all (no-op when not running)
   stkchan::wifi.tick();
   stkchan::connectivity.tick(millis());
   delay(10);
