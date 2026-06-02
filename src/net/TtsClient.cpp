@@ -25,7 +25,10 @@ uint8_t* psramAlloc(size_t n) {
     void* p = heap_caps_malloc(n, MALLOC_CAP_SPIRAM);
     if (p) return reinterpret_cast<uint8_t*>(p);
     // Fallback: better to allocate from internal heap and squeeze than to
-    // silently return nothing.
+    // silently return nothing. Log so memory pressure is visible in field
+    // diagnostics — on a healthy CoreS3 PSRAM this should never fire.
+    Serial.printf("[TtsClient] PSRAM alloc %u failed, trying internal heap\n",
+                  (unsigned)n);
     return reinterpret_cast<uint8_t*>(heap_caps_malloc(n, MALLOC_CAP_8BIT));
 }
 
