@@ -9,6 +9,9 @@ class NvsStore {
   void end();
 
   String getString(const char* key, const char* fallback = "");
+  // Returns true iff bytes were written. An empty string is treated by
+  // the underlying ESP32 Preferences API as a 0-byte write and reports
+  // false here — use eraseKey() when you want to delete a key.
   bool   putString(const char* key, const String& value);
   bool   eraseKey(const char* key);
 
