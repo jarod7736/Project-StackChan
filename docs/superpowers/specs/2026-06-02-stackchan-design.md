@@ -10,25 +10,22 @@
 ## 1. Summary
 
 A standalone PlatformIO/Arduino-ESP32 project for an **M5Stack CoreS3 + Stack-chan
-servo base + 2× SG90 servos**, running as a **voice-interactive desk companion**
-with **owner face recognition served by lobsterboy**.
+servo base + 2× SG90 servos**, running as a **voice-interactive desk companion**.
 
 v1 is a casual character: small talk, expressive face (M5Stack-Avatar), idle head
-motion, recognizes Jarod (on the home LAN, where lobsterboy can see the desk) and
-greets by name. No agent tools yet. The architecture leaves a clean seam to graft
-MCP/agent behavior on later (becoming "Jarvis with a face") without restructuring.
+motion. No agent tools, no camera, no face recognition yet. The architecture
+leaves a clean seam to graft MCP/agent behavior on later (becoming "Jarvis with
+a face") without restructuring.
 
 **Deployment assumption:** the device is always on a LAN — either home LAN (with
-Ollama on `192.168.1.108` and the vision service reachable) or a travel LAN
-(Tailscale to lobsterboy for chat, but no camera visibility). Never field-mode,
-never strictly OFFLINE as a primary state. WiFi loss is still handled as an
-error, just not as an intentional operating mode.
+Ollama on `192.168.1.108`) or a travel LAN (Tailscale to lobsterboy). Never
+field-mode, never strictly OFFLINE as a primary state. WiFi loss is still handled
+as an error, just not as an intentional operating mode.
 
-**Face recognition is home-only by design.** Lobsterboy hosts the camera (USB
-webcam or IP cam) and the recognition service; Stack-chan polls it for presence.
-On travel LANs voice works, but Stack-chan doesn't know who you are. This is
-intentional — keeps the device a single physical unit and reuses the lobsterboy
-infrastructure that already exists.
+**Face recognition is explicitly out of v1.** A complete design for a
+lobsterboy-side recognition service exists in git history (commit `18b87af`,
+original section 8) and is preserved as Appendix A below; revive it whenever
+it makes sense.
 
 Cherry-picks code patterns from `Project-Jarvis` where they apply (TTS client, OTA,
 NVS captive portal, audio playback) and copies servo/face wiring patterns from
@@ -40,17 +37,9 @@ NVS captive portal, audio playback) and copies servo/face wiring patterns from
 
 - Press-and-hold-to-talk → Stack-chan transcribes, responds, speaks with matching
   facial expression and head motion.
-- Recognize Jarod's face via a lobsterboy-side vision service reading from a
-  USB webcam (or any existing IP camera); greet by name and drive
-  presence-aware idle behavior (sleepier when alone, eyes-open when seen).
-- Stack-chan stays a single physical device. Camera and recognition live on
-  the existing lobsterboy infrastructure.
-- All face data stays on the home LAN (lobsterboy holds the embeddings; the
-  device only ever receives `{seen: jarod | unknown | nobody, confidence: f}`).
 - Works on both home LAN and travel LANs: Ollama reachable via a Tailscale
-  hostname that resolves to LAN at home and to the mesh elsewhere. Face
-  recognition is home-only — on travel LANs voice works but Stack-chan
-  doesn't know who you are.
+  hostname that resolves to LAN at home and to the mesh elsewhere.
+- Stack-chan stays a single physical device.
 - Reuses Jarvis's proven infrastructure patterns: NVS-stored credentials,
   captive-portal first-run, ArduinoOTA, blocking-HTTP-with-pre-render.
 - Architecture supports a later graft of MCP tools without rewriting the FSM or
@@ -60,8 +49,7 @@ NVS captive portal, audio playback) and copies servo/face wiring patterns from
 
 - No wake-word / KWS (touch-to-talk only; KWS is Phase 3).
 - No MCP tools, brain/calendar/email integration (Phase 3+).
-- No general object/scene vision (only owner face recognition).
-- Multi-face enrollment is Phase 2 (v1 enrolls a single owner: Jarod).
+- No camera, no face recognition, no vision (deferred; design preserved in Appendix A).
 - No multi-language support; English only.
 - No SD logging, no analytics.
 - No proactive pushes / MQTT.
@@ -84,8 +72,7 @@ NVS captive portal, audio playback) and copies servo/face wiring patterns from
 | D9 | LLM output format: `<speech>…</speech><expr>tag</expr>`, parsed defensively | Avoid JSON-mode pitfalls already known from Jarvis IntentRouter; degrade gracefully on malformed output. |
 | D10 | Conversation memory: RAM-only ring buffer, 6 turns, no cross-reboot persistence in v1 | "Forgets overnight" is on-brand for a small dumb cousin; persistence is Phase 2. |
 | D11 | Always-LAN deployment model; Ollama addressed via Tailscale hostname (resolves to LAN at home, mesh elsewhere) | Single config that works at home and on travel LANs; no per-network NVS edits; no OFFLINE design effort. |
-| D12 | Face recognition runs on **lobsterboy**, not on Stack-chan; USB webcam (or IP cam) feeds Python `face_recognition` / InsightFace; CoreS3 polls a tiny HTTP endpoint | User explicitly refused a second on-body ESP. Lobsterboy already exists, has GPU/CPU headroom, and gets much higher accuracy than ESP-WHO. Face data stays on user-owned hardware. Trade-off: recognition is home-only. |
-| D13 | Single-owner face enrollment in v1 (Jarod only); enrollment is a one-time CLI on lobsterboy (`stackchan-vision enroll jarod ./jarod.jpg`) | Smallest enrollment UX; no on-device flow needed; multi-face is Phase 2. |
+| D12 | Face recognition deferred from v1 (was in scope mid-brainstorm, then explicitly cut) | Keeps v1 scope tight and tests architecture without piling on dependencies; recognition design preserved in Appendix A for later revival. |
 
 ## 4. Hardware
 
@@ -95,13 +82,6 @@ NVS captive portal, audio playback) and copies servo/face wiring patterns from
 | M5Stack Stack-chan servo base | I²C PCA9685, 18650 holder, power switch, 2× servo header. |
 | 2× SG90 servos | Yaw + pitch. |
 | USB-C cable | Power + flashing + serial for the CoreS3. |
-
-**On lobsterboy** (not part of the Stack-chan device, listed here for completeness):
-
-| Part | Notes |
-|---|---|
-| USB webcam *or* IP camera | Any USB UVC webcam plugged into lobsterboy, or any existing RTSP/MJPEG IP cam reachable on the home LAN. User-supplied / re-used. |
-| `stackchan-vision` systemd service | Python service: pulls frames, runs `face_recognition` or InsightFace, exposes `/presence` (JSON) on `:8082`. Same `deploy.sh` + unit template pattern as Jarvis's `brain-mcp` / `notifier`. |
 
 **`platformio.ini` invariants** (copy from Jarvis):
 
@@ -148,8 +128,7 @@ src/
 │   ├── ConnectivityTier.{h,cpp} ★ Simplified: LAN_OK / LAN_NO_BACKEND / NO_WIFI
 │   ├── SttClient.{h,cpp}       NEW. POST WAV → Whisper API (or LAN fallback); returns text
 │   ├── ChatClient.{h,cpp}      NEW. POST → Ollama /api/chat; JSON in/out
-│   ├── TtsClient.{h,cpp}       ★ Cloud TTS router (OpenAI/ElevenLabs) → MP3 → AudioPlayer
-│   └── VisionClient.{h,cpp}    NEW. Polls lobsterboy /presence endpoint; emits FaceEvent
+│   └── TtsClient.{h,cpp}       ★ Cloud TTS router (OpenAI/ElevenLabs) → MP3 → AudioPlayer
 │
 ├── persona/
 │   ├── SystemPrompt.h          NEW. Stack-chan persona + expression instructions
@@ -162,17 +141,6 @@ src/
 │
 └── prompts/
     └── persona_examples.h      NEW. Few-shot examples for casual-companion voice
-
-tools/stackchan-vision/          (lobsterboy-side; deployed via deploy.sh)
-├── stackchan_vision/
-│   ├── __init__.py
-│   ├── server.py                FastAPI app, /presence endpoint
-│   ├── recognizer.py            face_recognition or InsightFace wrapper
-│   ├── camera.py                cv2 VideoCapture (USB) or RTSP grab
-│   └── enroll.py                CLI: stackchan-vision enroll <name> <image>
-├── stackchan-vision.service.tmpl  systemd unit w/ __RUN_USER__ / __PROJECT_ROOT__
-├── deploy.sh                    Same pattern as Jarvis tools/brain-mcp/deploy.sh
-└── pyproject.toml
 ```
 
 ★ = cherry-picked from `Project-Jarvis/src/` with light tweaks (rename namespaces, drop Jarvis-only paths).
@@ -216,7 +184,6 @@ All ERROR transitions: `g_state = ERROR` → `Face::*` → `TtsClient::synth(kEr
 | Ollama failed/timed out | `kErrChatFailed` | doubt | "Brain's stuck, try again." |
 | TTS failed | `kErrTtsFailed` | doubt | (silent; display only) |
 | Response parse fell back | (no error) | neutral | (raw text spoken) |
-| Vision service unreachable | (no error, log only) | n/a | Vision events silently stop; Face goes neutral; conversation still works |
 
 ### Connectivity-tier branching (simplified for always-LAN deployment)
 
@@ -292,76 +259,18 @@ Defensive, **not** a JSON parser (Jarvis IntentRouter learned this — models sm
 
 In-RAM ring buffer in `ChatClient`, last 6 turns, drops oldest on overflow. No cross-reboot persistence in v1.
 
-## 8. Face recognition subsystem
-
-Lobsterboy hosts `stackchan-vision`, a small Python service modeled after
-Jarvis's `tools/notifier/` and `tools/brain-mcp/` (FastAPI + systemd + deploy.sh
-with `__RUN_USER__` / `__PROJECT_ROOT__` placeholders).
-
-### Service shape
-
-- **Camera input:** OpenCV `VideoCapture(0)` against a USB webcam, *or* an RTSP/MJPEG URL for an IP camera. Configured in the unit's environment file.
-- **Recognizer:** [`face_recognition`](https://github.com/ageitgey/face_recognition) for v1 (CPU-fine, dlib-backed, ~10 fps on lobsterboy). InsightFace remains an option if accuracy disappoints; same interface either way.
-- **Loop:** grab a frame every 500 ms, run detection + recognition against the enrolled embedding(s), keep a 5 s sliding window of identifications, expose the smoothed result.
-- **Enrollment:** `stackchan-vision enroll jarod /path/to/jarod.jpg` (CLI command) writes the embedding to `~/.config/stackchan-vision/embeddings.json`. No on-device flow.
-
-### HTTP API (consumed by `net/VisionClient`)
-
-| Method | Path | Returns |
-|---|---|---|
-| `GET` | `/presence` | `{ "seen": "jarod" | "unknown" | "nobody", "confidence": 0.0–1.0, "since_ms": 1234 }` |
-| `GET` | `/healthz` | `{ "ok": true, "camera_ok": true, "enrolled": ["jarod"] }` |
-| `GET` | `/snapshot.jpg` *(Phase 2)* | last frame, for debugging only — disabled by default for privacy |
-
-The device polls `/presence` every **2 s in IDLE**, never during a turn. The
-poll is short-circuited if `ConnectivityTier == LAN_NO_BACKEND` or `NO_WIFI`.
-
-### Privacy & data handling
-
-- The embedding file lives on lobsterboy under the deploying user's home directory; never copied off-box.
-- The device receives only the labeled string and a confidence float — never raw frames, never embeddings.
-- `/snapshot.jpg` is a debug-only endpoint, gated by an env var, default off.
-- Logs record `{seen, confidence}` events with timestamps; no images.
-
-### How the device uses the presence signal
-
-`VisionClient` maintains a tiny state machine that emits three events:
-
-- `onOwnerArrived(name)` — fires when `seen` transitions from `nobody`/`unknown` → a known name and stays for ≥ 3 s.
-- `onOwnerLeft()` — fires when `seen` has been `nobody` for ≥ 30 s.
-- `onUnknownPresent()` — fires when `seen` has been `unknown` for ≥ 10 s.
-
-These are consumed by the FSM and by `MotionDirector`:
-
-| Event | Behavior (IDLE state) |
-|---|---|
-| `onOwnerArrived("jarod")` | Face: happy briefly; one greeting line via TTS ("Oh, hi Jarod!"); record last-seen timestamp. Suppressed if last greeting was < 10 min ago (no spam). |
-| `onOwnerLeft()` | Face: sleepy. Idle motion slows. No speech. |
-| `onUnknownPresent()` | Face: doubt; small tilt. No speech in v1 (avoid scaring guests). |
-
-The FSM treats vision events as advisory: they never block a press, never cancel
-a turn in progress, never trigger a state change while in `THINKING_*` or
-`SPEAKING_*`.
-
-### Failure modes
-
-- Vision service unreachable → `VisionClient` keeps polling at a reduced rate (every 10 s) and logs once per minute. Face goes neutral. Conversation continues unaffected.
-- Camera disconnected on lobsterboy → `/healthz` reports `camera_ok: false`; service stays up, returns `nobody` until camera comes back.
-- Wrong identifications happen — the 3 s sustain window on `onOwnerArrived` and the 10 min greet-suppression both protect against flapping.
-
-## 9. External endpoints
+## 8. External endpoints
 
 | Service | Primary | Fallback (Phase 2) | Auth | NVS keys |
 |---|---|---|---|---|
 | STT | `api.openai.com/v1/audio/transcriptions` | self-hosted Whisper on lobsterboy | Bearer | `oai_key`, `stt_url`, `stt_model` (`whisper-1`) |
 | Chat | Ollama via Tailscale hostname → `192.168.1.108:11434/api/chat` at home | — (LAN-only by design) | none | `chat_host`, `chat_model` (`gemma3n:e4b`) |
-| Vision | `http://lobsterboy.lan:8082/presence` (Tailscale hostname at travel time, but **expected unreachable on travel LANs**) | — | none (LAN-only) | `vision_url` |
 | TTS | OpenAI `/v1/audio/speech` or ElevenLabs `/v1/text-to-speech/<voice_id>` | VOICEVOX on lobsterboy | Bearer | `tts_provider`, `tts_voice`, `tts_model`, `oai_key`, `el_key` |
 | OTA | local mDNS / ArduinoOTA | — | password | `ota_pass` |
 
 All HTTPS uses `WiFiClientSecure::setInsecure()` for v1. Cert pinning is a deferred TODO (same posture as Jarvis HA client).
 
-## 10. NVS schema — namespace `"stkchan"`, keys ≤15 chars
+## 9. NVS schema — namespace `"stkchan"`, keys ≤15 chars
 
 | Key | Type | Purpose |
 |---|---|---|
@@ -369,8 +278,6 @@ All HTTPS uses `WiFiClientSecure::setInsecure()` for v1. Cert pinning is a defer
 | `psk1`–`psk3` | str | Matching PSKs |
 | `chat_host` | str | Ollama URL (Tailscale hostname recommended), default `http://lobsterboy.tail<...>.ts.net:11434` |
 | `chat_model` | str | Default `gemma3n:e4b` |
-| `vision_url` | str | `http://lobsterboy.lan:8082` or Tailscale-equivalent. Leave blank to disable face recognition. |
-| `owner_name` | str | Name reported by the vision service that corresponds to "the owner" (default `jarod`). Used in greetings. |
 | `stt_url` | str | Full URL incl. path; cloud or LAN fallback |
 | `stt_model` | str | Default `whisper-1` |
 | `oai_key` | str | OpenAI bearer (STT + cloud TTS) |
@@ -381,13 +288,13 @@ All HTTPS uses `WiFiClientSecure::setInsecure()` for v1. Cert pinning is a defer
 | `ota_pass` | str | ArduinoOTA password |
 | `persona` | str | Optional override of default system prompt |
 
-## 11. First-run provisioning
+## 10. First-run provisioning
 
-Cherry-pick `tools/provision-wifi.py` from Jarvis → `tools/provision-stackchan.py`. Same captive-portal flow: device boots into AP mode if no creds, user joins, fills in WiFi + the keys above (including `vision_url` and `owner_name`). Trim Jarvis-only fields (no HA, no MQTT, no Anthropic, no LLM-module UART).
+Cherry-pick `tools/provision-wifi.py` from Jarvis → `tools/provision-stackchan.py`. Same captive-portal flow: device boots into AP mode if no creds, user joins, fills in WiFi + the keys above. Trim Jarvis-only fields (no HA, no MQTT, no Anthropic, no LLM-module UART).
 
-## 12. Phasing
+## 11. Phasing
 
-### Phase 1 — v1 talking robot (no vision yet)
+### Phase 1 — v1 talking robot
 
 1. Repo bootstrap (`Project-StackChan/`, PlatformIO, `platformio.ini` w/ QSPI PSRAM flags).
 2. Cherry-pick from Jarvis: WifiManager, ConnectivityTier (simplified), OtaService, NvsStore, AudioPlayer, TtsClient, CaptivePortal.
@@ -397,33 +304,23 @@ Cherry-pick `tools/provision-wifi.py` from Jarvis → `tools/provision-stackchan
 6. New: FSM wiring everything together, `kErr*` taxonomy in `config.h`.
 7. End-to-end test: press → speak → hear Stack-chan reply with matching expression and a head bob.
 
-### Phase 1.5 — face recognition
-
-1. `tools/stackchan-vision/` Python service on lobsterboy: FastAPI, `face_recognition`, USB-webcam input, `/presence` + `/healthz`.
-2. systemd unit + `deploy.sh` (Jarvis pattern).
-3. Enroll Jarod via the CLI (`stackchan-vision enroll jarod ./jarod.jpg`).
-4. New: `net/VisionClient` on the CoreS3, polling loop, three events (arrived/left/unknown).
-5. Greeting flow wired into FSM (suppress within 10 min, no greet during turns).
-6. End-to-end test: walk away → come back → "Oh, hi Jarod!"
-
 ### Phase 2 — fallbacks & polish
 
 - Self-hosted Whisper systemd unit on lobsterboy (`tools/stackchan-stt/`).
 - VOICEVOX systemd unit on lobsterboy (`tools/stackchan-tts/`).
-- Multi-face enrollment + name detection (greet other recognized faces).
 - Cert pinning on cloud endpoints.
 - SD-logging of turns (audit + future training data).
 - Conversation memory persisted to NVS or SD.
-- Optional: switch recognizer to InsightFace if accuracy disappoints.
 
 ### Phase 3+ — deferred design space
 
+- **Face recognition** — full design preserved in Appendix A.
 - **KWS / wake-word** — either on-CoreS3 model or LLM Module accessory.
 - **MCP graft** — swap `ChatClient` for an oc-personal-style multi-turn client + switch to a tool-supporting chat model.
 - **Proactive pushes** via MQTT (notifier on lobsterboy could route low-priority items to Stack-chan).
 - **Multi-Stack-chan ensemble** (mentioned for amusement only).
 
-## 13. Risks & open items
+## 12. Risks & open items
 
 | # | Item | Mitigation |
 |---|---|---|
@@ -433,13 +330,71 @@ Cherry-pick `tools/provision-wifi.py` from Jarvis → `tools/provision-stackchan
 | R4 | Ollama unreachable on a travel LAN when Tailscale isn't connected | `LAN_NO_BACKEND` tier short-circuits the press cleanly with `kErrChatOffline`. |
 | R5 | Local TTS fallback (VOICEVOX) is a Phase 2 item; v1 has no TTS fallback at all | Acceptable for v1; cloud TTS outage means a silent failure with face-only error display. |
 | R6 | StackChan servo base availability / shipping time | Out of design scope; flagged for procurement. |
-| R7 | `face_recognition` accuracy degrades in low light / off-angle | Phase 2 InsightFace upgrade path; 3 s sustain + 10 min greet-suppression masks brief misses. |
-| R8 | Face recognition only works at home (lobsterboy camera) — Stack-chan greets nobody on travel LANs | Acceptable per D11/D12; documented; Stack-chan falls back to generic warmth without using a name. |
-| R9 | USB webcam on lobsterboy is a new physical dependency | One-time setup; existing IP cam can substitute via RTSP if user prefers. |
-| R10 | Vision service holds enrolled face data on lobsterboy disk | Permissions: `~/.config/stackchan-vision/embeddings.json` 0600; never copied off-box; `/snapshot.jpg` debug endpoint off by default. |
 
-## 14. Approval log
+## 13. Approval log
 
 - **2026-06-02** — All 11 clarifying questions answered. All 7 design sections approved interactively in brainstorm session.
-- **2026-06-02** — Mid-spec revision: user added "always on LAN" deployment model and "integrate camera, recognize my face" requirement. Initial draft routed recognition to a XIAO side-car; user explicitly refused a second device. Final design places recognition on lobsterboy with a USB webcam.
+- **2026-06-02** — Mid-spec revision: user added "always on LAN" deployment model and "integrate camera, recognize my face" requirement. Initial draft routed recognition to a XIAO side-car; user explicitly refused a second device. Revised to place recognition on lobsterboy with a USB webcam.
+- **2026-06-02** — User cut face recognition from v1 scope entirely. Full design preserved in Appendix A for future revival.
 - **Next:** user reviews this written spec; on approval, hand off to `writing-plans` skill.
+
+---
+
+## Appendix A — Deferred: face recognition subsystem
+
+> **Status:** out of v1 scope as of 2026-06-02. This appendix preserves the
+> design that was scoped during the brainstorm so it can be picked up cleanly
+> later. Reviving it would add back: the lobsterboy service, a `VisionClient`
+> module under `src/net/`, NVS keys `vision_url` and `owner_name`, and the
+> three FSM event hooks listed below.
+
+Lobsterboy hosts `stackchan-vision`, a small Python service modeled after
+Jarvis's `tools/notifier/` and `tools/brain-mcp/` (FastAPI + systemd + deploy.sh
+with `__RUN_USER__` / `__PROJECT_ROOT__` placeholders).
+
+### Service shape
+
+- **Camera input:** OpenCV `VideoCapture(0)` against a USB webcam, *or* an RTSP/MJPEG URL for an IP camera. Configured in the unit's environment file.
+- **Recognizer:** [`face_recognition`](https://github.com/ageitgey/face_recognition) (CPU-fine, dlib-backed, ~10 fps on lobsterboy). InsightFace is an alternative if accuracy disappoints.
+- **Loop:** grab a frame every 500 ms, run detection + recognition against the enrolled embedding(s), keep a 5 s sliding window, expose the smoothed result.
+- **Enrollment:** `stackchan-vision enroll jarod /path/to/jarod.jpg` writes the embedding to `~/.config/stackchan-vision/embeddings.json`.
+
+### HTTP API (would be consumed by `net/VisionClient`)
+
+| Method | Path | Returns |
+|---|---|---|
+| `GET` | `/presence` | `{ "seen": "jarod" | "unknown" | "nobody", "confidence": 0.0–1.0, "since_ms": 1234 }` |
+| `GET` | `/healthz` | `{ "ok": true, "camera_ok": true, "enrolled": ["jarod"] }` |
+| `GET` | `/snapshot.jpg` | debug-only; disabled by default for privacy |
+
+Device polls `/presence` every **2 s in IDLE**, never during a turn. Poll is
+short-circuited if `ConnectivityTier == LAN_NO_BACKEND` or `NO_WIFI`.
+
+### FSM hooks (if revived)
+
+`VisionClient` emits:
+
+- `onOwnerArrived(name)` — `seen` transitions from nobody/unknown → known name, stays ≥ 3 s.
+- `onOwnerLeft()` — `seen == nobody` for ≥ 30 s.
+- `onUnknownPresent()` — `seen == unknown` for ≥ 10 s.
+
+| Event | Behavior (IDLE) |
+|---|---|
+| `onOwnerArrived("jarod")` | Face: happy briefly; one greeting via TTS; suppress if last greeting was < 10 min ago. |
+| `onOwnerLeft()` | Face: sleepy. Idle motion slows. No speech. |
+| `onUnknownPresent()` | Face: doubt; small tilt. No speech (avoid scaring guests). |
+
+Vision events are advisory: they never block a press, never cancel a turn in
+progress, never trigger a state change while in `THINKING_*` or `SPEAKING_*`.
+
+### Privacy & data handling (if revived)
+
+- Embedding file lives on lobsterboy under the deploying user's home directory; never copied off-box.
+- Device receives only the labeled string and confidence float — never raw frames, never embeddings.
+- `/snapshot.jpg` debug endpoint gated by env var, default off.
+- Logs record `{seen, confidence}` with timestamps; no images.
+
+### Considered alternatives (rejected during brainstorm)
+
+- **XIAO ESP32S3 Sense side-car running ESP-WHO** — rejected: user did not want a second on-body device.
+- **On-CoreS3 camera via M-Bus module** — no production-quality CoreS3 camera module exists in M5Stack's catalog.
