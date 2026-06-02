@@ -29,6 +29,7 @@ bool SttClient::transcribe(const uint8_t* wavData, size_t wavSize, String& out) 
   HTTPClient http;
   if (!http.begin(tls, url)) {
     Serial.println("ERR: stt http.begin failed");
+    http.end();  // defensive — HTTPClient may have partial state
     return false;
   }
   http.setTimeout(kSttTimeoutMs);
