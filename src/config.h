@@ -35,6 +35,15 @@ constexpr const char* kDefaultTtsProv   = "openai";
 constexpr const char* kDefaultTtsVoice  = "nova";
 constexpr const char* kDefaultTtsModel  = "tts-1";
 
+// === NTP / Time ===
+// POSIX TZ string (US Central with DST). Override at provisioning time if needed.
+constexpr const char* kNtpServer        = "pool.ntp.org";
+constexpr const char* kTimezoneDefault  = "CST6CDT,M3.2.0,M11.1.0";
+
+// === WiFi ===
+// Per-slot connect budget inside the slot-priority loop (Jarvis PR #20).
+constexpr uint32_t kPerSlotTimeoutMs    = 8000;
+
 // === Timeouts (ms) ===
 constexpr uint32_t kSttTimeoutMs        = 8000;
 constexpr uint32_t kChatTimeoutMs       = 30000;

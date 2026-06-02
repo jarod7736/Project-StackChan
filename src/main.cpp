@@ -4,6 +4,7 @@
 #include <M5CoreS3.h>
 #include "config.h"
 #include "services/NvsStore.h"
+#include "net/WifiManager.h"
 
 void setup() {
   auto cfg = M5.config();
@@ -20,9 +21,12 @@ void setup() {
   }
   Serial.printf("PSRAM: %u bytes\n", (unsigned)ESP.getPsramSize());
   Serial.printf("Free heap: %u bytes\n", (unsigned)ESP.getFreeHeap());
+
+  stkchan::wifi.begin();  // non-blocking slot-priority connect + NTP kick
 }
 
 void loop() {
   M5.update();
+  stkchan::wifi.tick();
   delay(10);
 }
