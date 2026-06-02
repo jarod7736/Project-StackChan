@@ -191,6 +191,19 @@ function renderField(f) {
       control.appendChild(input);
       break;
     }
+    case 'text': {
+      const ta = el('textarea', {
+        rows: '6',
+        placeholder: f.sensitive ? '(unchanged)' : '',
+        autocomplete: 'off',
+        autocapitalize: 'off',
+        spellcheck: 'false',
+      });
+      ta.value = f.value || '';
+      ta.addEventListener('input', () => onFieldChange(f, ta.value));
+      control.appendChild(ta);
+      break;
+    }
     case 'enum': {
       const select = el('select');
       for (const opt of (f.options || [])) {

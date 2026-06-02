@@ -45,6 +45,17 @@ void setup() {
 void loop() {
   M5.update();
   stkchan::portal.tick();  // T6: drain DNS catch-all (no-op when not running)
+
+  // T6: honor the web UI's "Exit Config Mode" button — tear down the AP
+  // and restart cleanly so the next boot reads the freshly-saved creds.
+  if (stkchan::portal.exitRequested()) {
+    Serial.println("[PORTAL] exit requested — rebooting");
+    stkchan::portal.clearExitFlag();
+    stkchan::portal.end();
+    delay(200);
+    ESP.restart();
+  }
+
   stkchan::wifi.tick();
   stkchan::connectivity.tick(millis());
   delay(10);

@@ -13,14 +13,16 @@ namespace stkchan {
 
 // ============================================================================
 // Internal schema — maps NVS keys to human labels, categories, types.
-// Only the 16 Stack-chan spec keys are present. Adapted from Jarvis's
+// Only the 17 Stack-chan spec keys are present. Adapted from Jarvis's
 // ConfigSchema pattern; self-contained here so we don't need a separate
 // ConfigSchema.cpp.
 // ============================================================================
 
 namespace {
 
-enum class FieldType : uint8_t { String, Enum };
+// Text is functionally identical to String at the NVS layer; the UI
+// emits a multi-line <textarea> for it. Used for long fields like persona.
+enum class FieldType : uint8_t { String, Enum, Text };
 
 struct EnumOption { const char* value; const char* label; };
 
@@ -36,11 +38,16 @@ struct ConfigField {
 };
 
 constexpr EnumOption kTtsProvOptions[] = {
-    {"openai",  "OpenAI"},
-    {"eleven",  "ElevenLabs"},
+    {"openai",   "OpenAI"},
+    {"eleven",   "ElevenLabs"},
+    // VOICEVOX is the Phase-2 self-hosted fallback per spec §9.
+    // Selecting it now persists the value; TtsClient (T9) currently
+    // only routes openai/eleven, so VOICEVOX will be inactive until
+    // a Phase-2 implementation lands.
+    {"voicevox", "VOICEVOX (Phase 2)"},
 };
 
-// 16 spec keys — WiFi 3-slot keys are handled separately via /api/wifi/*.
+// 17 spec keys — WiFi 3-slot keys are handled separately via /api/wifi/*.
 // The non-WiFi keys are managed here via the schema-driven /api/config.
 constexpr ConfigField kSchema[] = {
     // ── Chat ────────────────────────────────────────────────────────────
@@ -73,7 +80,7 @@ constexpr ConfigField kSchema[] = {
      true,  "",                         nullptr, 0},
 
     // ── Persona ─────────────────────────────────────────────────────────
-    {"persona",    "Persona Prompt",  "persona", FieldType::String,
+    {"persona",    "Persona Prompt",  "persona", FieldType::Text,
      false, "",                         nullptr, 0},
 };
 constexpr size_t kSchemaCount = sizeof(kSchema) / sizeof(kSchema[0]);
@@ -113,8 +120,9 @@ void buildConfigJson(JsonDocument& doc) {
         o["sensitive"] = f.sensitive;
 
         switch (f.type) {
-            case FieldType::String: {
-                o["type"] = "string";
+            case FieldType::String:
+            case FieldType::Text: {
+                o["type"] = (f.type == FieldType::Text) ? "text" : "string";
                 String v = stkchan::nvs.getString(f.key, f.sdefault ? f.sdefault : "");
                 o["value"] = (f.sensitive && v.length()) ? "********" : v;
                 break;
@@ -141,7 +149,8 @@ int applyConfigJson(const JsonDocument& patch) {
         if (!patch[f.key].is<JsonVariantConst>()) continue;
 
         switch (f.type) {
-            case FieldType::String: {
+            case FieldType::String:
+            case FieldType::Text: {
                 String v = patch[f.key].as<String>();
                 if (f.sensitive && v == "********") continue;
                 stkchan::nvs.putString(f.key, v);
