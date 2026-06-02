@@ -2,73 +2,97 @@
 // See docs/superpowers/specs/2026-06-02-stackchan-design.md
 #include <Arduino.h>
 #include <M5CoreS3.h>
+
 #include "config.h"
 #include "services/NvsStore.h"
-#include "services/CaptivePortal.h"
 #include "services/OtaService.h"
+#include "services/CaptivePortal.h"
 #include "net/WifiManager.h"
 #include "net/ConnectivityTier.h"
+#include "net/SttClient.h"     // not strictly needed in main but pulls externs
+#include "net/ChatClient.h"
+#include "net/TtsClient.h"
 #include "hal/AudioPlayer.h"
+#include "hal/MicRecorder.h"
+#include "hal/Servos.h"
+#include "hal/Display.h"
+#include "face/Face.h"
+#include "motion/MotionDirector.h"
+#include "state_machine.h"
+
+using namespace stkchan;
+
+static bool g_pressedLast = false;
 
 void setup() {
   auto cfg = M5.config();
   M5.begin(cfg);
   Serial.begin(115200);
   delay(200);
-  Serial.println();
-  Serial.println("=== Stack-chan v1 boot ===");
+  Serial.println("\n=== Stack-chan v1 boot ===");
 
-  // T3: NVS smoke-test
-  if (!stkchan::nvs.begin()) {
+  if (!nvs.begin()) {
     Serial.println("WARN: NVS open failed");
-  } else {
-    Serial.printf("NVS chat_host = '%s'\n",
-                  stkchan::nvs.getString(stkchan::kNvsChatHost, "(unset)").c_str());
   }
-  Serial.printf("PSRAM: %u bytes\n", (unsigned)ESP.getPsramSize());
-  Serial.printf("Free heap: %u bytes\n", (unsigned)ESP.getFreeHeap());
 
-  // T6: First-run captive portal — if no WiFi creds are saved, bring up AP
-  // provisioning at 192.168.4.1 so a phone can configure the device.
-  if (stkchan::nvs.getString(stkchan::kNvsSsid1, "").isEmpty()) {
+  display.begin();
+  face.begin();
+
+  if (!servos.begin()) {
+    Serial.println("WARN: servo init failed");
+  }
+  motion.begin();
+
+  if (!mic.begin()) {
+    Serial.println("WARN: mic alloc failed");
+  }
+
+  // Provisioning gate: no SSID1 in NVS → captive portal forever, no FSM.
+  bool needsProvisioning = nvs.getString(kNvsSsid1, "").isEmpty();
+  if (needsProvisioning) {
     Serial.println("No WiFi creds — entering captive portal");
-    stkchan::portal.begin();
-    // portal.tick() runs in loop(); the T4/T5 ticks below are harmless
-    // during the portal lifetime (wifi.begin() will find no creds and
-    // stand idle, connectivity will stay OFFLINE).
+    portal.begin();
+    while (true) {
+      portal.tick();
+      if (portal.exitRequested()) {
+        Serial.println("[PORTAL] exit requested — rebooting");
+        portal.clearExitFlag();
+        portal.end();
+        delay(200);
+        ESP.restart();
+      }
+      delay(10);
+    }
   }
 
-  // T4: WiFi slot-priority connect + NTP kick
-  stkchan::wifi.begin();
-  // T5: Connectivity tier probe
-  stkchan::connectivity.begin();
+  wifi.begin();
+  connectivity.begin();
+  initStateMachine();
 }
 
 void loop() {
   static bool ota_begun = false;
+  uint32_t now = millis();
 
   M5.update();
-  stkchan::portal.tick();  // T6: drain DNS catch-all (no-op when not running)
+  wifi.tick();
 
-  // T6: honor the web UI's "Exit Config Mode" button — tear down the AP
-  // and restart cleanly so the next boot reads the freshly-saved creds.
-  if (stkchan::portal.exitRequested()) {
-    Serial.println("[PORTAL] exit requested — rebooting");
-    stkchan::portal.clearExitFlag();
-    stkchan::portal.end();
-    delay(200);
-    ESP.restart();
-  }
-
-  stkchan::wifi.tick();
-
-  // T7: OTA — initialize once WiFi connects
-  if (!ota_begun && stkchan::wifi.isConnected()) {
-    stkchan::ota.begin();
+  // T7: OTA — initialize once WiFi connects (ota.tick() is a no-op until begin())
+  if (!ota_begun && wifi.isConnected()) {
+    ota.begin();
     ota_begun = true;
   }
-  stkchan::ota.tick();
+  ota.tick();
 
-  stkchan::connectivity.tick(millis());
-  delay(10);
+  connectivity.tick(now);
+  motion.tick(now);
+
+  // Touch → FSM events
+  bool pressed = (M5.Touch.getCount() > 0);
+  if (pressed && !g_pressedLast) onPressDown();
+  if (!pressed && g_pressedLast) onPressUp();
+  g_pressedLast = pressed;
+
+  tickStateMachine(now);
+  delay(5);
 }
