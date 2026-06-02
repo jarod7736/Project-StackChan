@@ -1,7 +1,6 @@
 #pragma once
 #include <Arduino.h>
 #include <array>
-#include <string>
 #include "config.h"
 
 namespace stkchan {
