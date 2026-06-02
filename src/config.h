@@ -2,6 +2,7 @@
 // Stack-chan v1 — global constants.
 // See spec section 6 (errors) and section 10 (NVS schema).
 
+#include <stddef.h>
 #include <stdint.h>
 
 namespace stkchan {
