@@ -5,6 +5,7 @@
 #include "config.h"
 #include "services/NvsStore.h"
 #include "net/WifiManager.h"
+#include "net/ConnectivityTier.h"
 
 void setup() {
   auto cfg = M5.config();
@@ -23,10 +24,12 @@ void setup() {
   Serial.printf("Free heap: %u bytes\n", (unsigned)ESP.getFreeHeap());
 
   stkchan::wifi.begin();  // non-blocking slot-priority connect + NTP kick
+  stkchan::connectivity.begin();
 }
 
 void loop() {
   M5.update();
   stkchan::wifi.tick();
+  stkchan::connectivity.tick(millis());
   delay(10);
 }
