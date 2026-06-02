@@ -141,6 +141,7 @@ RawMp3 synthOpenAi(const String& text, const String& voice,
     String url = String("https://") + kOpenAiHost + kOpenAiPath;
     if (!http.begin(secure, url)) {
         Serial.println("[TtsClient] http.begin failed (openai)");
+        http.end();  // defensive — HTTPClient may have partial state
         return RawMp3{};
     }
     http.addHeader("Authorization", String("Bearer ") + apiKey);
@@ -168,6 +169,7 @@ RawMp3 synthEleven(const String& text, const String& voice,
     String url = String("https://") + kElevenHost + kElevenPathBase + voice;
     if (!http.begin(secure, url)) {
         Serial.println("[TtsClient] http.begin failed (elevenlabs)");
+        http.end();  // defensive — HTTPClient may have partial state
         return RawMp3{};
     }
     http.addHeader("xi-api-key",   apiKey);
