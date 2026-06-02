@@ -1,0 +1,12 @@
+.pio/
+.vscode/
+*.bin
+*.elf
+*.map
+*.swp
+*.swo
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+node_modules/
