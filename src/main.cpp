@@ -8,6 +8,7 @@
 #include "services/OtaService.h"
 #include "net/WifiManager.h"
 #include "net/ConnectivityTier.h"
+#include "hal/AudioPlayer.h"
 
 void setup() {
   auto cfg = M5.config();
