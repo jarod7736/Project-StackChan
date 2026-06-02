@@ -5,6 +5,7 @@
 #include "config.h"
 #include "services/NvsStore.h"
 #include "services/CaptivePortal.h"
+#include "services/OtaService.h"
 #include "net/WifiManager.h"
 #include "net/ConnectivityTier.h"
 
@@ -43,6 +44,8 @@ void setup() {
 }
 
 void loop() {
+  static bool ota_begun = false;
+
   M5.update();
   stkchan::portal.tick();  // T6: drain DNS catch-all (no-op when not running)
 
@@ -57,6 +60,14 @@ void loop() {
   }
 
   stkchan::wifi.tick();
+
+  // T7: OTA — initialize once WiFi connects
+  if (!ota_begun && stkchan::wifi.isConnected()) {
+    stkchan::ota.begin();
+    ota_begun = true;
+  }
+  stkchan::ota.tick();
+
   stkchan::connectivity.tick(millis());
   delay(10);
 }
