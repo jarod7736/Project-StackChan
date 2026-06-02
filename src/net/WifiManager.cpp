@@ -1,7 +1,6 @@
 #include "WifiManager.h"
 
 #include <WiFi.h>
-#include <WiFiClient.h>
 #include <ESPmDNS.h>
 #include <time.h>
 
@@ -61,7 +60,7 @@ static bool connectInSlotOrder(uint32_t connectTimeoutMs) {
         const uint32_t elapsed = millis() - t_start;
         if (elapsed >= connectTimeoutMs) {
             Serial.printf("[WIFI] total budget %lums exhausted before slot %u\n",
-                          (unsigned long)connectTimeoutMs, (unsigned)i);
+                          (unsigned long)connectTimeoutMs, (unsigned)i + 1);
             return false;
         }
         const uint32_t remaining   = connectTimeoutMs - elapsed;
@@ -152,13 +151,18 @@ void WifiManager::tick() {
         Serial.printf("[WIFI] Reconnected. ip=%s\n",
                       WiFi.localIP().toString().c_str());
         kickNtpSync();
+        // ESPmDNS does not re-register on auto-reconnect; without this,
+        // stackchan.local stops resolving and OTA breaks after any drop.
+        if (MDNS.begin("stackchan")) {
+            Serial.println("[WIFI] mDNS re-registered: stackchan.local");
+        }
     }
     s_was_connected = now;
 }
 
-bool   WifiManager::isConnected() { return WiFi.status() == WL_CONNECTED; }
-String WifiManager::getIP()       { return WiFi.localIP().toString(); }
-int    WifiManager::getRSSI()     { return WiFi.RSSI(); }
+bool   WifiManager::isConnected() const { return WiFi.status() == WL_CONNECTED; }
+String WifiManager::getIP()       const { return WiFi.localIP().toString(); }
+int    WifiManager::getRSSI()     const { return WiFi.RSSI(); }
 
 // Global singleton.
 WifiManager wifi;
