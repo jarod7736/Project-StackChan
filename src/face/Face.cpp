@@ -20,7 +20,7 @@ lv_obj_t* g_eye_l    = nullptr;
 lv_obj_t* g_eye_r    = nullptr;
 lv_obj_t* g_pupil_l  = nullptr;
 lv_obj_t* g_pupil_r  = nullptr;
-lv_obj_t* g_mouth    = nullptr;
+lv_obj_t* g_mouth    = nullptr;   // lv_line
 
 lv_anim_t g_blink_anim_l;
 lv_anim_t g_blink_anim_r;
@@ -30,7 +30,8 @@ bool g_auto_blink = true;
 constexpr int kBgColor   = 0x101820;   // near-black teal
 constexpr int kEyeWhite  = 0xFFFFFF;
 constexpr int kPupil     = 0x101820;   // matches bg so the pupil "is" a hole
-constexpr int kMouth     = 0xFFFFFF;
+constexpr int kMouthWhite= 0xFFFFFF;
+constexpr int kMouthRed  = 0xFF5566;
 
 // Layout for a 320x240 screen.
 constexpr int kEyeY    = 95;
@@ -41,10 +42,48 @@ constexpr int kEyeRX   = 180;
 constexpr int kEyeBlinkH = 4;  // height during blink — "thin white line"
 constexpr int kPupilW  = 18;
 constexpr int kPupilH  = 18;
-constexpr int kMouthY  = 175;
-constexpr int kMouthW  = 60;
-constexpr int kMouthHClosed = 6;
-constexpr int kMouthHMax    = 38;
+
+// Mouth is an lv_line with 7 control points spanning kMouthW px,
+// centered horizontally at kMouthCenterX, baseline at kMouthY.
+// Each expression provides per-point Y offsets, then setMouthOpen() adds
+// a bow in the middle for lip-sync.
+constexpr int kMouthCenterX = 160;
+constexpr int kMouthY       = 175;
+constexpr int kMouthW       = 80;
+constexpr int kMouthPoints  = 7;
+
+// Per-expression Y offsets for the 7 mouth points (left → right).
+// Positive Y is downward; corners at the ends, middle at index 3.
+struct MouthCurve { const char* tag; int dy[kMouthPoints]; uint32_t color; };
+constexpr MouthCurve kCurves[] = {
+    // tag      dy[0]  dy[1] dy[2] dy[3] dy[4] dy[5] dy[6]   color
+    {"neutral", {  0,    0,    0,    0,    0,    0,    0  }, kMouthWhite},
+    {"happy",   { -8,   -4,    3,    8,    3,   -4,   -8  }, kMouthWhite}, // ∪ smile
+    {"sad",     {  8,    4,   -3,   -8,   -3,    4,    8  }, kMouthWhite}, // ∩ frown
+    {"angry",   {  0,    6,    0,    8,    0,    6,    0  }, kMouthRed  }, // jagged red
+    {"doubt",   { -6,   -3,    0,    3,    6,    9,   12  }, kMouthWhite}, // tilted up-left
+    {"sleepy",  {  4,    4,    4,    4,    4,    4,    4  }, kMouthWhite}, // flat low
+};
+
+// State, recomputed in rebuildMouth() from the active expression + open ratio.
+int   g_mouth_expr_dy[kMouthPoints] = {0,0,0,0,0,0,0};
+float g_mouth_open_r = 0.0f;
+lv_point_precise_t g_mouth_pts[kMouthPoints];
+
+void rebuildMouth() {
+    if (!g_mouth) return;
+    const int xStart = kMouthCenterX - kMouthW / 2;
+    const int step   = kMouthW / (kMouthPoints - 1);
+    // Per-point amplitude for the open-mouth bow — peaks at the middle,
+    // tapers to 0 at the corners. Multiplied by g_mouth_open_r ∈ [0,1].
+    static constexpr int kBow[kMouthPoints] = { 0, 6, 14, 22, 14, 6, 0 };
+    for (int i = 0; i < kMouthPoints; ++i) {
+        g_mouth_pts[i].x = xStart + i * step;
+        g_mouth_pts[i].y = kMouthY + g_mouth_expr_dy[i]
+                                   + (int)(kBow[i] * g_mouth_open_r);
+    }
+    lv_line_set_points(g_mouth, g_mouth_pts, kMouthPoints);
+}
 
 // ── Blink animation ─────────────────────────────────────────────────────
 // Shrink the eye's height from kEyeH → kEyeBlinkH and back. Y is adjusted
@@ -139,15 +178,14 @@ void buildStage() {
     lv_obj_set_style_border_width(g_pupil_r, 0, 0);
     lv_obj_clear_flag(g_pupil_r, LV_OBJ_FLAG_SCROLLABLE);
 
-    // ── Mouth ───────────────────────────────────────────────────────────
-    g_mouth = lv_obj_create(root);
-    lv_obj_set_size(g_mouth, kMouthW, kMouthHClosed);
-    lv_obj_set_pos(g_mouth, (320 - kMouthW) / 2, kMouthY);
-    lv_obj_set_style_radius(g_mouth, 4, 0);
-    lv_obj_set_style_bg_color(g_mouth, lv_color_hex(kMouth), 0);
-    lv_obj_set_style_bg_opa(g_mouth, LV_OPA_COVER, 0);
-    lv_obj_set_style_border_width(g_mouth, 0, 0);
-    lv_obj_clear_flag(g_mouth, LV_OBJ_FLAG_SCROLLABLE);
+    // ── Mouth (lv_line, 7 control points) ──────────────────────────────
+    g_mouth = lv_line_create(root);
+    lv_obj_set_style_line_width(g_mouth, 6, 0);
+    lv_obj_set_style_line_color(g_mouth, lv_color_hex(kMouthWhite), 0);
+    lv_obj_set_style_line_rounded(g_mouth, true, 0);
+    lv_obj_set_style_line_opa(g_mouth, LV_OPA_COVER, 0);
+    // Build the initial neutral curve.
+    rebuildMouth();
 
     // Eyelids are no longer needed — blink is implemented by animating
     // the eye's own height (see runBlinkOnce / blinkSetH above).
@@ -172,34 +210,23 @@ void Face::begin() {
 
 void Face::setExpression(const std::string& tag) {
     currentTag_ = tag;
-    if (!g_mouth || !g_eye_l || !g_eye_r) return;
-    auto m = expressionFor(tag);
-    (void)m;
+    if (!g_mouth) return;
 
-    // Quick-and-dirty expression mapping: change the mouth shape per tag.
-    // Eyes stay round for now; future work can squish them per emotion.
-    int mouthW = kMouthW;
-    int mouthH = kMouthHClosed;
-    uint32_t mouthColor = kEyeWhite;
-    if      (tag == "happy")  { mouthW = 80; mouthH = 18; }
-    else if (tag == "sad")    { mouthW = 50; mouthH = 4;  }
-    else if (tag == "angry")  { mouthW = 70; mouthH = 8;  mouthColor = 0xff5566; }
-    else if (tag == "doubt")  { mouthW = 40; mouthH = 6;  }
-    else if (tag == "sleepy") { mouthW = 30; mouthH = 4;  }
-    lv_obj_set_size(g_mouth, mouthW, mouthH);
-    lv_obj_set_pos(g_mouth, (320 - mouthW) / 2, kMouthY);
-    lv_obj_set_style_bg_color(g_mouth, lv_color_hex(mouthColor), 0);
+    // Look up the curve table, fall back to neutral.
+    const MouthCurve* found = &kCurves[0];
+    for (const auto& c : kCurves) {
+        if (tag == c.tag) { found = &c; break; }
+    }
+    for (int i = 0; i < kMouthPoints; ++i) g_mouth_expr_dy[i] = found->dy[i];
+    lv_obj_set_style_line_color(g_mouth, lv_color_hex(found->color), 0);
+    rebuildMouth();
 }
 
 void Face::setMouthOpen(float ratio) {
-    if (!g_mouth) return;
     if (ratio < 0) ratio = 0;
     if (ratio > 1) ratio = 1;
-    int h = kMouthHClosed + int((kMouthHMax - kMouthHClosed) * ratio);
-    // Keep the mouth centered vertically as it grows.
-    int yShift = (h - kMouthHClosed) / 2;
-    lv_obj_set_size(g_mouth, lv_obj_get_width(g_mouth), h);
-    lv_obj_set_y(g_mouth, kMouthY - yShift);
+    g_mouth_open_r = ratio;
+    rebuildMouth();
 }
 
 void Face::setAutoBlinkEnabled(bool enabled) {
