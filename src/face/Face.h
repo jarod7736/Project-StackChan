@@ -18,9 +18,12 @@ class Face {
   void revealMenuButton();
 
   // True while the floating Menu button is visible. main.cpp uses this
-  // to suppress press-to-talk during the ~3 s reveal window — otherwise
+  // to suppress press-to-talk during the reveal window — otherwise
   // tapping the button would also start the mic.
   bool isMenuButtonVisible() const;
+
+  // Called once per loop() to handle auto-hide of the menu button.
+  void tick(uint32_t nowMs);
 
  private:
   std::string currentTag_ = "neutral";

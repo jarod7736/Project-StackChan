@@ -23,7 +23,8 @@ lv_obj_t* g_pupil_l  = nullptr;
 lv_obj_t* g_pupil_r  = nullptr;
 lv_obj_t* g_mouth    = nullptr;   // lv_line
 lv_obj_t* g_menu_btn = nullptr;   // hidden until swipe-up reveals
-lv_timer_t* g_menu_btn_hide_timer = nullptr;
+uint32_t  g_menu_btn_show_ms = 0; // millis() at reveal; 0 = not visible
+constexpr uint32_t kMenuBtnAutoHideMs = 5000;
 
 lv_anim_t g_blink_anim_l;
 lv_anim_t g_blink_anim_r;
@@ -271,18 +272,17 @@ void Face::revealMenuButton() {
     if (!g_menu_btn) return;
     Serial.println("[Face] Menu button revealed");
     lv_obj_clear_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
-    lv_obj_move_foreground(g_menu_btn);  // ensure it's on top
-    if (g_menu_btn_hide_timer) lv_timer_delete(g_menu_btn_hide_timer);
-    // 5 s window to tap (was 3) — gives more time to react.
-    g_menu_btn_hide_timer = lv_timer_create(
-        [](lv_timer_t* t) {
-            if (g_menu_btn) lv_obj_add_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
-            lv_timer_delete(t);
-            g_menu_btn_hide_timer = nullptr;
-            Serial.println("[Face] Menu button auto-hidden");
-        },
-        5000, nullptr);
-    lv_timer_set_repeat_count(g_menu_btn_hide_timer, 1);
+    lv_obj_move_foreground(g_menu_btn);
+    g_menu_btn_show_ms = millis();
+}
+
+void Face::tick(uint32_t nowMs) {
+    if (g_menu_btn_show_ms != 0 &&
+        nowMs - g_menu_btn_show_ms >= kMenuBtnAutoHideMs) {
+        if (g_menu_btn) lv_obj_add_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
+        g_menu_btn_show_ms = 0;
+        Serial.println("[Face] Menu button auto-hidden");
+    }
 }
 
 }  // namespace stkchan

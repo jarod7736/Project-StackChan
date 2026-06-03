@@ -85,6 +85,7 @@ void loop() {
 
   M5.update();
   lvglDisplay.tick();
+  face.tick(now);
   wifi.tick();
 
   // T7: OTA — initialize once WiFi connects (ota.tick() is a no-op until begin())
