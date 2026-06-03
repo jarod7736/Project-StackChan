@@ -194,20 +194,29 @@ void buildStage() {
     // the eye's own height (see runBlinkOnce / blinkSetH above).
 
     // ── Menu button (hidden until swipe-up) ─────────────────────────────
+    // Make it visually loud so it can't be missed when it appears.
     g_menu_btn = lv_btn_create(root);
-    lv_obj_set_size(g_menu_btn, 100, 36);
-    lv_obj_align(g_menu_btn, LV_ALIGN_BOTTOM_MID, 0, -8);
+    lv_obj_set_size(g_menu_btn, 200, 60);
+    lv_obj_align(g_menu_btn, LV_ALIGN_BOTTOM_MID, 0, -4);
     lv_obj_set_style_bg_color(g_menu_btn, lv_color_hex(0xFF6688), 0);
     lv_obj_set_style_bg_opa(g_menu_btn, LV_OPA_COVER, 0);
-    lv_obj_set_style_radius(g_menu_btn, 8, 0);
+    lv_obj_set_style_border_color(g_menu_btn, lv_color_hex(0xFFFFFF), 0);
+    lv_obj_set_style_border_width(g_menu_btn, 3, 0);
+    lv_obj_set_style_radius(g_menu_btn, 12, 0);
     lv_obj_add_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
+    // Bring to front in case anything else gets layered on top.
+    lv_obj_move_foreground(g_menu_btn);
     lv_obj_add_event_cb(g_menu_btn,
-        [](lv_event_t*) { menu.show(); },
+        [](lv_event_t*) {
+            Serial.println("[Face] Menu button tapped");
+            menu.show();
+        },
         LV_EVENT_CLICKED, nullptr);
 
     lv_obj_t* mlabel = lv_label_create(g_menu_btn);
-    lv_label_set_text(mlabel, "Menu");
+    lv_label_set_text(mlabel, "MENU");
     lv_obj_set_style_text_color(mlabel, lv_color_hex(0xFFFFFF), 0);
+    lv_obj_set_style_text_font(mlabel, &lv_font_montserrat_14, 0);
     lv_obj_center(mlabel);
 
     // ── Auto-blink timer ────────────────────────────────────────────────
@@ -260,15 +269,19 @@ bool Face::isMenuButtonVisible() const {
 
 void Face::revealMenuButton() {
     if (!g_menu_btn) return;
+    Serial.println("[Face] Menu button revealed");
     lv_obj_clear_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_move_foreground(g_menu_btn);  // ensure it's on top
     if (g_menu_btn_hide_timer) lv_timer_delete(g_menu_btn_hide_timer);
+    // 5 s window to tap (was 3) — gives more time to react.
     g_menu_btn_hide_timer = lv_timer_create(
         [](lv_timer_t* t) {
             if (g_menu_btn) lv_obj_add_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
             lv_timer_delete(t);
             g_menu_btn_hide_timer = nullptr;
+            Serial.println("[Face] Menu button auto-hidden");
         },
-        3000, nullptr);
+        5000, nullptr);
     lv_timer_set_repeat_count(g_menu_btn_hide_timer, 1);
 }
 
