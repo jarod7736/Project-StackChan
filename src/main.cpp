@@ -37,6 +37,9 @@ void setup() {
 
   display.begin();
   face.begin();
+  if (!audio.begin()) {
+    Serial.println("WARN: AudioPlayer init failed");
+  }
 
   if (!servos.begin()) {
     Serial.println("WARN: servo init failed");

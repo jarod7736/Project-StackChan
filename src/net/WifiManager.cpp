@@ -143,7 +143,9 @@ void WifiManager::tick() {
     // Lightweight; the ESP32 driver handles auto-reconnect internally.
     // This hook is here so T5 (ConnectivityProbe) and future reconnect
     // backoff logic can be added without changing main.cpp's call sites.
-    static bool s_was_connected = false;
+    // Seed s_was_connected from the live state so the first tick after
+    // begin() doesn't print a spurious "Reconnected" + double-register mDNS.
+    static bool s_was_connected = (WiFi.status() == WL_CONNECTED);
     bool now = (WiFi.status() == WL_CONNECTED);
     if (s_was_connected && !now) {
         Serial.println("[WIFI] Connection lost.");

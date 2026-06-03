@@ -25,6 +25,7 @@ bool SttClient::transcribe(const uint8_t* wavData, size_t wavSize, String& out) 
   }
 
   WiFiClientSecure tls;
+  // cert pinning is Phase 2 (spec risk R1)
   tls.setInsecure();
   HTTPClient http;
   if (!http.begin(tls, url)) {

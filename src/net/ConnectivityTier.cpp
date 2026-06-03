@@ -33,7 +33,7 @@ bool ConnectivityTier::probeBackend_() {
   String url = host + "/api/tags";
   http.setConnectTimeout(1500);
   http.setTimeout(2000);
-  if (!http.begin(url)) return false;
+  if (!http.begin(url)) { http.end(); return false; }
   int code = http.GET();
   http.end();
   return code > 0 && code < 500;

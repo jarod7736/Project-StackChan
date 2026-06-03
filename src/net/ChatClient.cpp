@@ -24,6 +24,9 @@ bool ChatClient::send(const String& userMsg, String& out) {
   String host  = nvs.getString(kNvsChatHost, "");
   String model = nvs.getString(kNvsChatModel, kDefaultChatModel);
   if (host.isEmpty()) return false;
+  // Tolerate a trailing slash on the provisioned host so the resulting URL
+  // doesn't end up with a "//api/chat" double-slash.
+  while (host.endsWith("/")) host.remove(host.length() - 1);
 
   HTTPClient http;
   String url = host + "/api/chat";

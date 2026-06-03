@@ -128,6 +128,8 @@ void tickStateMachine(uint32_t nowMs) {
     }
 
     case State::SPEAKING_TTS: {
+      // Render "speaking..." before the blocking synth (render-before-HTTP).
+      display.showStatusOverlay("speaking...", 0x07E0);
       // synth() is blocking; onDone fires when AudioPlayer accepts the buffer
       // (playback started) or on failure (ok=false).
       tts.synth(String(g_parsed.speech.c_str()), [](bool ok) {
