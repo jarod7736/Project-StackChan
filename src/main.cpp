@@ -68,6 +68,29 @@ static bool tryConsumeProvisioningLine(const String& line) {
   return true;
 }
 
+// Non-blocking serial line accumulator. Call frequently. On a complete
+// line that parses as a provisioning blob, persists + reboots. Safe to
+// call anytime — non-JSON / non-provisioning lines are ignored. This is
+// the always-available escape hatch: you can (re)send WiFi creds over USB
+// even after a wrong password was saved, since WiFi-not-connected means
+// the web UI is unreachable.
+static void pollSerialProvisioning() {
+  static String line;
+  while (Serial.available()) {
+    char c = (char)Serial.read();
+    if (c == '\n' || c == '\r') {
+      line.trim();
+      if (line.length() && tryConsumeProvisioningLine(line)) {
+        delay(200);
+        ESP.restart();
+      }
+      line = "";
+    } else if (line.length() < 1024) {
+      line += c;
+    }
+  }
+}
+
 // Block at boot until provisioned over serial. Keeps the LVGL face alive
 // and shows a setup prompt on screen.
 static void runSerialProvisioning() {
@@ -76,22 +99,9 @@ static void runSerialProvisioning() {
   Serial.println("[PROV]   (use tools/provision-serial.py, or type + Enter)");
   display.showStatusOverlay("setup: send WiFi over USB", 0xFFE0);
 
-  String line;
   for (;;) {
     lvglDisplay.tick();
-    while (Serial.available()) {
-      char c = (char)Serial.read();
-      if (c == '\n' || c == '\r') {
-        line.trim();
-        if (line.length() && tryConsumeProvisioningLine(line)) {
-          delay(200);
-          ESP.restart();
-        }
-        line = "";
-      } else if (line.length() < 1024) {
-        line += c;
-      }
-    }
+    pollSerialProvisioning();  // reboots on success
     delay(10);
   }
 }
@@ -150,6 +160,13 @@ void loop() {
   lvglDisplay.tick();
   face.tick(now);
   wifi.tick();
+
+  // Always-available USB escape hatch: while WiFi is down (e.g. a wrong
+  // password was saved and the web UI is unreachable), accept a fresh
+  // provisioning line over serial. Reboots on a valid blob.
+  if (!wifi.isConnected()) {
+    pollSerialProvisioning();
+  }
 
   // T7: OTA — initialize once WiFi connects (ota.tick() is a no-op until begin())
   if (!ota_begun && wifi.isConnected()) {

@@ -75,31 +75,44 @@ def main():
     payload = build_payload(args)
     line = json.dumps(payload) + "\n"
 
-    print(f"Opening {args.port} @ {args.baud} ...")
-    with serial.Serial(args.port, args.baud, timeout=2) as ser:
-        time.sleep(0.5)  # let the port settle
-        ser.reset_input_buffer()
-        # Mask the password in the echo.
-        masked = dict(payload)
-        for k in ("psk", "psk2", "oai_key", "ota_pass"):
-            if masked.get(k):
-                masked[k] = "***"
-        print(f"Sending: {json.dumps(masked)}")
-        ser.write(line.encode("utf-8"))
-        ser.flush()
+    # Opening the port toggles DTR/RTS, which resets the ESP32 — so the
+    # device reboots when we connect and takes ~2 s to reach the point where
+    # it reads serial. We resend the line a few times over ~15 s and watch
+    # for the "saved … rebooting" confirmation.
+    masked = dict(payload)
+    for k in ("psk", "psk2", "oai_key", "ota_pass"):
+        if masked.get(k):
+            masked[k] = "***"
 
-        # Read back ~5 s of device output so the user sees [PROV] confirmation.
-        deadline = time.time() + 5
+    print(f"Opening {args.port} @ {args.baud} ...")
+    with serial.Serial(args.port, args.baud, timeout=1) as ser:
+        time.sleep(0.3)
+        ser.reset_input_buffer()
+        print(f"Sending: {json.dumps(masked)}  (will retry while the device boots)")
+
+        deadline = time.time() + 15
+        last_send = 0.0
         while time.time() < deadline:
+            now = time.time()
+            if now - last_send >= 2.5:          # (re)send every 2.5 s
+                ser.write(line.encode("utf-8"))
+                ser.flush()
+                last_send = now
             chunk = ser.readline().decode("utf-8", "replace").rstrip()
             if chunk:
                 print(f"  device: {chunk}")
-                if "saved" in chunk.lower() and "reboot" in chunk.lower():
+                low = chunk.lower()
+                if "saved" in low and "reboot" in low:
                     print("Provisioned. Device is rebooting onto your LAN.")
                     print("Control panel: http://stackchan.local/")
                     return
-    print("Done sending. If you didn't see a 'saved … rebooting' line, "
-          "re-check the port and that the device is at the setup prompt.")
+                if "handshake_timeout" in low or "reason: 15" in low:
+                    print("\n!! WiFi 4-way handshake timeout = WRONG PASSWORD "
+                          "(SSID is fine). Re-run with the correct --psk.\n"
+                          "   In PowerShell, wrap a password with special "
+                          "chars in SINGLE quotes: --psk 'p@ss$word'\n")
+    print("Timed out. If you saw a handshake-timeout the password is wrong; "
+          "otherwise re-check --port and that the device is powered.")
 
 
 if __name__ == "__main__":
