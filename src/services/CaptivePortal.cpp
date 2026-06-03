@@ -8,6 +8,10 @@
 
 #include "../config.h"
 #include "NvsStore.h"
+#include "../app/ControlBridge.h"
+#include "../hal/AudioPlayer.h"
+#include "../hal/Servos.h"
+#include "../state_machine.h"
 
 namespace stkchan {
 
@@ -325,6 +329,59 @@ void handleExit(AsyncWebServerRequest* req) {
     g_exit_requested = true;
 }
 
+// ── Live control endpoints (v2b) ───────────────────────────────────────────
+// All actions are enqueued to ControlBridge and applied on the main loop
+// task — handlers here never touch face/servo/audio directly. Params come
+// in via query string (simple, no body accumulation).
+
+void handleCtrlExpression(AsyncWebServerRequest* req) {
+    if (!req->hasParam("tag")) {
+        req->send(400, "application/json", "{\"error\":\"tag required\"}");
+        return;
+    }
+    String tag = req->getParam("tag")->value();
+    controlBridge.pushExpression(tag.c_str());
+    req->send(200, "application/json", "{\"ok\":true}");
+}
+
+void handleCtrlServo(AsyncWebServerRequest* req) {
+    int yaw   = req->hasParam("yaw")   ? req->getParam("yaw")->value().toInt()   : 0;
+    int pitch = req->hasParam("pitch") ? req->getParam("pitch")->value().toInt() : 0;
+    controlBridge.pushServo(yaw, pitch);
+    req->send(200, "application/json", "{\"ok\":true}");
+}
+
+void handleCtrlVolume(AsyncWebServerRequest* req) {
+    if (!req->hasParam("value")) {
+        req->send(400, "application/json", "{\"error\":\"value required\"}");
+        return;
+    }
+    int v = req->getParam("value")->value().toInt();
+    controlBridge.pushVolume(v);
+    req->send(200, "application/json", "{\"ok\":true}");
+}
+
+void handleCtrlSay(AsyncWebServerRequest* req) {
+    if (!req->hasParam("text")) {
+        req->send(400, "application/json", "{\"error\":\"text required\"}");
+        return;
+    }
+    String text = req->getParam("text")->value();
+    bool queued = controlBridge.pushSay(text.c_str());
+    req->send(queued ? 200 : 503, "application/json",
+              queued ? "{\"ok\":true}" : "{\"error\":\"busy\"}");
+}
+
+void handleCtrlState(AsyncWebServerRequest* req) {
+    JsonDocument doc;
+    doc["volume"]   = audio.getVolume();
+    doc["fsmState"] = (int)currentState();
+    doc["yaw"]      = servos.currentYaw();
+    doc["pitch"]    = servos.currentPitch();
+    String out; serializeJson(doc, out);
+    req->send(200, "application/json", out);
+}
+
 void handleNotFound(AsyncWebServerRequest* req) {
     // LAN mode: this is the always-on control server, not a captive portal.
     // Unknown path → plain 404, no redirect.
@@ -358,6 +415,13 @@ void registerRoutes() {
     g_server.on("/api/wifi/remove", HTTP_POST, handleWifiRemove);
     g_server.on("/api/status",      HTTP_GET,  handleStatus);
     g_server.on("/api/exit",        HTTP_POST, handleExit);
+
+    // Live control (v2b) — query-param POSTs, enqueued to ControlBridge.
+    g_server.on("/api/control/expression", HTTP_POST, handleCtrlExpression);
+    g_server.on("/api/control/servo",      HTTP_POST, handleCtrlServo);
+    g_server.on("/api/control/volume",     HTTP_POST, handleCtrlVolume);
+    g_server.on("/api/control/say",        HTTP_POST, handleCtrlSay);
+    g_server.on("/api/control/state",      HTTP_GET,  handleCtrlState);
 
     g_server.onNotFound(handleNotFound);
 }

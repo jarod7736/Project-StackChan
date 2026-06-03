@@ -481,8 +481,85 @@ async function exitConfig() {
 // Wire up
 // ============================================================================
 
+// ============================================================================
+// Control panel (live actuation via /api/control/*)
+// ============================================================================
+
+// Fire-and-forget POST with query params; toasts on failure.
+async function ctrlPost(path, params) {
+  const qs = params ? '?' + new URLSearchParams(params).toString() : '';
+  try {
+    await postJson(path + qs);
+  } catch (err) {
+    toast('Control failed: ' + err.message, 'error');
+  }
+}
+
+// Debounce slider spam so we don't flood the device with one POST per pixel.
+function debounce(fn, ms) {
+  let t = null;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+
+const sendVolume = debounce((v) => ctrlPost('/api/control/volume', { value: v }), 120);
+const sendServo  = debounce((yaw, pitch) => ctrlPost('/api/control/servo', { yaw, pitch }), 120);
+
+function initControl() {
+  // Say
+  const sayText = $('#sayText');
+  const doSay = () => {
+    const t = sayText.value.trim();
+    if (t) ctrlPost('/api/control/say', { text: t });
+  };
+  $('#sayBtn').addEventListener('click', doSay);
+  sayText.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSay(); });
+
+  // Expressions
+  for (const b of $$('.expr')) {
+    b.addEventListener('click', () => ctrlPost('/api/control/expression', { tag: b.dataset.expr }));
+  }
+
+  // Volume
+  const vol = $('#volSlider');
+  vol.addEventListener('input', () => {
+    $('#volLabel').textContent = `Volume  ${vol.value}%`;
+    sendVolume(vol.value);
+  });
+
+  // Servos
+  const yaw = $('#yawSlider'), pitch = $('#pitchSlider');
+  const onServo = () => {
+    $('#yawLabel').textContent = `Yaw  ${yaw.value}°`;
+    $('#pitchLabel').textContent = `Pitch  ${pitch.value}°`;
+    sendServo(yaw.value, pitch.value);
+  };
+  yaw.addEventListener('input', onServo);
+  pitch.addEventListener('input', onServo);
+  $('#centerBtn').addEventListener('click', () => {
+    yaw.value = 0; pitch.value = 0; onServo();
+  });
+
+  // Seed from device state.
+  getJson('/api/control/state').then(({ body }) => {
+    if (!body) return;
+    if (typeof body.volume === 'number') {
+      vol.value = body.volume;
+      $('#volLabel').textContent = `Volume  ${body.volume}%`;
+    }
+    if (typeof body.yaw === 'number') {
+      yaw.value = body.yaw;
+      $('#yawLabel').textContent = `Yaw  ${body.yaw}°`;
+    }
+    if (typeof body.pitch === 'number') {
+      pitch.value = body.pitch;
+      $('#pitchLabel').textContent = `Pitch  ${body.pitch}°`;
+    }
+  }).catch(() => {});
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   initTabs();
+  initControl();
 
   $('#rescanBtn').addEventListener('click', startScan);
   $('#manualBtn').addEventListener('click', openManualWifiModal);

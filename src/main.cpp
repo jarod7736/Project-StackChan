@@ -23,6 +23,7 @@
 #include "face/MenuScreen.h"
 #include "motion/MotionDirector.h"
 #include "state_machine.h"
+#include "app/ControlBridge.h"
 
 using namespace stkchan;
 
@@ -140,6 +141,8 @@ void setup() {
     runSerialProvisioning();  // never returns — reboots on success
   }
 
+  controlBridge.begin();   // queue for web → main-loop control commands
+
   wifi.begin();
   connectivity.begin();
 
@@ -185,6 +188,7 @@ void loop() {
 
   connectivity.tick(now);
   motion.tick(now);
+  controlBridge.tick();   // apply queued web-control commands on this task
 
   // Touch → FSM events + swipe-up gesture for menu reveal.
   // When the menu screen is active, LVGL widget handlers own the touch

@@ -31,6 +31,22 @@ void onPressDown()  { g_pressFlag   = true; }
 void onPressUp()    { g_releaseFlag = true; }
 void onAudioDone()  { g_audioDoneFlag = true; }
 
+bool requestExternalSpeak(const String& text, const char* exprTag) {
+  if (g_state != State::IDLE) return false;       // busy with a voice turn
+  if (text.isEmpty()) return false;
+  std::string expr = (exprTag && *exprTag) ? std::string(exprTag) : "neutral";
+  g_parsed.speech = std::string(text.c_str());
+  g_parsed.expr   = expr;
+  g_parsed.ok     = true;
+  // Mirror the THINKING_CHAT → SPEAKING_TTS handoff: set face/motion, then
+  // let the SPEAKING_TTS tick run the (blocking) synth + playback.
+  face.setExpression(expr);
+  motion.onExpressionChange(expr);
+  motion.startSpeechBob(expressionFor(expr).bobAmp);
+  g_state = State::SPEAKING_TTS;
+  return true;
+}
+
 void onPressCancel() {
   // Abort whatever the FSM is doing right now (mic recording, etc.) and
   // return cleanly to IDLE without speaking an error. Called by main.cpp
