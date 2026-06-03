@@ -8,6 +8,9 @@
 #include <AudioOutput.h>
 
 #include "../config.h"
+#include "../face/Face.h"
+
+#include <math.h>
 
 // Pull in ESP8266Audio concrete types here (not in the header) so
 // consumers of AudioPlayer.h don't need ESP8266Audio on their include path.
@@ -289,9 +292,16 @@ void AudioPlayer::tick() {
                 break;
             }
         }
+        // Cheap fake lip-sync: oscillate mouth open ratio on a ~6 Hz sine
+        // while audio is playing. Not amplitude-tracked but it reads as
+        // "the mouth is moving while speaking", which is enough for v1.5.
+        float t = (float)millis() * 0.012f;
+        float r = 0.35f + 0.35f * (0.5f + 0.5f * sinf(t));
+        face.setMouthOpen(r);
     }
     if (!mp3->isRunning()) {
         Serial.println("[AudioPlayer] track done");
+        face.setMouthOpen(0.0f);
         teardown_track();
         // Fire onPlayDone AFTER teardown so the callback can immediately
         // call play() for a queued utterance without reentrancy issues.
