@@ -209,6 +209,19 @@ bool AudioPlayer::play(const uint8_t* mp3, size_t len) {
         return false;
     }
 
+    // Re-apply the speaker config every play. MicRecorder::stop() restores
+    // the speaker after the mic owned I2S, but it does a bare M5.Speaker.
+    // begin() which loses our sample-rate (kSampleRate) + virtual-channel
+    // settings — output sounds like static until config is restored. Doing
+    // it here makes play() self-healing regardless of who else touched the
+    // speaker.
+    auto cfg = M5.Speaker.config();
+    cfg.sample_rate = kSampleRate;
+    M5.Speaker.config(cfg);
+    M5.Speaker.begin();
+    auto* out = static_cast<AudioOutputM5Speaker*>(out_);
+    if (out) out->SetGain(kDecoderGain);
+
     teardown_track();
 
     // Allocate PSRAM buffer and copy MP3 bytes (spec: any buffer > 512 B
