@@ -173,6 +173,8 @@ bool AudioPlayer::begin() {
         Serial.println("[AudioPlayer] M5.Speaker.begin failed");
         return false;
     }
+    // Match reapplySpeakerConfig() — make sure boot volume is audible.
+    M5.Speaker.setVolume(200);
 
     auto* out = new AudioOutputM5Speaker(&M5.Speaker, kVirtualChannel);
     if (!out) {
@@ -199,6 +201,9 @@ void AudioPlayer::reapplySpeakerConfig() {
     cfg.sample_rate = kSampleRate;
     M5.Speaker.config(cfg);
     M5.Speaker.begin();
+    // M5.Speaker.begin() may reset volume to a sub-audible default after an
+    // end()/begin() cycle (post-Mic). Force a known-audible level.
+    M5.Speaker.setVolume(200);
     if (auto* spk = static_cast<AudioOutputM5Speaker*>(out_)) {
         spk->SetGain(kDecoderGain);
     }
