@@ -219,8 +219,8 @@ bool AudioPlayer::play(const uint8_t* mp3, size_t len) {
     cfg.sample_rate = kSampleRate;
     M5.Speaker.config(cfg);
     M5.Speaker.begin();
-    auto* out = static_cast<AudioOutputM5Speaker*>(out_);
-    if (out) out->SetGain(kDecoderGain);
+    auto* spk = static_cast<AudioOutputM5Speaker*>(out_);
+    if (spk) spk->SetGain(kDecoderGain);
 
     teardown_track();
 
