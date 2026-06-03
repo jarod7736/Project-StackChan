@@ -129,12 +129,16 @@ void loop() {
       // press-to-talk still works.
       g_pressStartY = t.y;
       g_swipeFired  = false;
+      Serial.printf("[Touch] down @ (%d,%d)\n", (int)t.x, (int)t.y);
       onPressDown();
     } else if (!g_swipeFired) {
-      // Mid-press: check for swipe-up from the bottom edge.
+      // Mid-press: check for swipe-up from the bottom edge. Loosened
+      // thresholds — allow swipes starting from the bottom half of the
+      // screen with only 40 px of upward motion.
       int dy = g_pressStartY - t.y;
-      if (g_pressStartY >= 180 && dy >= 60) {
-        // It's a swipe — abort the press-to-talk and reveal the menu button.
+      if (g_pressStartY >= 120 && dy >= 40) {
+        Serial.printf("[Touch] swipe-up detected (startY=%d, dy=%d)\n",
+                      g_pressStartY, dy);
         g_swipeFired = true;
         onPressCancel();
         face.revealMenuButton();
