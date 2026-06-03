@@ -31,6 +31,23 @@ void onPressDown()  { g_pressFlag   = true; }
 void onPressUp()    { g_releaseFlag = true; }
 void onAudioDone()  { g_audioDoneFlag = true; }
 
+void onPressCancel() {
+  // Abort whatever the FSM is doing right now (mic recording, etc.) and
+  // return cleanly to IDLE without speaking an error. Called by main.cpp
+  // when a swipe-up gesture is detected mid-press.
+  g_pressFlag   = false;
+  g_releaseFlag = false;
+  if (mic.isActive()) mic.stop();
+  if (g_state == State::LISTENING ||
+      g_state == State::THINKING_STT ||
+      g_state == State::THINKING_CHAT) {
+    face.setExpression(std::string("neutral"));
+    display.clearOverlay();
+    motion.resumeIdle();
+    g_state = State::IDLE;
+  }
+}
+
 // enterError: face + display + motion, then either speak (→ SPEAKING) or
 // set audioDone + ERROR for display-only errors (kErrTtsFailed is "").
 //

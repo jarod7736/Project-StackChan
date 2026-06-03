@@ -20,6 +20,7 @@ void tickStateMachine(uint32_t nowMs);
 // Called by main loop / hal callbacks to set flags.
 void onPressDown();
 void onPressUp();
+void onPressCancel();  // abort an in-progress press (e.g. swipe-up gesture)
 void onAudioDone();   // AudioPlayer onPlayDone callback target
 
 State currentState();

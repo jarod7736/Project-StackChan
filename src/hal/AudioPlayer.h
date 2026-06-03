@@ -67,8 +67,11 @@ public:
     void setOnPlayDone(OnDoneCb cb);
 
     // Set output volume as a 0–100 percentage. Mapped internally to
-    // M5.Speaker's 0–255 range. Clamped to [0, 100].
+    // M5.Speaker's 0–255 range. Clamped to [0, 100]. Persists to NVS.
     void setVolume(int pct);
+
+    // Current volume as 0–100 percentage.
+    int  getVolume() const;
 
 private:
     bool            ok_      = false;

@@ -9,8 +9,16 @@
 
 #include "../config.h"
 #include "../face/Face.h"
+#include "../services/NvsStore.h"
 
 #include <math.h>
+
+namespace {
+// User-controlled speaker volume (0-255). Loaded from NVS on begin(),
+// re-applied after every M5.Speaker.begin() (including post-mic via
+// reapplySpeakerConfig). Updated by AudioPlayer::setVolume().
+int g_user_volume = 0;
+}
 
 // Pull in ESP8266Audio concrete types here (not in the header) so
 // consumers of AudioPlayer.h don't need ESP8266Audio on their include path.
@@ -176,8 +184,12 @@ bool AudioPlayer::begin() {
         Serial.println("[AudioPlayer] M5.Speaker.begin failed");
         return false;
     }
-    // Match reapplySpeakerConfig() — make sure boot volume is audible.
-    M5.Speaker.setVolume(200);
+    // Load user-set volume from NVS (falls back to default if unset).
+    String vstr = stkchan::nvs.getString(stkchan::kNvsSpkVolume, "");
+    g_user_volume = vstr.isEmpty() ? stkchan::kDefaultSpkVolume : vstr.toInt();
+    if (g_user_volume < 0)   g_user_volume = 0;
+    if (g_user_volume > 255) g_user_volume = 255;
+    M5.Speaker.setVolume(g_user_volume);
 
     auto* out = new AudioOutputM5Speaker(&M5.Speaker, kVirtualChannel);
     if (!out) {
@@ -204,9 +216,9 @@ void AudioPlayer::reapplySpeakerConfig() {
     cfg.sample_rate = kSampleRate;
     M5.Speaker.config(cfg);
     M5.Speaker.begin();
-    // M5.Speaker.begin() may reset volume to a sub-audible default after an
-    // end()/begin() cycle (post-Mic). Force a known-audible level.
-    M5.Speaker.setVolume(200);
+    // M5.Speaker.begin() may reset volume after an end()/begin() cycle
+    // (post-Mic). Restore the user's chosen volume.
+    M5.Speaker.setVolume(g_user_volume > 0 ? g_user_volume : stkchan::kDefaultSpkVolume);
     if (auto* spk = static_cast<AudioOutputM5Speaker*>(out_)) {
         spk->SetGain(kDecoderGain);
     }
@@ -317,8 +329,16 @@ void AudioPlayer::setVolume(int pct) {
     if (pct < 0)   pct = 0;
     if (pct > 100) pct = 100;
     // M5.Speaker.setVolume takes 0–255. Linear map.
-    uint8_t m5_vol = static_cast<uint8_t>((pct * 255) / 100);
-    M5.Speaker.setVolume(m5_vol);
+    int m5_vol = (pct * 255) / 100;
+    g_user_volume = m5_vol;
+    M5.Speaker.setVolume((uint8_t)m5_vol);
+    // Persist to NVS so it survives reboot.
+    stkchan::nvs.putString(stkchan::kNvsSpkVolume, String(m5_vol));
+}
+
+int AudioPlayer::getVolume() const {
+    // Map current 0-255 back to 0-100%.
+    return (g_user_volume * 100) / 255;
 }
 
 }  // namespace stkchan

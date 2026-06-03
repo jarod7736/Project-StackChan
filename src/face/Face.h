@@ -12,6 +12,16 @@ class Face {
   void setAutoBlinkEnabled(bool enabled);  // control auto-blink behavior
   std::string currentExpression() const { return currentTag_; }
 
+  // Reveal the floating "Menu" button at the bottom of the face screen
+  // for ~3 s. Tapping it navigates to MenuScreen. Called from main.cpp
+  // when a swipe-up gesture is detected.
+  void revealMenuButton();
+
+  // True while the floating Menu button is visible. main.cpp uses this
+  // to suppress press-to-talk during the ~3 s reveal window — otherwise
+  // tapping the button would also start the mic.
+  bool isMenuButtonVisible() const;
+
  private:
   std::string currentTag_ = "neutral";
 };

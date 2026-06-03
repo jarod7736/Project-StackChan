@@ -32,6 +32,22 @@ static void flushCb(lv_display_t* disp, const lv_area_t* area, uint8_t* px_map) 
     lv_display_flush_ready(disp);
 }
 
+// ── Touch input ──────────────────────────────────────────────────────────
+// Bridges M5.Touch into LVGL's pointer input so button clicks + slider
+// drags + screen gestures all work. Touches are also read by main.cpp's
+// own M5.Touch.getCount() polling for press-to-talk; M5.Touch supports
+// multiple readers since both just inspect state.
+static void touchReadCb(lv_indev_t* /*indev*/, lv_indev_data_t* data) {
+    if (M5.Touch.getCount() > 0) {
+        auto t = M5.Touch.getDetail(0);
+        data->point.x = t.x;
+        data->point.y = t.y;
+        data->state = LV_INDEV_STATE_PRESSED;
+    } else {
+        data->state = LV_INDEV_STATE_RELEASED;
+    }
+}
+
 bool LvglDisplay::begin() {
     if (ok_) return true;
 
@@ -48,6 +64,11 @@ bool LvglDisplay::begin() {
         g_buf1, nullptr,
         sizeof(g_buf1),
         LV_DISPLAY_RENDER_MODE_PARTIAL);
+
+    // Register a pointer-type input device backed by M5.Touch.
+    lv_indev_t* indev = lv_indev_create();
+    lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
+    lv_indev_set_read_cb(indev, touchReadCb);
 
     // Step 2: the test rectangle is gone. Face::begin() will build the
     // actual face widgets (eyes/mouth/lids) on the active screen.

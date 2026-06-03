@@ -27,6 +27,7 @@ constexpr const char* kNvsTtsModel  = "tts_model";
 constexpr const char* kNvsElKey     = "el_key";
 constexpr const char* kNvsOtaPass   = "ota_pass";
 constexpr const char* kNvsPersona   = "persona";
+constexpr const char* kNvsSpkVolume = "spk_vol";  // 0-255 M5.Speaker.setVolume
 
 // === Defaults ===
 constexpr const char* kDefaultChatModel = "gemma3n:e4b";
@@ -34,6 +35,7 @@ constexpr const char* kDefaultSttModel  = "whisper-1";
 constexpr const char* kDefaultTtsProv   = "openai";
 constexpr const char* kDefaultTtsVoice  = "nova";
 constexpr const char* kDefaultTtsModel  = "tts-1";
+constexpr int         kDefaultSpkVolume = 230;   // 0-255; 200 was inaudible
 
 // === NTP / Time ===
 // POSIX TZ string (US Central with DST). Override at provisioning time if needed.

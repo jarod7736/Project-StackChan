@@ -1,6 +1,7 @@
 #include "face/Face.h"
 #include "face/ExpressionMap.h"
 #include "face/LvglDisplay.h"
+#include "face/MenuScreen.h"
 
 #include <lvgl.h>
 
@@ -21,6 +22,8 @@ lv_obj_t* g_eye_r    = nullptr;
 lv_obj_t* g_pupil_l  = nullptr;
 lv_obj_t* g_pupil_r  = nullptr;
 lv_obj_t* g_mouth    = nullptr;   // lv_line
+lv_obj_t* g_menu_btn = nullptr;   // hidden until swipe-up reveals
+lv_timer_t* g_menu_btn_hide_timer = nullptr;
 
 lv_anim_t g_blink_anim_l;
 lv_anim_t g_blink_anim_r;
@@ -190,6 +193,23 @@ void buildStage() {
     // Eyelids are no longer needed — blink is implemented by animating
     // the eye's own height (see runBlinkOnce / blinkSetH above).
 
+    // ── Menu button (hidden until swipe-up) ─────────────────────────────
+    g_menu_btn = lv_btn_create(root);
+    lv_obj_set_size(g_menu_btn, 100, 36);
+    lv_obj_align(g_menu_btn, LV_ALIGN_BOTTOM_MID, 0, -8);
+    lv_obj_set_style_bg_color(g_menu_btn, lv_color_hex(0xFF6688), 0);
+    lv_obj_set_style_bg_opa(g_menu_btn, LV_OPA_COVER, 0);
+    lv_obj_set_style_radius(g_menu_btn, 8, 0);
+    lv_obj_add_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_event_cb(g_menu_btn,
+        [](lv_event_t*) { menu.show(); },
+        LV_EVENT_CLICKED, nullptr);
+
+    lv_obj_t* mlabel = lv_label_create(g_menu_btn);
+    lv_label_set_text(mlabel, "Menu");
+    lv_obj_set_style_text_color(mlabel, lv_color_hex(0xFFFFFF), 0);
+    lv_obj_center(mlabel);
+
     // ── Auto-blink timer ────────────────────────────────────────────────
     // Fire every 5 seconds. runBlinkOnce() plays through the up-then-down
     // animation; LVGL handles the rest.
@@ -231,6 +251,25 @@ void Face::setMouthOpen(float ratio) {
 
 void Face::setAutoBlinkEnabled(bool enabled) {
     g_auto_blink = enabled;
+}
+
+bool Face::isMenuButtonVisible() const {
+    return g_menu_btn != nullptr &&
+           !lv_obj_has_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
+}
+
+void Face::revealMenuButton() {
+    if (!g_menu_btn) return;
+    lv_obj_clear_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
+    if (g_menu_btn_hide_timer) lv_timer_delete(g_menu_btn_hide_timer);
+    g_menu_btn_hide_timer = lv_timer_create(
+        [](lv_timer_t* t) {
+            if (g_menu_btn) lv_obj_add_flag(g_menu_btn, LV_OBJ_FLAG_HIDDEN);
+            lv_timer_delete(t);
+            g_menu_btn_hide_timer = nullptr;
+        },
+        3000, nullptr);
+    lv_timer_set_repeat_count(g_menu_btn_hide_timer, 1);
 }
 
 }  // namespace stkchan
