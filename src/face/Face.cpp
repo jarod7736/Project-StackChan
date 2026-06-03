@@ -21,8 +21,6 @@ lv_obj_t* g_eye_r    = nullptr;
 lv_obj_t* g_pupil_l  = nullptr;
 lv_obj_t* g_pupil_r  = nullptr;
 lv_obj_t* g_mouth    = nullptr;
-lv_obj_t* g_lid_l    = nullptr;   // animated downward to close eye
-lv_obj_t* g_lid_r    = nullptr;
 
 lv_anim_t g_blink_anim_l;
 lv_anim_t g_blink_anim_r;
@@ -35,44 +33,56 @@ constexpr int kPupil     = 0x101820;   // matches bg so the pupil "is" a hole
 constexpr int kMouth     = 0xFFFFFF;
 
 // Layout for a 320x240 screen.
-constexpr int kEyeY    = 70;
-constexpr int kEyeW    = 80;
-constexpr int kEyeH    = 80;
-constexpr int kEyeLX   = 60;
+constexpr int kEyeY    = 95;
+constexpr int kEyeW    = 50;
+constexpr int kEyeH    = 50;
+constexpr int kEyeLX   = 90;
 constexpr int kEyeRX   = 180;
-constexpr int kPupilW  = 28;
-constexpr int kPupilH  = 28;
+constexpr int kEyeBlinkH = 4;  // height during blink — "thin white line"
+constexpr int kPupilW  = 18;
+constexpr int kPupilH  = 18;
 constexpr int kMouthY  = 175;
 constexpr int kMouthW  = 60;
 constexpr int kMouthHClosed = 6;
 constexpr int kMouthHMax    = 38;
 
 // ── Blink animation ─────────────────────────────────────────────────────
-// Drives lid Y-position from -kEyeH (fully up, invisible) → 0 (fully covering
-// the eye). The animation is a there-and-back via lv_anim_set_playback_*.
-void blinkSetY(void* obj, int32_t y) {
-    lv_obj_set_y(static_cast<lv_obj_t*>(obj), y);
+// Shrink the eye's height from kEyeH → kEyeBlinkH and back. Y is adjusted
+// so the eye contracts toward its center. Pupil is hidden during the
+// shrink so the result is a clean "thin white line on black" — the
+// pupil's clip rectangle is otherwise still visible inside the line.
+void blinkSetH(void* obj, int32_t h) {
+    lv_obj_t* eye = static_cast<lv_obj_t*>(obj);
+    lv_obj_set_height(eye, h);
+    lv_obj_set_y(eye, kEyeY + (kEyeH - (int)h) / 2);
+    // Hide pupil while the eye is sufficiently closed.
+    bool isLeft  = (eye == g_eye_l);
+    lv_obj_t* pupil = isLeft ? g_pupil_l : g_pupil_r;
+    if (pupil) {
+        if (h < kEyeH * 2 / 3) lv_obj_add_flag(pupil, LV_OBJ_FLAG_HIDDEN);
+        else                    lv_obj_clear_flag(pupil, LV_OBJ_FLAG_HIDDEN);
+    }
 }
 
 void runBlinkOnce() {
-    if (!g_lid_l || !g_lid_r) return;
-    // Left lid
+    if (!g_eye_l || !g_eye_r) return;
+    // Left eye
     lv_anim_init(&g_blink_anim_l);
-    lv_anim_set_var(&g_blink_anim_l, g_lid_l);
-    lv_anim_set_values(&g_blink_anim_l, kEyeY - kEyeH, kEyeY);
-    lv_anim_set_duration(&g_blink_anim_l, 120);
-    lv_anim_set_playback_duration(&g_blink_anim_l, 120);
+    lv_anim_set_var(&g_blink_anim_l, g_eye_l);
+    lv_anim_set_values(&g_blink_anim_l, kEyeH, kEyeBlinkH);
+    lv_anim_set_duration(&g_blink_anim_l, 110);
+    lv_anim_set_playback_duration(&g_blink_anim_l, 110);
     lv_anim_set_path_cb(&g_blink_anim_l, lv_anim_path_ease_in_out);
-    lv_anim_set_exec_cb(&g_blink_anim_l, blinkSetY);
+    lv_anim_set_exec_cb(&g_blink_anim_l, blinkSetH);
     lv_anim_start(&g_blink_anim_l);
-    // Right lid (clone)
+    // Right eye (clone)
     lv_anim_init(&g_blink_anim_r);
-    lv_anim_set_var(&g_blink_anim_r, g_lid_r);
-    lv_anim_set_values(&g_blink_anim_r, kEyeY - kEyeH, kEyeY);
-    lv_anim_set_duration(&g_blink_anim_r, 120);
-    lv_anim_set_playback_duration(&g_blink_anim_r, 120);
+    lv_anim_set_var(&g_blink_anim_r, g_eye_r);
+    lv_anim_set_values(&g_blink_anim_r, kEyeH, kEyeBlinkH);
+    lv_anim_set_duration(&g_blink_anim_r, 110);
+    lv_anim_set_playback_duration(&g_blink_anim_r, 110);
     lv_anim_set_path_cb(&g_blink_anim_r, lv_anim_path_ease_in_out);
-    lv_anim_set_exec_cb(&g_blink_anim_r, blinkSetY);
+    lv_anim_set_exec_cb(&g_blink_anim_r, blinkSetH);
     lv_anim_start(&g_blink_anim_r);
 }
 
@@ -139,26 +149,8 @@ void buildStage() {
     lv_obj_set_style_border_width(g_mouth, 0, 0);
     lv_obj_clear_flag(g_mouth, LV_OBJ_FLAG_SCROLLABLE);
 
-    // ── Eyelids (start parked above the eye) ────────────────────────────
-    // Eyelids are colored rectangles matching the background — when their
-    // y matches the eye's y they appear to "close" the eye.
-    g_lid_l = lv_obj_create(root);
-    lv_obj_set_size(g_lid_l, kEyeW, kEyeH);
-    lv_obj_set_pos(g_lid_l, kEyeLX, kEyeY - kEyeH);   // parked offscreen-above
-    lv_obj_set_style_radius(g_lid_l, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_bg_color(g_lid_l, lv_color_hex(kBgColor), 0);
-    lv_obj_set_style_bg_opa(g_lid_l, LV_OPA_COVER, 0);
-    lv_obj_set_style_border_width(g_lid_l, 0, 0);
-    lv_obj_clear_flag(g_lid_l, LV_OBJ_FLAG_SCROLLABLE);
-
-    g_lid_r = lv_obj_create(root);
-    lv_obj_set_size(g_lid_r, kEyeW, kEyeH);
-    lv_obj_set_pos(g_lid_r, kEyeRX, kEyeY - kEyeH);
-    lv_obj_set_style_radius(g_lid_r, LV_RADIUS_CIRCLE, 0);
-    lv_obj_set_style_bg_color(g_lid_r, lv_color_hex(kBgColor), 0);
-    lv_obj_set_style_bg_opa(g_lid_r, LV_OPA_COVER, 0);
-    lv_obj_set_style_border_width(g_lid_r, 0, 0);
-    lv_obj_clear_flag(g_lid_r, LV_OBJ_FLAG_SCROLLABLE);
+    // Eyelids are no longer needed — blink is implemented by animating
+    // the eye's own height (see runBlinkOnce / blinkSetH above).
 
     // ── Auto-blink timer ────────────────────────────────────────────────
     // Fire every 5 seconds. runBlinkOnce() plays through the up-then-down
