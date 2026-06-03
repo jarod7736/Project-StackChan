@@ -23,6 +23,13 @@ bool MicRecorder::begin() {
 bool MicRecorder::start() {
   if (!wav_ || active_) return false;
 
+  // The CoreS3 shares I2S0 between speaker and mic — bringing up the mic
+  // while the speaker holds I2S leaves spk_task with stale DMA descriptors
+  // and crashes the next audio.play() with a LoadProhibited / stack-canary
+  // panic. Tear the speaker down before claiming I2S for capture; stop()
+  // brings it back.
+  M5.Speaker.end();
+
   // Queue a full-capacity recording into the PCM region of the PSRAM buffer.
   // M5.Mic.record() is asynchronous — the background I2S task fills the
   // buffer while loop() continues.  stop() will call M5.Mic.end() to halt
@@ -33,6 +40,9 @@ bool MicRecorder::start() {
   M5.Mic.setSampleRate(kRecordSampleRate);
   if (!M5.Mic.record(dst, capSamples, kRecordSampleRate)) {
     Serial.println("ERR: M5.Mic.record failed");
+    // Restore the speaker even on failed mic start — otherwise the next
+    // audio.play() would crash spk_task.
+    M5.Speaker.begin();
     return false;
   }
 
@@ -51,6 +61,10 @@ bool MicRecorder::stop() {
   // and spin-waits (vTaskDelay) until the task exits, so the buffer is no
   // longer being written after this returns.
   M5.Mic.end();
+
+  // Bring the speaker back online so AudioPlayer can drive I2S for TTS
+  // playback. Without this, spk_task crashes on stale DMA descriptors.
+  M5.Speaker.begin();
 
   // Calculate samples actually captured from elapsed wall time, capped at
   // the buffer capacity.

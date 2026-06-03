@@ -46,7 +46,7 @@ constexpr uint32_t kPerSlotTimeoutMs    = 8000;
 
 // === Timeouts (ms) ===
 constexpr uint32_t kSttTimeoutMs        = 8000;
-constexpr uint32_t kChatTimeoutMs       = 30000;
+constexpr uint32_t kChatTimeoutMs       = 60000;  // cold gemma3n load can be ~20-40s
 constexpr uint32_t kTtsTimeoutMs        = 8000;
 constexpr uint32_t kTierProbeIntervalMs = 30000;
 constexpr uint32_t kMaxRecordMs         = 6000;
