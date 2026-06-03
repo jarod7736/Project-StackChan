@@ -1,24 +1,24 @@
 #include "face/Face.h"
 #include "face/ExpressionMap.h"
+#include "face/LvglDisplay.h"
 
-// v1 NOTE: the M5Stack-Avatar lib spawns its own drawLoop FreeRTOS task
-// when init() runs, and that task asserts on a SPI mutex (Bus_SPI::
-// endTransaction → xQueueGenericSend) when anything on the main task
-// touches Avatar or LCD state concurrently. Stubbed out for the v1 smoke
-// test so the voice path is reachable. Proper fix is either:
-//   (a) don't auto-start drawLoop — drive g_avatar.draw() manually from
-//       our main loop() so there's a single SPI consumer;
-//   (b) wrap every g_avatar.setExpression / setMouthOpenRatio call in
-//       g_avatar.suspend() / .resume().
-// Either way, re-enabling face will need ExpressionMap (T15) unchanged.
+// v1.5: bring up LVGL (single-threaded, driven from main loop()) and use
+// it for the face. m5avatar's drawLoop FreeRTOS task tripped a SPI mutex
+// assert against the main task; LVGL's lv_timer_handler runs on whichever
+// task calls it, so there's only ever one SPI consumer.
+//
+// Step 1 (this commit) just brings LVGL up with a placeholder rectangle so
+// we can verify the flush driver before adding face widgets.
 
 namespace stkchan {
 
 Face face;
 
 void Face::begin() {
-  // No-op for v1; see file comment above.
   currentTag_ = "neutral";
+  if (!lvglDisplay.begin()) {
+    Serial.println("[Face] LVGL bring-up failed; face is no-op");
+  }
 }
 
 void Face::setExpression(const std::string& tag) {

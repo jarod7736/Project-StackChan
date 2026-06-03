@@ -17,6 +17,7 @@
 #include "hal/Servos.h"
 #include "hal/Display.h"
 #include "face/Face.h"
+#include "face/LvglDisplay.h"
 #include "motion/MotionDirector.h"
 #include "state_machine.h"
 
@@ -57,6 +58,7 @@ void setup() {
     portal.begin();
     while (true) {
       portal.tick();
+      lvglDisplay.tick();   // keep the face alive during provisioning
       if (portal.exitRequested()) {
         Serial.println("[PORTAL] exit requested — rebooting");
         portal.clearExitFlag();
@@ -78,6 +80,7 @@ void loop() {
   uint32_t now = millis();
 
   M5.update();
+  lvglDisplay.tick();
   wifi.tick();
 
   // T7: OTA — initialize once WiFi connects (ota.tick() is a no-op until begin())
