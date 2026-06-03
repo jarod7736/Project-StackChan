@@ -35,6 +35,12 @@ public:
     // virtual channel + sample rate. Idempotent.
     bool begin();
 
+    // Re-apply M5.Speaker config + begin (without rebuilding the bridge).
+    // MicRecorder calls this from stop() after M5.Mic.end() to bring the
+    // speaker back online with the right sample rate — without this it
+    // boots into the M5Unified default (44.1 kHz) and TTS plays as static.
+    void reapplySpeakerConfig();
+
     // True iff begin() succeeded.
     bool ok() const;
 

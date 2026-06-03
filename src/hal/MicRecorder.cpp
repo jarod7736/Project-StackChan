@@ -1,6 +1,7 @@
 #include "hal/MicRecorder.h"
 #include <M5CoreS3.h>
 #include "config.h"
+#include "hal/AudioPlayer.h"
 
 namespace stkchan {
 
@@ -63,8 +64,10 @@ bool MicRecorder::stop() {
   M5.Mic.end();
 
   // Bring the speaker back online so AudioPlayer can drive I2S for TTS
-  // playback. Without this, spk_task crashes on stale DMA descriptors.
-  M5.Speaker.begin();
+  // playback. We have to re-apply AudioPlayer's full config (sample rate,
+  // gain) — a bare M5.Speaker.begin() leaves the speaker on M5Unified
+  // defaults (44.1 kHz) and TTS plays as static.
+  audio.reapplySpeakerConfig();
 
   // Calculate samples actually captured from elapsed wall time, capped at
   // the buffer capacity.

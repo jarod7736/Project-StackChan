@@ -194,6 +194,16 @@ bool AudioPlayer::begin() {
 
 bool AudioPlayer::ok() const { return ok_; }
 
+void AudioPlayer::reapplySpeakerConfig() {
+    auto cfg = M5.Speaker.config();
+    cfg.sample_rate = kSampleRate;
+    M5.Speaker.config(cfg);
+    M5.Speaker.begin();
+    if (auto* spk = static_cast<AudioOutputM5Speaker*>(out_)) {
+        spk->SetGain(kDecoderGain);
+    }
+}
+
 bool AudioPlayer::play(const uint8_t* mp3, size_t len) {
     if (!ok_) {
         Serial.println("[AudioPlayer] play() before begin()");
@@ -208,19 +218,6 @@ bool AudioPlayer::play(const uint8_t* mp3, size_t len) {
                       (unsigned)len, (unsigned)stkchan::kMp3MaxBytes);
         return false;
     }
-
-    // Re-apply the speaker config every play. MicRecorder::stop() restores
-    // the speaker after the mic owned I2S, but it does a bare M5.Speaker.
-    // begin() which loses our sample-rate (kSampleRate) + virtual-channel
-    // settings — output sounds like static until config is restored. Doing
-    // it here makes play() self-healing regardless of who else touched the
-    // speaker.
-    auto cfg = M5.Speaker.config();
-    cfg.sample_rate = kSampleRate;
-    M5.Speaker.config(cfg);
-    M5.Speaker.begin();
-    auto* spk = static_cast<AudioOutputM5Speaker*>(out_);
-    if (spk) spk->SetGain(kDecoderGain);
 
     teardown_track();
 
