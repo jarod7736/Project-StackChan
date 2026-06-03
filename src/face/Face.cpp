@@ -34,14 +34,14 @@ constexpr int kMouthWhite= 0xFFFFFF;
 constexpr int kMouthRed  = 0xFF5566;
 
 // Layout for a 320x240 screen.
-constexpr int kEyeY    = 95;
-constexpr int kEyeW    = 50;
-constexpr int kEyeH    = 50;
-constexpr int kEyeLX   = 90;
+constexpr int kEyeY    = 100;
+constexpr int kEyeW    = 48;
+constexpr int kEyeH    = 42;   // slightly squatter than wide → less "wide-eyed"
+constexpr int kEyeLX   = 92;
 constexpr int kEyeRX   = 180;
 constexpr int kEyeBlinkH = 4;  // height during blink — "thin white line"
-constexpr int kPupilW  = 18;
-constexpr int kPupilH  = 18;
+constexpr int kPupilW  = 32;
+constexpr int kPupilH  = 32;   // larger pupils → less "startled" empty whites
 
 // Mouth is an lv_line with 7 control points spanning kMouthW px,
 // centered horizontally at kMouthCenterX, baseline at kMouthY.
