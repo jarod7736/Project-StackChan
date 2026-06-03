@@ -43,7 +43,7 @@ bool MicRecorder::start() {
     Serial.println("ERR: M5.Mic.record failed");
     // Restore the speaker even on failed mic start — otherwise the next
     // audio.play() would crash spk_task.
-    M5.Speaker.begin();
+    audio.reapplySpeakerConfig();
     return false;
   }
 
