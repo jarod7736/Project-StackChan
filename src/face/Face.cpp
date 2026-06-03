@@ -1,32 +1,37 @@
 #include "face/Face.h"
-#include <Avatar.h>
 #include "face/ExpressionMap.h"
+
+// v1 NOTE: the M5Stack-Avatar lib spawns its own drawLoop FreeRTOS task
+// when init() runs, and that task asserts on a SPI mutex (Bus_SPI::
+// endTransaction → xQueueGenericSend) when anything on the main task
+// touches Avatar or LCD state concurrently. Stubbed out for the v1 smoke
+// test so the voice path is reachable. Proper fix is either:
+//   (a) don't auto-start drawLoop — drive g_avatar.draw() manually from
+//       our main loop() so there's a single SPI consumer;
+//   (b) wrap every g_avatar.setExpression / setMouthOpenRatio call in
+//       g_avatar.suspend() / .resume().
+// Either way, re-enabling face will need ExpressionMap (T15) unchanged.
 
 namespace stkchan {
 
 Face face;
-static m5avatar::Avatar g_avatar;
 
 void Face::begin() {
-  g_avatar.init();
-  g_avatar.setIsAutoBlink(true);
-  setExpression("neutral");
+  // No-op for v1; see file comment above.
+  currentTag_ = "neutral";
 }
 
 void Face::setExpression(const std::string& tag) {
-  auto m = expressionFor(tag);
   currentTag_ = tag;
-  g_avatar.setExpression(static_cast<m5avatar::Expression>(m.idx));
+  (void)expressionFor(tag);  // silence unused-include warning
 }
 
 void Face::setMouthOpen(float ratio) {
-  if (ratio < 0) ratio = 0;
-  if (ratio > 1) ratio = 1;
-  g_avatar.setMouthOpenRatio(ratio);
+  (void)ratio;
 }
 
 void Face::setAutoBlinkEnabled(bool enabled) {
-  g_avatar.setIsAutoBlink(enabled);
+  (void)enabled;
 }
 
 }  // namespace stkchan
