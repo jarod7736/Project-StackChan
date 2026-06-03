@@ -6,23 +6,22 @@ namespace stkchan {
 Display display;
 
 void Display::begin() {
-  // Avatar owns the main canvas; here we only need the overlay layer.
-  M5.Display.setTextSize(2);
+  // No-op for v1. See showStatusOverlay() below.
 }
 
+// v1: no-op. The M5Stack-Avatar library spawns its own drawLoop FreeRTOS
+// task that owns the SPI bus to the LCD; calling M5.Display.* from the
+// main task here races that task and trips the xQueueGenericSend mutex
+// assert (Bus_SPI::endTransaction from drawLoop while we hold the bus).
+// Proper fix is either avatar.suspend()/.resume() around writes or routing
+// status text through Avatar::setSpeechText. Until that lands, the face
+// expression conveys state and the Serial log carries the diagnostics.
 void Display::showStatusOverlay(const String& text, uint16_t fgColor) {
-  int w = M5.Display.width();
-  int h = M5.Display.height();
-  M5.Display.fillRect(0, h - 28, w, 28, BLACK);
-  M5.Display.setCursor(8, h - 24);
-  M5.Display.setTextColor(fgColor, BLACK);
-  M5.Display.print(text);
+  (void)text; (void)fgColor;
 }
 
 void Display::clearOverlay() {
-  int w = M5.Display.width();
-  int h = M5.Display.height();
-  M5.Display.fillRect(0, h - 28, w, 28, BLACK);
+  // No-op for v1; see showStatusOverlay().
 }
 
 }  // namespace stkchan
