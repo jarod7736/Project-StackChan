@@ -3,6 +3,8 @@
 #include <Arduino.h>
 #include <M5CoreS3.h>
 
+#include <ArduinoJson.h>
+
 #include "config.h"
 #include "services/NvsStore.h"
 #include "services/OtaService.h"
@@ -27,6 +29,72 @@ using namespace stkchan;
 static bool    g_pressedLast = false;
 static int16_t g_pressStartY = 0;
 static bool    g_swipeFired  = false;   // latches per-press so we only fire once
+
+// ── USB-serial WiFi provisioning ───────────────────────────────────────────
+// No captive-portal hotspot. On first boot with no saved WiFi creds, the
+// device waits for a single line of JSON on USB serial:
+//   {"ssid":"MyNet","psk":"secret"}            (slot 1)
+//   {"ssid1":"A","psk1":"a","ssid2":"B","psk2":"b"}   (multi-slot also OK)
+// Sent by tools/provision-serial.py (or just typed into a serial monitor).
+// On a valid line we persist to NVS and reboot into normal operation.
+static bool tryConsumeProvisioningLine(const String& line) {
+  JsonDocument doc;
+  if (deserializeJson(doc, line)) return false;
+
+  // Accept either {"ssid","psk"} or explicit slot keys.
+  String s1 = doc["ssid1"] | doc["ssid"] | "";
+  String p1 = doc["psk1"]  | doc["psk"]  | doc["password"] | "";
+  if (s1.isEmpty()) return false;
+
+  nvs.putString(kNvsSsid1, s1);
+  nvs.putString(kNvsPsk1,  p1);
+  String s2 = doc["ssid2"] | "";
+  if (!s2.isEmpty()) { nvs.putString(kNvsSsid2, s2); nvs.putString(kNvsPsk2, doc["psk2"] | ""); }
+  String s3 = doc["ssid3"] | "";
+  if (!s3.isEmpty()) { nvs.putString(kNvsSsid3, s3); nvs.putString(kNvsPsk3, doc["psk3"] | ""); }
+
+  // Optional: accept other config keys in the same blob so a one-shot
+  // provision can set the OpenAI key etc. without the web UI.
+  const char* passKeys[][2] = {
+    {"chat_host", kNvsChatHost}, {"oai_key", kNvsOaiKey}, {"ota_pass", kNvsOtaPass},
+    {"tts_voice", kNvsTtsVoice}, {"tts_provider", kNvsTtsProv},
+  };
+  for (auto& kv : passKeys) {
+    const char* v = doc[kv[0]] | (const char*)nullptr;
+    if (v && *v) nvs.putString(kv[1], String(v));
+  }
+
+  Serial.printf("[PROV] saved ssid=\"%s\" — rebooting\n", s1.c_str());
+  return true;
+}
+
+// Block at boot until provisioned over serial. Keeps the LVGL face alive
+// and shows a setup prompt on screen.
+static void runSerialProvisioning() {
+  Serial.println("[PROV] No WiFi creds. Send JSON over serial, e.g.:");
+  Serial.println("[PROV]   {\"ssid\":\"YourNet\",\"psk\":\"password\"}");
+  Serial.println("[PROV]   (use tools/provision-serial.py, or type + Enter)");
+  display.showStatusOverlay("setup: send WiFi over USB", 0xFFE0);
+
+  String line;
+  for (;;) {
+    lvglDisplay.tick();
+    while (Serial.available()) {
+      char c = (char)Serial.read();
+      if (c == '\n' || c == '\r') {
+        line.trim();
+        if (line.length() && tryConsumeProvisioningLine(line)) {
+          delay(200);
+          ESP.restart();
+        }
+        line = "";
+      } else if (line.length() < 1024) {
+        line += c;
+      }
+    }
+    delay(10);
+  }
+}
 
 void setup() {
   auto cfg = M5.config();
@@ -55,27 +123,22 @@ void setup() {
     Serial.println("WARN: mic alloc failed");
   }
 
-  // Provisioning gate: no SSID1 in NVS → captive portal forever, no FSM.
-  bool needsProvisioning = nvs.getString(kNvsSsid1, "").isEmpty();
-  if (needsProvisioning) {
-    Serial.println("No WiFi creds — entering captive portal");
-    portal.begin();
-    while (true) {
-      portal.tick();
-      lvglDisplay.tick();   // keep the face alive during provisioning
-      if (portal.exitRequested()) {
-        Serial.println("[PORTAL] exit requested — rebooting");
-        portal.clearExitFlag();
-        portal.end();
-        delay(200);
-        ESP.restart();
-      }
-      delay(10);
-    }
+  // Provisioning gate (v2): no SSID1 in NVS → wait for USB-serial creds.
+  // No hotspot. tools/provision-serial.py (or a serial monitor) sends a
+  // JSON line; we persist + reboot.
+  if (nvs.getString(kNvsSsid1, "").isEmpty()) {
+    runSerialProvisioning();  // never returns — reboots on success
   }
 
   wifi.begin();
   connectivity.begin();
+
+  // v2: bring up the always-on LAN control server once WiFi is connected.
+  // Reachable at http://stackchan.local/ from any browser on the network.
+  if (wifi.isConnected()) {
+    portal.beginLan();
+  }
+
   initStateMachine();
 }
 
@@ -94,6 +157,14 @@ void loop() {
     ota_begun = true;
   }
   ota.tick();
+
+  // v2: start the LAN control server the first time WiFi comes up (covers
+  // the case where WiFi wasn't connected yet at the end of setup()).
+  static bool lan_begun = false;
+  if (!lan_begun && wifi.isConnected()) {
+    portal.beginLan();   // idempotent (no-op if already running)
+    lan_begun = true;
+  }
 
   connectivity.tick(now);
   motion.tick(now);

@@ -22,7 +22,8 @@ namespace stkchan {
 
 class CaptivePortal {
 public:
-    static void begin();
+    static void begin();      // legacy AP/captive mode (unused in v2; kept for ref)
+    static void beginLan();   // v2: always-on control server on the LAN/STA IP
     static void end();
     static void tick();
     static bool running();

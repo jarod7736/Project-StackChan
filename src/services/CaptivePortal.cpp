@@ -101,6 +101,7 @@ AsyncWebServer g_server(80);
 DNSServer      g_dns;
 bool           g_running       = false;
 bool           g_exit_requested = false;
+bool           g_lan_mode       = false;  // true = serve on LAN (no AP/DNS/redirect)
 
 // AsyncWebServer fragments POST bodies; we accumulate manually per route.
 struct PendingBody { String data; };
@@ -325,6 +326,12 @@ void handleExit(AsyncWebServerRequest* req) {
 }
 
 void handleNotFound(AsyncWebServerRequest* req) {
+    // LAN mode: this is the always-on control server, not a captive portal.
+    // Unknown path → plain 404, no redirect.
+    if (g_lan_mode) {
+        req->send(404, "text/plain", "not found");
+        return;
+    }
     // Captive-portal redirect. iOS hits /hotspot-detect.html,
     // Android /generate_204, Windows /connecttest.txt — redirect all
     // to the AP root to trigger the OS-level "sign in to network" UI.
@@ -391,17 +398,38 @@ void CaptivePortal::begin() {
                   WiFi.softAPIP().toString().c_str());
 }
 
+// Start the control web server on the LAN (station) interface. No AP, no
+// DNS catch-all, no captive redirect — just the static UI + JSON APIs at
+// http://stackchan.local/ (or the device IP). Call once WiFi is connected.
+void CaptivePortal::beginLan() {
+    if (g_running) return;
+    g_lan_mode = true;
+    g_exit_requested = false;
+
+    if (!LittleFS.begin(false)) {
+        Serial.println("[Portal] WARN: LittleFS mount failed — web UI unavailable");
+    }
+
+    registerRoutes();
+    g_server.begin();
+    g_running = true;
+
+    Serial.printf("[Portal] LAN control server up — http://%s/  (stackchan.local)\n",
+                  WiFi.localIP().toString().c_str());
+}
+
 void CaptivePortal::end() {
     if (!g_running) return;
-    g_dns.stop();
+    if (!g_lan_mode) g_dns.stop();
     g_server.end();
     g_running = false;
+    g_lan_mode = false;
     Serial.println("[Portal] stopped");
 }
 
 void CaptivePortal::tick() {
     if (!g_running) return;
-    g_dns.processNextRequest();
+    if (!g_lan_mode) g_dns.processNextRequest();
 }
 
 bool CaptivePortal::running()       { return g_running; }
