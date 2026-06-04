@@ -5,7 +5,7 @@
 namespace stkchan {
 
 static const std::string kValidExprs[] = {
-  "neutral", "happy", "sad", "angry", "doubt", "sleepy",
+  "neutral", "happy", "sad", "angry", "doubt", "sleepy", "kiss",
 };
 
 bool isValidExpr(const std::string& tag) {

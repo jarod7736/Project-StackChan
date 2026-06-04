@@ -139,9 +139,9 @@ constexpr uint32_t kSampleRate     = 24000;
 // speaker. OpenAI's `onyx` voice is naturally deep/low-amplitude and
 // the CoreS3 onboard amp has a low ceiling, so even setVolume(100)
 // leaves voice replies barely loud enough for across-the-room hearing.
-// 4.0 lifts the floor noticeably without audible clipping on
-// conversational voice. Raised to 4.0 in Jarvis PR #57.
-constexpr float    kDecoderGain    = 4.0f;
+// Bumped 4.0 → 7.0 because 100% was still too quiet on hardware. TTS
+// voice is low-amplitude so headroom is large; back off if it clips.
+constexpr float    kDecoderGain    = 7.0f;
 
 // Max time AudioPlayer::tick() may spend decoding per main-loop tick.
 // The main loop has ~30-50 ms of other work per iteration (display
