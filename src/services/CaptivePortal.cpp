@@ -396,10 +396,11 @@ void handleNotFound(AsyncWebServerRequest* req) {
 }
 
 void registerRoutes() {
-    // Static UI from LittleFS.
-    g_server.serveStatic("/", LittleFS, "/web/")
-            .setDefaultFile("index.html");
-
+    // API routes FIRST. ESPAsyncWebServer consults handlers in registration
+    // order; registering these before the static catch-all means an /api/*
+    // request matches its handler immediately. (When serveStatic was first,
+    // it stat'd LittleFS for every /api GET, missed, logged an error-level
+    // "does not exist" line, then fell through — harmless but noisy.)
     g_server.on("/api/config", HTTP_GET, handleGetConfig);
     g_server.on("/api/config", HTTP_POST,
                 [](AsyncWebServerRequest* req) {},
@@ -422,6 +423,11 @@ void registerRoutes() {
     g_server.on("/api/control/volume",     HTTP_POST, handleCtrlVolume);
     g_server.on("/api/control/say",        HTTP_POST, handleCtrlSay);
     g_server.on("/api/control/state",      HTTP_GET,  handleCtrlState);
+
+    // Static UI from LittleFS — registered LAST so it only catches non-API
+    // paths and never stat-checks the filesystem for /api/* requests.
+    g_server.serveStatic("/", LittleFS, "/web/")
+            .setDefaultFile("index.html");
 
     g_server.onNotFound(handleNotFound);
 }

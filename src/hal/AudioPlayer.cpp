@@ -44,10 +44,18 @@ public:
 
     bool begin() override { return true; }
 
+    // Capture the gain locally — the base class stores it but it's only
+    // applied if WE multiply samples by it, which is exactly what was
+    // missing before (gain was a silent no-op, so audio was always 1x).
+    bool SetGain(float f) override {
+        gain_ = f;
+        return AudioOutput::SetGain(f);
+    }
+
     bool ConsumeSample(int16_t sample[2]) override {
         if (idx_ < kBufSize) {
-            buf_[bank_][idx_]     = sample[0];
-            buf_[bank_][idx_ + 1] = sample[1];
+            buf_[bank_][idx_]     = amplify(sample[0]);
+            buf_[bank_][idx_ + 1] = amplify(sample[1]);
             idx_ += 2;
             return true;
         }
@@ -70,8 +78,18 @@ public:
     }
 
 private:
+    // Software amplify with hard clamp. Voice TTS is low-amplitude so a
+    // few× boost is well below clipping on most syllables.
+    inline int16_t amplify(int16_t s) const {
+        int32_t v = (int32_t)(s * gain_);
+        if (v >  32767) v =  32767;
+        if (v < -32768) v = -32768;
+        return (int16_t)v;
+    }
+
     m5::Speaker_Class* spk_;
     uint8_t            vch_;
+    float              gain_ = 1.0f;
     // 1536 int16_t = 3 KB per bank — fits in stack/DRAM, small enough that
     // three banks don't threaten the heap, large enough to amortize
     // playRaw() call overhead.
@@ -139,9 +157,11 @@ constexpr uint32_t kSampleRate     = 24000;
 // speaker. OpenAI's `onyx` voice is naturally deep/low-amplitude and
 // the CoreS3 onboard amp has a low ceiling, so even setVolume(100)
 // leaves voice replies barely loud enough for across-the-room hearing.
-// Bumped 4.0 → 7.0 because 100% was still too quiet on hardware. TTS
-// voice is low-amplitude so headroom is large; back off if it clips.
-constexpr float    kDecoderGain    = 7.0f;
+// NOTE: until now this gain was never actually applied (ConsumeSample
+// copied samples raw), so effective gain was 1.0×. Now that amplify()
+// applies it for real, 4.0 = a genuine 4× boost over what shipped before.
+// 7.0 would hard-clip; raise/lower from 4.0 to taste vs distortion.
+constexpr float    kDecoderGain    = 4.0f;
 
 // Max time AudioPlayer::tick() may spend decoding per main-loop tick.
 // The main loop has ~30-50 ms of other work per iteration (display
