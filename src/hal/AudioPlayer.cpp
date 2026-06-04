@@ -181,7 +181,10 @@ AudioPlayer audio;
 
 void AudioPlayer::teardown_track() {
     auto* mp3 = static_cast<AudioGeneratorMP3*>(mp3_);
-    auto* src = static_cast<AudioFileSourceMemory*>(src_);
+    // Delete through the base pointer (virtual dtor) so this works for both
+    // AudioFileSourceMemory and the streaming source (whose dtor closes the
+    // HTTP/TLS client). AudioFileSource has a virtual destructor.
+    auto* src = static_cast<AudioFileSource*>(src_);
     if (mp3 && mp3->isRunning()) mp3->stop();
     if (src) { src->close(); delete src; src_ = nullptr; }
     delete mp3; mp3_ = nullptr;
@@ -290,6 +293,42 @@ bool AudioPlayer::play(const uint8_t* mp3, size_t len) {
     }
     running_ = true;
     Serial.printf("[AudioPlayer] playing %u-byte MP3\n", (unsigned)len);
+    return true;
+}
+
+bool AudioPlayer::playStream(void* sourcePtr) {
+    // Take ownership immediately: on EVERY false return below we free the
+    // source (closing its HTTP/TLS client), so the caller never has to.
+    auto* src = static_cast<AudioFileSource*>(sourcePtr);
+    if (!ok_) {
+        Serial.println("[AudioPlayer] playStream() before begin()");
+        if (src) { src->close(); delete src; }
+        return false;
+    }
+    if (!src) return false;
+
+    teardown_track();
+
+    // The streaming source owns the HTTP/TLS client and reads MP3 bytes as
+    // they arrive. No PSRAM copy — we decode straight off the wire, so
+    // time-to-first-audio is just the first frame, not the whole download.
+    auto* dec = new AudioGeneratorMP3();
+    if (!dec) {
+        src->close();
+        delete src;
+        return false;
+    }
+    src_ = src;
+    mp3_ = dec;
+
+    auto* out = static_cast<AudioOutputM5Speaker*>(out_);
+    if (!dec->begin(src, out)) {
+        Serial.println("[AudioPlayer] stream mp3.begin failed");
+        teardown_track();
+        return false;
+    }
+    running_ = true;
+    Serial.println("[AudioPlayer] streaming playback started");
     return true;
 }
 

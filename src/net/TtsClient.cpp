@@ -1,9 +1,10 @@
 #include "TtsClient.h"
 
+#include <algorithm>
 #include <ArduinoJson.h>
+#include <AudioFileSource.h>
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
-#include <esp_heap_caps.h>
 
 #include "../config.h"
 #include "../hal/AudioPlayer.h"
@@ -18,19 +19,6 @@ constexpr const char* kOpenAiHost     = "api.openai.com";
 constexpr const char* kOpenAiPath     = "/v1/audio/speech";
 constexpr const char* kElevenHost     = "api.elevenlabs.io";
 constexpr const char* kElevenPathBase = "/v1/text-to-speech/";
-
-// Allocate `n` bytes in PSRAM if available, else regular heap. Any buffer
-// >= a couple KB belongs in PSRAM to keep internal SRAM free for stack/DMA.
-uint8_t* psramAlloc(size_t n) {
-    void* p = heap_caps_malloc(n, MALLOC_CAP_SPIRAM);
-    if (p) return reinterpret_cast<uint8_t*>(p);
-    // Fallback: better to allocate from internal heap and squeeze than to
-    // silently return nothing. Log so memory pressure is visible in field
-    // diagnostics — on a healthy CoreS3 PSRAM this should never fire.
-    Serial.printf("[TtsClient] PSRAM alloc %u failed, trying internal heap\n",
-                  (unsigned)n);
-    return reinterpret_cast<uint8_t*>(heap_caps_malloc(n, MALLOC_CAP_8BIT));
-}
 
 // Build the OpenAI /v1/audio/speech request body.
 String buildOpenAiBody(const String& text, const String& voice,
@@ -58,134 +46,109 @@ String buildElevenBody(const String& text, const String& model) {
     return body;
 }
 
-// Download the HTTP response body into a freshly-allocated PSRAM buffer,
-// capped at kMp3MaxBytes. Returns {buf, len} or {nullptr, 0} on failure.
-// Caller is responsible for calling http.end() — this function does NOT.
-struct RawMp3 {
-    uint8_t* buf = nullptr;
-    size_t   len = 0;
-    bool empty() const { return len == 0 || buf == nullptr; }
+// ── Streaming MP3 source ───────────────────────────────────────────────────
+// Owns the HTTP/TLS client and feeds MP3 bytes to the decoder as they arrive,
+// so playback starts on the first frame instead of after the whole download.
+// Lifetime: AudioPlayer::playStream() takes ownership and deletes this on
+// teardown, which closes the connection (~TtsStreamSource → close()).
+class TtsStreamSource : public AudioFileSource {
+public:
+    TtsStreamSource(WiFiClientSecure* tls, HTTPClient* http)
+        : tls_(tls), http_(http) {
+        stream_ = http_ ? http_->getStreamPtr() : nullptr;
+        size_   = http_ ? http_->getSize() : -1;  // -1 = unknown (HTTP/1.0 close)
+    }
+    ~TtsStreamSource() override { close(); }
+
+    bool     open(const char*) override { return stream_ != nullptr; }
+    bool     isOpen() override          { return stream_ != nullptr; }
+    uint32_t getSize() override         { return size_ > 0 ? (uint32_t)size_ : 0x7FFFFFFFu; }
+    uint32_t getPos() override          { return pos_; }
+    bool     seek(int32_t, int) override { return false; }  // no seeking on a live stream
+
+    uint32_t read(void* dst, uint32_t len) override {
+        if (!stream_ || len == 0) return 0;
+        uint8_t* out = static_cast<uint8_t*>(dst);
+        uint32_t got = 0;
+        uint32_t lastByte = millis();
+        while (got < len) {
+            int avail = stream_->available();
+            if (avail > 0) {
+                int n = stream_->readBytes(
+                    out + got, std::min((uint32_t)avail, len - got));
+                if (n > 0) { got += n; lastByte = millis(); }
+            } else {
+                // Clean EOF: HTTP/1.0 server closed and the buffer is drained.
+                if (http_ && !http_->connected() && stream_->available() == 0) break;
+                if (millis() - lastByte > 3000) break;  // stall guard
+                // Don't busy-block the main loop: hand back what we have and
+                // let the decoder ask again next tick. Only wait if we have
+                // nothing at all yet.
+                if (got > 0) break;
+                delay(2);
+            }
+        }
+        pos_ += got;
+        return got;
+    }
+
+    bool close() override {
+        if (http_) { http_->end(); delete http_; http_ = nullptr; }
+        if (tls_)  { delete tls_;  tls_  = nullptr; }
+        stream_ = nullptr;
+        return true;
+    }
+
+private:
+    WiFiClientSecure* tls_    = nullptr;
+    HTTPClient*       http_   = nullptr;
+    Stream*           stream_ = nullptr;
+    int               size_   = -1;
+    uint32_t          pos_    = 0;
 };
 
-RawMp3 downloadBody(HTTPClient& http, int code) {
-    RawMp3 out;
-    if (code < 200 || code >= 300) {
+// Open an authed TTS POST and, on HTTP 200, return a streaming source that
+// owns the HTTP/TLS client. Returns nullptr on any failure (client freed).
+TtsStreamSource* openStream(const String& provider, const String& text,
+                            const String& voice, const String& model,
+                            const String& apiKey) {
+    auto* tls = new WiFiClientSecure();
+    tls->setInsecure();  // cert pinning is Phase 2 (spec risk R1)
+    auto* http = new HTTPClient();
+    http->setTimeout(kTtsTimeoutMs);
+    http->useHTTP10(true);  // HTTP/1.0 → connection-close gives a clean EOF
+
+    const bool eleven = provider.equalsIgnoreCase("eleven") ||
+                        provider.equalsIgnoreCase("elevenlabs");
+    String url = eleven
+        ? String("https://") + kElevenHost + kElevenPathBase + voice
+        : String("https://") + kOpenAiHost + kOpenAiPath;
+
+    if (!http->begin(*tls, url)) {
+        Serial.println("[TtsClient] http.begin failed");
+        delete http; delete tls;
+        return nullptr;
+    }
+    String body;
+    if (eleven) {
+        http->addHeader("xi-api-key", apiKey);
+        body = buildElevenBody(text, model);
+    } else {
+        http->addHeader("Authorization", String("Bearer ") + apiKey);
+        body = buildOpenAiBody(text, voice, model);
+    }
+    http->addHeader("Content-Type", "application/json");
+    http->addHeader("Accept",       "audio/mpeg");
+
+    Serial.printf("[TtsClient] POST %s body=%u chars (streaming)\n",
+                  url.c_str(), (unsigned)body.length());
+    int code = http->POST(body);
+    if (code != 200) {
         Serial.printf("[TtsClient] HTTP %d\n", code);
-        return out;
+        http->end(); delete http; delete tls;
+        return nullptr;
     }
-
-    int contentLen = http.getSize();  // -1 if chunked / unknown
-    size_t cap = kMp3MaxBytes;
-    if (contentLen > 0) {
-        if ((size_t)contentLen > cap) {
-            Serial.printf("[TtsClient] response too large: %d > %u cap\n",
-                          contentLen, (unsigned)cap);
-            return out;
-        }
-        cap = (size_t)contentLen;
-    }
-
-    uint8_t* buf = psramAlloc(cap);
-    if (!buf) {
-        Serial.printf("[TtsClient] PSRAM alloc failed (%u bytes)\n",
-                      (unsigned)cap);
-        Serial.printf("[TtsClient]   free_psram=%u largest_psram_block=%u\n",
-                      (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
-                      (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
-        Serial.printf("[TtsClient]   free_heap=%u largest_heap_block=%u\n",
-                      (unsigned)heap_caps_get_free_size(MALLOC_CAP_8BIT),
-                      (unsigned)heap_caps_get_largest_free_block(MALLOC_CAP_8BIT));
-        return out;
-    }
-
-    WiFiClient* stream = http.getStreamPtr();
-    size_t got = 0;
-    uint32_t lastByte = millis();
-    while (got < cap) {
-        int avail = stream->available();
-        if (avail > 0) {
-            int n = stream->readBytes(buf + got,
-                                      std::min((size_t)avail, cap - got));
-            if (n > 0) {
-                got += n;
-                lastByte = millis();
-            }
-        } else {
-            // No bytes ready: check for clean EOF.
-            if (!http.connected() && stream->available() == 0) break;
-            if (millis() - lastByte > 3000) {
-                Serial.println("[TtsClient] body read stall (>3s)");
-                break;
-            }
-            delay(5);
-        }
-    }
-
-    if (got == 0) {
-        Serial.println("[TtsClient] empty body");
-        free(buf);
-        return out;
-    }
-    Serial.printf("[TtsClient] downloaded %u bytes\n", (unsigned)got);
-    out.buf = buf;
-    out.len = got;
-    return out;
-}
-
-// Synthesize via OpenAI /v1/audio/speech. Returns RawMp3 (caller frees buf).
-RawMp3 synthOpenAi(const String& text, const String& voice,
-                   const String& model, const String& apiKey) {
-    WiFiClientSecure secure;
-    secure.setInsecure();  // cert pinning is Phase 2 (spec risk R1)
-    HTTPClient http;
-    http.setTimeout(kTtsTimeoutMs);
-    http.useHTTP10(true);
-
-    String url = String("https://") + kOpenAiHost + kOpenAiPath;
-    if (!http.begin(secure, url)) {
-        Serial.println("[TtsClient] http.begin failed (openai)");
-        http.end();  // defensive — HTTPClient may have partial state
-        return RawMp3{};
-    }
-    http.addHeader("Authorization", String("Bearer ") + apiKey);
-    http.addHeader("Content-Type",  "application/json");
-    http.addHeader("Accept",        "audio/mpeg");
-
-    String body = buildOpenAiBody(text, voice, model);
-    Serial.printf("[TtsClient] POST %s body=%u chars\n", url.c_str(),
-                  (unsigned)body.length());
-    int code = http.POST(body);
-    RawMp3 out = downloadBody(http, code);
-    http.end();   // every exit path closes the client
-    return out;
-}
-
-// Synthesize via ElevenLabs /v1/text-to-speech/<voice_id>.
-RawMp3 synthEleven(const String& text, const String& voice,
-                   const String& model, const String& apiKey) {
-    WiFiClientSecure secure;
-    secure.setInsecure();
-    HTTPClient http;
-    http.setTimeout(kTtsTimeoutMs);
-    http.useHTTP10(true);
-
-    String url = String("https://") + kElevenHost + kElevenPathBase + voice;
-    if (!http.begin(secure, url)) {
-        Serial.println("[TtsClient] http.begin failed (elevenlabs)");
-        http.end();  // defensive — HTTPClient may have partial state
-        return RawMp3{};
-    }
-    http.addHeader("xi-api-key",   apiKey);
-    http.addHeader("Content-Type", "application/json");
-    http.addHeader("Accept",       "audio/mpeg");
-
-    String body = buildElevenBody(text, model);
-    Serial.printf("[TtsClient] POST %s body=%u chars\n", url.c_str(),
-                  (unsigned)body.length());
-    int code = http.POST(body);
-    RawMp3 out = downloadBody(http, code);
-    http.end();   // every exit path closes the client
-    return out;
+    return new TtsStreamSource(tls, http);
 }
 
 }  // namespace
@@ -208,27 +171,23 @@ void TtsClient::synth(const String& text, std::function<void(bool)> onDone) {
                   provider.c_str(), voice.c_str(), model.c_str(),
                   (unsigned)text.length());
 
-    RawMp3 mp3;
-
+    // Resolve the API key per provider.
+    String apiKey;
     if (provider.equalsIgnoreCase("openai")) {
-        String apiKey = nvs.getString(kNvsOaiKey, "");
+        apiKey = nvs.getString(kNvsOaiKey, "");
         if (apiKey.length() == 0) {
             Serial.println("[TtsClient] no oai_key in NVS");
             onDone(false);
             return;
         }
-        mp3 = synthOpenAi(text, voice, model, apiKey);
-
     } else if (provider.equalsIgnoreCase("eleven") ||
                provider.equalsIgnoreCase("elevenlabs")) {
-        String apiKey = nvs.getString(kNvsElKey, "");
+        apiKey = nvs.getString(kNvsElKey, "");
         if (apiKey.length() == 0) {
             Serial.println("[TtsClient] no el_key in NVS");
             onDone(false);
             return;
         }
-        mp3 = synthEleven(text, voice, model, apiKey);
-
     } else {
         // VOICEVOX and any unknown provider: Phase 2. Log + fail.
         Serial.printf("[TtsClient] unsupported provider \"%s\" (Phase 2)\n",
@@ -237,19 +196,19 @@ void TtsClient::synth(const String& text, std::function<void(bool)> onDone) {
         return;
     }
 
-    if (mp3.empty()) {
-        Serial.println("[TtsClient] synth failed (empty MP3)");
+    // Open the streaming POST. On 200 we get a source that owns the HTTP/TLS
+    // client; the decoder consumes it off the wire (no full download).
+    TtsStreamSource* src = openStream(provider, text, voice, model, apiKey);
+    if (!src) {
+        Serial.println("[TtsClient] synth failed (no stream)");
         onDone(false);
         return;
     }
 
-    // Hand the buffer off to AudioPlayer. play() copies into its own PSRAM
-    // buffer, so we can free ours once the call returns.
-    bool ok = audio.play(mp3.buf, mp3.len);
-    free(mp3.buf);
-
-    if (!ok) {
-        Serial.println("[TtsClient] AudioPlayer::play rejected buffer");
+    // AudioPlayer takes ownership of the source from here (and frees it +
+    // closes the connection on teardown / failure).
+    if (!audio.playStream(src)) {
+        Serial.println("[TtsClient] AudioPlayer::playStream rejected");
         onDone(false);
         return;
     }

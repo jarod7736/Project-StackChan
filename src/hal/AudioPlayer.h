@@ -49,6 +49,13 @@ public:
     // Returns false if not begun, or if the buffer is empty / too large.
     bool play(const uint8_t* mp3, size_t len);
 
+    // Stream playback: takes OWNERSHIP of an AudioFileSource* (passed as
+    // void* to keep ESP8266Audio out of this header). The source feeds MP3
+    // bytes as they arrive over the network; we decode straight off the
+    // wire. On teardown the source is deleted (its dtor closes the HTTP/TLS
+    // client). Returns false if not begun or the decoder fails to start.
+    bool playStream(void* audioFileSource);
+
     // Stop and release the current track. Safe to call when nothing is
     // playing. Does NOT fire the OnDone callback — that fires only on
     // a natural end of playback (or decoder error, so FSM can always advance).
