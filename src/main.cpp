@@ -109,16 +109,16 @@ static void runSerialProvisioning() {
 
 void setup() {
   auto cfg = M5.config();
-  // CoreS3 power-path (AXP2101 BUS_OUT_EN). Default output_power=true puts it in
-  // "USB INPUT / BUS OUTPUT": the AXP boosts the battery out to the Grove/M-Bus
-  // 5V port — which drains the pack and skews the charge/discharge state (the
-  // device reads "low" even on a full battery). We don't power bus modules from
-  // the Core (the servo board has its own 5V), so select "USB INPUT / BUS INPUT"
-  // (BUS_OUT_EN=0): draw and charge from USB-C, don't source the bus.
-  cfg.output_power = false;
+  // KEEP output_power = true (default) on CoreS3. M5Unified's setExtOutput()
+  // here (_core_s3_output in Power_Class.cpp) clears the AW9523 BUS_EN and, with
+  // it, BOOST_EN — and that SY7088 boost is the converter that steps the battery
+  // up to the 5V system rail. Setting output_power=false kills it, so the device
+  // runs only on USB and DIES on battery. (The false "battery low" we saw was the
+  // unreliable AXP2101 fuel-gauge %, fixed separately by voltage-based metering.)
+  cfg.output_power = true;
   M5.begin(cfg);
-  // Ensure the AXP2101 charges the pack (per M5's CoreS3 power example). Default
-  // should be on, but set explicitly. ~0.4C for the 500 mAh cell.
+  // Ensure the AXP2101 charges the pack (per M5's CoreS3 power example).
+  // ~0.4C for the 500 mAh cell.
   M5.Power.setBatteryCharge(true);
   M5.Power.setChargeCurrent(200);
   Serial.begin(115200);
