@@ -10,10 +10,6 @@ class Face {
   void setExpression(const std::string& tag);
   void setMouthOpen(float ratio);          // 0.0 .. 1.0
   void setAutoBlinkEnabled(bool enabled);  // control auto-blink behavior
-
-  // Discreet status readout in the top-left corner: WiFi link + battery.
-  // batteryPct < 0 means "unknown" (icon only). Called throttled from loop().
-  void setStatus(int batteryPct, bool charging, bool wifiConnected);
   std::string currentExpression() const { return currentTag_; }
 
   // Reveal the floating "Menu" button at the bottom of the face screen

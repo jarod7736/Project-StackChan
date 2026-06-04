@@ -40,23 +40,6 @@ constexpr const char* kDefaultTtsVoice  = "nova";
 constexpr const char* kDefaultTtsModel  = "tts-1";
 constexpr int         kDefaultSpkVolume = 230;   // 0-255; 200 was inaudible
 
-// === Battery ===
-// The CoreS3 AXP2101 fuel-gauge percentage (getBatteryLevel) is unreliable —
-// it can read low even on a full pack. We gate the low-battery cue on battery
-// VOLTAGE (a direct ADC read) instead, and derive the displayed % from it.
-constexpr int         kLowBattMv      = 3500;  // warn at/below this battery voltage (mV)
-constexpr int         kLowBattClearMv = 3700;  // re-arm the cue once recovered above this
-constexpr int         kVbusPresentMv  = 4000;  // VBUS above this => on USB/external power
-constexpr const char* kLowBattMsg     = "My battery is low. Please plug me in.";
-
-// Rough LiPo voltage(mV) -> percent for a discreet indicator. -1 if unknown.
-inline int batteryPctFromMv(int mv) {
-    if (mv <= 0)    return -1;
-    if (mv >= 4200) return 100;
-    if (mv <= 3300) return 0;
-    return (int)((long)(mv - 3300) * 100 / (4200 - 3300));
-}
-
 // === Brain agent (oc-personal) ===
 // The oc-personal runner is an OpenAI-compatible endpoint; model "oc-personal"
 // runs the Claude + multi-MCP agent (2ndBrain / Gmail / Calendar).

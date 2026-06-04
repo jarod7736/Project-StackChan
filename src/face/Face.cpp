@@ -28,8 +28,6 @@ lv_obj_t* g_brow_r   = nullptr;
 lv_obj_t* g_mouth    = nullptr;   // lv_line, 7 pts
 lv_obj_t* g_kiss     = nullptr;   // small filled pucker (shown for "kiss")
 lv_obj_t* g_menu_btn = nullptr;
-lv_obj_t* g_stat_wifi = nullptr;  // top-left WiFi glyph
-lv_obj_t* g_stat_batt = nullptr;  // top-left battery glyph + %
 uint32_t  g_menu_btn_show_ms = 0;
 constexpr uint32_t kMenuBtnAutoHideMs = 5000;
 
@@ -263,20 +261,6 @@ void buildStage() {
     lv_obj_set_style_text_font(mlabel, &lv_font_montserrat_14, 0);
     lv_obj_center(mlabel);
 
-    // Discreet status readout, top-left corner (dim so it doesn't fight the
-    // face). WiFi glyph + battery glyph/percentage; updated via setStatus().
-    g_stat_wifi = lv_label_create(root);
-    lv_obj_set_style_text_font(g_stat_wifi, &lv_font_montserrat_14, 0);
-    lv_obj_set_style_text_color(g_stat_wifi, lv_color_hex(0x55606A), 0);
-    lv_obj_align(g_stat_wifi, LV_ALIGN_TOP_LEFT, 6, 5);
-    lv_label_set_text(g_stat_wifi, LV_SYMBOL_WIFI);
-
-    g_stat_batt = lv_label_create(root);
-    lv_obj_set_style_text_font(g_stat_batt, &lv_font_montserrat_14, 0);
-    lv_obj_set_style_text_color(g_stat_batt, lv_color_hex(0x55606A), 0);
-    lv_obj_align(g_stat_batt, LV_ALIGN_TOP_LEFT, 30, 5);
-    lv_label_set_text(g_stat_batt, LV_SYMBOL_BATTERY_FULL);
-
     g_blink_timer = lv_timer_create(blinkTimerCb, 5000, nullptr);
 }
 
@@ -335,32 +319,6 @@ void Face::setMouthOpen(float ratio) {
 
 void Face::setAutoBlinkEnabled(bool enabled) {
     g_auto_blink = enabled;
-}
-
-void Face::setStatus(int batteryPct, bool charging, bool wifiConnected) {
-    if (!g_stat_wifi || !g_stat_batt) return;
-
-    // WiFi: dim green when linked, dim red when not.
-    lv_obj_set_style_text_color(g_stat_wifi,
-        lv_color_hex(wifiConnected ? 0x3A6B4A : 0x6B3A3A), 0);
-
-    // Battery glyph by level (charge bolt while charging).
-    const char* sym = charging        ? LV_SYMBOL_CHARGE
-                    : batteryPct >= 80 ? LV_SYMBOL_BATTERY_FULL
-                    : batteryPct >= 55 ? LV_SYMBOL_BATTERY_3
-                    : batteryPct >= 30 ? LV_SYMBOL_BATTERY_2
-                    : batteryPct >= 10 ? LV_SYMBOL_BATTERY_1
-                                       : LV_SYMBOL_BATTERY_EMPTY;
-    char buf[24];
-    if (batteryPct < 0) snprintf(buf, sizeof buf, "%s", sym);          // unknown
-    else                snprintf(buf, sizeof buf, "%s %d%%", sym, batteryPct);
-    lv_label_set_text(g_stat_batt, buf);
-
-    // Colour: charging green, low red, otherwise dim gray.
-    uint32_t c = 0x55606A;
-    if (charging)                                  c = 0x3A6B4A;
-    else if (batteryPct >= 0 && batteryPct < 15)   c = 0xB05050;
-    lv_obj_set_style_text_color(g_stat_batt, lv_color_hex(c), 0);
 }
 
 bool Face::isMenuButtonVisible() const {
