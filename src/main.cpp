@@ -164,6 +164,16 @@ void loop() {
   face.tick(now);
   wifi.tick();
 
+  // Discreet face status (battery + WiFi), refreshed ~every 2 s. Battery via
+  // the AXP2101 (M5.Power); WiFi from the live link state.
+  static uint32_t s_lastStatusMs = 0;
+  if (now - s_lastStatusMs >= 2000) {
+    s_lastStatusMs = now;
+    face.setStatus(M5.Power.getBatteryLevel(),
+                   (int)M5.Power.isCharging() > 0,
+                   wifi.isConnected());
+  }
+
   // Always-available USB escape hatch: while WiFi is down (e.g. a wrong
   // password was saved and the web UI is unreachable), accept a fresh
   // provisioning line over serial. Reboots on a valid blob.
