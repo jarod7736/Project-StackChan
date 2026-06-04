@@ -61,8 +61,11 @@ from urllib.parse import urljoin
 # Config keys (sent to POST /api/config)
 CONFIG_FIELDS = [
     # key           label                       category   sensitive
-    ("chat_host",   "Chat Host URL",             "chat",    False),
+    ("chat_host",   "Chat Host URL (direct Ollama)", "chat", False),
     ("chat_model",  "Chat Model",                "chat",    False),
+    ("brain_host",  "Brain Agent URL (oc-personal)", "brain", False),
+    ("brain_key",   "Brain Bearer Token",        "brain",   True),
+    ("brain_kw",    "Brain Keywords CSV (optional)", "brain", False),
     ("stt_url",     "STT Endpoint URL",          "stt",     False),
     ("stt_model",   "STT Model",                 "stt",     False),
     ("oai_key",     "OpenAI API Key",            "stt",     True),

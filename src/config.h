@@ -16,8 +16,11 @@ constexpr const char* kNvsSsid2     = "ssid2";
 constexpr const char* kNvsPsk2      = "psk2";
 constexpr const char* kNvsSsid3     = "ssid3";
 constexpr const char* kNvsPsk3      = "psk3";
-constexpr const char* kNvsChatHost  = "chat_host";
+constexpr const char* kNvsChatHost  = "chat_host";   // casual LLM (direct Ollama)
 constexpr const char* kNvsChatModel = "chat_model";
+constexpr const char* kNvsBrainHost = "brain_host";  // oc-personal agent runner
+constexpr const char* kNvsBrainKey  = "brain_key";   // bearer for the agent (optional)
+constexpr const char* kNvsBrainKw   = "brain_kw";    // optional CSV stem override
 constexpr const char* kNvsSttUrl    = "stt_url";
 constexpr const char* kNvsSttModel  = "stt_model";
 constexpr const char* kNvsOaiKey    = "oai_key";
@@ -36,6 +39,19 @@ constexpr const char* kDefaultTtsProv   = "openai";
 constexpr const char* kDefaultTtsVoice  = "nova";
 constexpr const char* kDefaultTtsModel  = "tts-1";
 constexpr int         kDefaultSpkVolume = 230;   // 0-255; 200 was inaudible
+
+// === Brain agent (oc-personal) ===
+// The oc-personal runner is an OpenAI-compatible endpoint; model "oc-personal"
+// runs the Claude + multi-MCP agent (2ndBrain / Gmail / Calendar).
+constexpr const char* kDefaultBrainHost = "http://192.168.1.178:8080";
+constexpr const char* kOcPersonalModel  = "oc-personal";
+// Utterances containing any of these stems (case-insensitive substring) route
+// to the agent instead of the local casual model. NVS "brain_kw" (CSV) overrides.
+constexpr const char* kBrainStems[] = {
+    "2nd brain", "second brain", "calendar", "schedule", "agenda",
+    "my email", "inbox", "my notes",
+};
+constexpr size_t kBrainStemCount = sizeof(kBrainStems) / sizeof(kBrainStems[0]);
 
 // === NTP / Time ===
 // POSIX TZ string (US Central with DST). Override at provisioning time if needed.
@@ -60,6 +76,7 @@ constexpr size_t   kMp3MaxBytes      = 256 * 1024;  // PSRAM cap (PR #55 in Jarv
 
 // === Conversation ===
 constexpr size_t kHistoryTurns = 6;
+constexpr int    kChatMaxTokens = 512;  // cap casual replies (agent is capped server-side)
 
 // === User-facing error strings ===
 // Routed via TtsClient → AudioPlayer; never returned silently.

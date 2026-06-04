@@ -9,6 +9,7 @@ enum class State : uint8_t {
   LISTENING,
   THINKING_STT,
   THINKING_CHAT,
+  THINKING_CHAT_WAIT,   // background chat task in flight; face keeps animating
   SPEAKING_TTS,
   SPEAKING,
   ERROR,

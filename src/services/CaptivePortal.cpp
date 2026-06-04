@@ -54,11 +54,19 @@ constexpr EnumOption kTtsProvOptions[] = {
 // 17 spec keys — WiFi 3-slot keys are handled separately via /api/wifi/*.
 // The non-WiFi keys are managed here via the schema-driven /api/config.
 constexpr ConfigField kSchema[] = {
-    // ── Chat ────────────────────────────────────────────────────────────
+    // ── Chat (casual, direct local Ollama) ──────────────────────────────
     {"chat_host",  "Chat Host URL",   "chat",    FieldType::String,
-     false, "",                         nullptr, 0},
+     false, "http://192.168.1.108:11434", nullptr, 0},
     {"chat_model", "Chat Model",      "chat",    FieldType::String,
      false, kDefaultChatModel,           nullptr, 0},
+
+    // ── Brain (oc-personal agent: 2ndBrain / email / calendar) ──────────
+    {"brain_host", "Brain Agent URL", "brain",   FieldType::String,
+     false, kDefaultBrainHost,          nullptr, 0},
+    {"brain_key",  "Brain Bearer Token","brain", FieldType::String,
+     true,  "",                         nullptr, 0},
+    {"brain_kw",   "Brain Keywords (CSV, optional)", "brain", FieldType::String,
+     false, "",                         nullptr, 0},
 
     // ── STT ─────────────────────────────────────────────────────────────
     {"stt_url",    "STT Endpoint URL","stt",     FieldType::String,

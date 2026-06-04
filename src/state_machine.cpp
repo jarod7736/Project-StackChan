@@ -13,6 +13,10 @@
 #include "net/ChatClient.h"
 #include "net/TtsClient.h"
 #include "net/ConnectivityTier.h"
+#include "services/NvsStore.h"
+
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 namespace stkchan {
 
@@ -24,6 +28,48 @@ static uint32_t g_pressStartMs  = 0;
 static String   g_transcript;
 static String   g_replyRaw;
 static ParsedReply g_parsed;
+
+// Background chat task: chat.send() can block 5–30 s (esp. the oc-personal
+// agent), so we run it off the main loop to keep the LVGL face animating.
+static TaskHandle_t  g_chatTask  = nullptr;
+static volatile bool g_chatDone  = false;
+static volatile bool g_chatOk    = false;
+static bool          g_brainMode = false;
+
+// Case-insensitive substring scan of the transcript for any brain stem.
+// Routes brain/email/calendar utterances to the oc-personal agent.
+static bool transcriptWantsBrain(const String& transcript) {
+  String low = transcript;
+  low.toLowerCase();
+  // Optional NVS CSV override of the default stem list.
+  String csv = nvs.getString(kNvsBrainKw, "");
+  if (csv.length()) {
+    csv.toLowerCase();
+    int start = 0;
+    while (start < (int)csv.length()) {
+      int comma = csv.indexOf(',', start);
+      if (comma < 0) comma = csv.length();
+      String stem = csv.substring(start, comma); stem.trim();
+      if (stem.length() && low.indexOf(stem) >= 0) return true;
+      start = comma + 1;
+    }
+    return false;
+  }
+  for (size_t i = 0; i < kBrainStemCount; ++i) {
+    if (low.indexOf(kBrainStems[i]) >= 0) return true;
+  }
+  return false;
+}
+
+// One-shot worker: runs the (blocking) chat call, then flags completion.
+// g_transcript / g_brainMode are set by the FSM before spawn and not touched
+// again until g_chatDone is observed, so no extra locking is needed.
+static void chatTaskFn(void* /*arg*/) {
+  g_chatOk = chat.send(g_transcript, g_replyRaw, g_brainMode);
+  g_chatDone = true;   // publish last
+  g_chatTask = nullptr;
+  vTaskDelete(nullptr);
+}
 
 State currentState() { return g_state; }
 
@@ -143,8 +189,36 @@ void tickStateMachine(uint32_t nowMs) {
     }
 
     case State::THINKING_CHAT: {
-      // Display already shows "thinking..." from LISTENING transition.
-      if (!chat.send(g_transcript, g_replyRaw)) {
+      // Route: brain-stem utterances → oc-personal agent, else casual local.
+      g_brainMode = transcriptWantsBrain(g_transcript);
+      Serial.printf("[FSM] chat route: %s\n", g_brainMode ? "BRAIN (oc-personal)" : "casual");
+      if (g_brainMode) {
+        face.setExpression("doubt");           // "hmm, let me check…"
+        display.showStatusOverlay("checking...", 0x07E0);
+      }
+      // Run the (blocking, possibly slow) chat call on a background task so
+      // the LVGL face + idle motion keep animating during the wait. 16 KB
+      // stack covers mbedTLS if brain_host is https. Pin to core 0 (the
+      // Arduino loop runs on core 1).
+      g_chatDone = false;
+      g_chatOk   = false;
+      if (xTaskCreatePinnedToCore(chatTaskFn, "chat", 16384, nullptr, 1,
+                                  &g_chatTask, 0) != pdPASS) {
+        Serial.println("[FSM] chat task spawn failed");
+        enterError(kErrChatFailed, "doubt");
+        break;
+      }
+      motion.resumeIdle();   // keep the head alive while we wait
+      g_state = State::THINKING_CHAT_WAIT;
+      break;
+    }
+
+    case State::THINKING_CHAT_WAIT: {
+      // Worker is running chat.send() off-core; the loop keeps ticking LVGL +
+      // idle motion so the face animates. Just watch for completion.
+      if (!g_chatDone) break;
+      g_chatDone = false;
+      if (!g_chatOk) {
         enterError(kErrChatFailed, "doubt");
         break;
       }

@@ -27,16 +27,20 @@ void ConnectivityTier::tick(uint32_t nowMs) {
 bool ConnectivityTier::probeBackend_() {
   String host = nvs.getString(kNvsChatHost, "");
   if (host.isEmpty()) return false;
+  // Backend-agnostic reachability: GET the host root. Any HTTP status (200,
+  // 404, 405 ...) means TCP+HTTP is alive — works for both Ollama (/api/tags
+  // is Ollama-only) and any OpenAI-compatible server. We only gate the casual
+  // chat host here; the brain host is checked implicitly when a brain query runs.
+  while (host.endsWith("/")) host.remove(host.length() - 1);
 
   HTTPClient http;
-  // Ollama exposes /api/tags for a cheap reachability probe.
-  String url = host + "/api/tags";
   http.setConnectTimeout(1500);
   http.setTimeout(2000);
-  if (!http.begin(url)) { http.end(); return false; }
+  http.useHTTP10(true);
+  if (!http.begin(host)) { http.end(); return false; }
   int code = http.GET();
   http.end();
-  return code > 0 && code < 500;
+  return code > 0;   // got any HTTP response → reachable
 }
 
 }  // namespace stkchan
