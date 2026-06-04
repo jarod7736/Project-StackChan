@@ -287,8 +287,9 @@ async function refreshStatus() {
     const wifiSub = body.wifi
       ? `${body.ip || ''}${body.rssi != null ? `  ${body.rssi} dBm` : ''}`.trim()
       : null;
+    const battSub = body.battery_mv ? `${body.battery_mv} mV` : null;
     const cells = [
-      { k: 'Battery',    v: battV },
+      { k: 'Battery',    v: battV, sub: battSub },
       { k: 'WiFi',       v: wifiV, sub: wifiSub },
       { k: 'Mode',       v: body.mode || '—' },
       { k: 'AP SSID',    v: body.ap_ssid || '—' },

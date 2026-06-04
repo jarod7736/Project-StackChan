@@ -329,8 +329,12 @@ void handleStatus(AsyncWebServerRequest* req) {
     doc["mode"]        = "config";
     doc["ap_ssid"]     = WiFi.softAPSSID();
     doc["ap_clients"]  = WiFi.softAPgetStationNum();
-    doc["battery_pct"] = M5.Power.getBatteryLevel();        // 0-100, -1 unknown
-    doc["charging"]    = ((int)M5.Power.isCharging() > 0);
+    int vbat = M5.Power.getBatteryVoltage();                // mV (reliable)
+    int vbus = M5.Power.getVBUSVoltage();                   // mV
+    doc["battery_pct"] = batteryPctFromMv(vbat);            // derived from voltage
+    doc["battery_mv"]  = vbat;
+    doc["vbus_mv"]     = vbus;
+    doc["charging"]    = (vbus >= kVbusPresentMv) || ((int)M5.Power.isCharging() == 1);
     bool wifiUp        = (WiFi.status() == WL_CONNECTED);
     doc["wifi"]        = wifiUp;
     if (wifiUp) {

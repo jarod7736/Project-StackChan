@@ -166,20 +166,30 @@ void loop() {
 
   // Discreet face status (battery + WiFi), refreshed ~every 2 s. Battery via
   // the AXP2101 (M5.Power); WiFi from the live link state.
-  static uint32_t s_lastStatusMs = 0;
+  static uint32_t s_lastStatusMs  = 0;
   static bool     s_lowBattWarned = false;
+  static int      s_lowStreak     = 0;
   if (now - s_lastStatusMs >= 2000) {
     s_lastStatusMs = now;
-    int  batt = M5.Power.getBatteryLevel();        // 0-100, -1 = unknown
-    bool chg  = ((int)M5.Power.isCharging() > 0);
-    face.setStatus(batt, chg, wifi.isConnected());
+    // Voltage-based: the AXP2101 fuel-gauge % is unreliable on CoreS3, so we
+    // use battery voltage (direct ADC) and treat high VBUS as "on USB power".
+    int  vbat = M5.Power.getBatteryVoltage();      // mV
+    int  vbus = M5.Power.getVBUSVoltage();         // mV
+    bool ext  = (vbus >= kVbusPresentMv) || ((int)M5.Power.isCharging() == 1);
+    int  pct  = batteryPctFromMv(vbat);
+    face.setStatus(pct, ext, wifi.isConnected());
+    Serial.printf("[PWR] vbat=%dmV vbus=%dmV chg=%d pct=%d ext=%d\n",
+                  vbat, vbus, (int)M5.Power.isCharging(), pct, (int)ext);
 
-    // One-shot spoken low-battery cue (hysteresis; only while discharging).
-    if (chg || batt < 0 || batt >= kLowBattClearPct) {
-      s_lowBattWarned = false;                     // re-arm once recovered/charging
-    } else if (!s_lowBattWarned && batt <= kLowBattWarnPct) {
-      // requestExternalSpeak only fires from IDLE; if busy it returns false and
-      // we retry next tick, so the warning is delivered once the device is free.
+    // One-shot spoken low-battery cue: gated on external power, debounced
+    // (~10 s sustained) + 30 s boot grace to avoid AXP settling false alarms.
+    bool lowNow = (!ext && vbat > 0 && vbat <= kLowBattMv);
+    s_lowStreak = lowNow ? s_lowStreak + 1 : 0;
+    if (ext || vbat <= 0 || vbat >= kLowBattClearMv) {
+      s_lowBattWarned = false;                     // re-arm once recovered/on USB
+    }
+    if (now >= 30000 && !s_lowBattWarned && s_lowStreak >= 5) {
+      // requestExternalSpeak only fires from IDLE; retries next tick if busy.
       if (requestExternalSpeak(String(kLowBattMsg), "sad")) s_lowBattWarned = true;
     }
   }
