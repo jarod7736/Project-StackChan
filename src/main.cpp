@@ -117,6 +117,10 @@ void setup() {
   // (BUS_OUT_EN=0): draw and charge from USB-C, don't source the bus.
   cfg.output_power = false;
   M5.begin(cfg);
+  // Ensure the AXP2101 charges the pack (per M5's CoreS3 power example). Default
+  // should be on, but set explicitly. ~0.4C for the 500 mAh cell.
+  M5.Power.setBatteryCharge(true);
+  M5.Power.setChargeCurrent(200);
   Serial.begin(115200);
   delay(200);
   Serial.println("\n=== Stack-chan v1 boot ===");
