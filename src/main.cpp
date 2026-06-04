@@ -109,6 +109,13 @@ static void runSerialProvisioning() {
 
 void setup() {
   auto cfg = M5.config();
+  // CoreS3 power-path (AXP2101 BUS_OUT_EN). Default output_power=true puts it in
+  // "USB INPUT / BUS OUTPUT": the AXP boosts the battery out to the Grove/M-Bus
+  // 5V port — which drains the pack and skews the charge/discharge state (the
+  // device reads "low" even on a full battery). We don't power bus modules from
+  // the Core (the servo board has its own 5V), so select "USB INPUT / BUS INPUT"
+  // (BUS_OUT_EN=0): draw and charge from USB-C, don't source the bus.
+  cfg.output_power = false;
   M5.begin(cfg);
   Serial.begin(115200);
   delay(200);
