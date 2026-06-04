@@ -4,6 +4,7 @@
 #include <DNSServer.h>
 #include <ESPAsyncWebServer.h>
 #include <LittleFS.h>
+#include <M5Unified.h>
 #include <WiFi.h>
 
 #include "../config.h"
@@ -328,6 +329,14 @@ void handleStatus(AsyncWebServerRequest* req) {
     doc["mode"]        = "config";
     doc["ap_ssid"]     = WiFi.softAPSSID();
     doc["ap_clients"]  = WiFi.softAPgetStationNum();
+    doc["battery_pct"] = M5.Power.getBatteryLevel();        // 0-100, -1 unknown
+    doc["charging"]    = ((int)M5.Power.isCharging() > 0);
+    bool wifiUp        = (WiFi.status() == WL_CONNECTED);
+    doc["wifi"]        = wifiUp;
+    if (wifiUp) {
+        doc["ip"]   = WiFi.localIP().toString();
+        doc["rssi"] = WiFi.RSSI();
+    }
     String out; serializeJson(doc, out);
     req->send(200, "application/json", out);
 }

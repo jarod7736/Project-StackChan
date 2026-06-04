@@ -40,6 +40,11 @@ constexpr const char* kDefaultTtsVoice  = "nova";
 constexpr const char* kDefaultTtsModel  = "tts-1";
 constexpr int         kDefaultSpkVolume = 230;   // 0-255; 200 was inaudible
 
+// === Battery ===
+constexpr int         kLowBattWarnPct  = 15;  // speak a low-battery cue at/below this
+constexpr int         kLowBattClearPct = 25;  // re-arm the cue once recovered above this
+constexpr const char* kLowBattMsg      = "My battery is low. Please plug me in.";
+
 // === Brain agent (oc-personal) ===
 // The oc-personal runner is an OpenAI-compatible endpoint; model "oc-personal"
 // runs the Claude + multi-MCP agent (2ndBrain / Gmail / Calendar).

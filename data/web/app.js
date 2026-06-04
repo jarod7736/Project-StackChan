@@ -280,7 +280,16 @@ async function refreshStatus() {
     }
     const grid = $('#statusGrid');
     grid.innerHTML = '';
+    const battV = body.battery_pct == null || body.battery_pct < 0
+      ? '—'
+      : `${body.battery_pct}%${body.charging ? ' ⚡' : ''}`;
+    const wifiV = body.wifi ? 'connected' : 'offline';
+    const wifiSub = body.wifi
+      ? `${body.ip || ''}${body.rssi != null ? `  ${body.rssi} dBm` : ''}`.trim()
+      : null;
     const cells = [
+      { k: 'Battery',    v: battV },
+      { k: 'WiFi',       v: wifiV, sub: wifiSub },
       { k: 'Mode',       v: body.mode || '—' },
       { k: 'AP SSID',    v: body.ap_ssid || '—' },
       { k: 'Clients',    v: String(body.ap_clients ?? 0) },
