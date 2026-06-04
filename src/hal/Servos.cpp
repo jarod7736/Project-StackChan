@@ -1,11 +1,21 @@
 #include "hal/Servos.h"
+#include <Wire.h>
 #include <Adafruit_PWMServoDriver.h>
 
 namespace stkchan {
 
 Servos servos;
 
-static Adafruit_PWMServoDriver g_pwm = Adafruit_PWMServoDriver(0x40);
+// M5Stack Module13.2 Servo2 on CoreS3. Per the official compatibility chart
+// the module's I2C is a FIXED connection to the M-Bus:
+//   I2C_SDA → G43,  I2C_SCL → G44.
+// We drive it on the secondary I2C peripheral (Wire1) so it doesn't collide
+// with the CoreS3's internal Wire (display/touch/power on G11/G12). The
+// PCA9685 sits at 0x40 (to confirm against the module datasheet on arrival).
+constexpr int kServoSDA  = 43;
+constexpr int kServoSCL  = 44;
+constexpr uint8_t kServoAddr = 0x40;
+static Adafruit_PWMServoDriver g_pwm = Adafruit_PWMServoDriver(kServoAddr, Wire1);
 
 // PCA9685 PWM range for SG90: ~150 .. 600 counts at 50 Hz.
 static int degToPwm(int deg) {
@@ -15,9 +25,10 @@ static int degToPwm(int deg) {
 }
 
 bool Servos::begin() {
-  Wire.begin();
+  // Secondary I2C bus on the Servo2 module's fixed M-Bus pins.
+  Wire1.begin(kServoSDA, kServoSCL, 400000);
   if (!g_pwm.begin()) {
-    Serial.println("ERR: PCA9685 init failed");
+    Serial.println("ERR: PCA9685 init failed (SERVO2 module not detected on Wire1 G43/G44)");
     return false;
   }
   g_pwm.setOscillatorFrequency(27000000);
