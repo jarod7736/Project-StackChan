@@ -109,13 +109,16 @@ static void runSerialProvisioning() {
 
 void setup() {
   auto cfg = M5.config();
-  // KEEP output_power = true (default) on CoreS3. M5Unified's setExtOutput()
-  // here (_core_s3_output in Power_Class.cpp) clears the AW9523 BUS_EN and, with
-  // it, BOOST_EN — and that SY7088 boost is the converter that steps the battery
-  // up to the 5V system rail. Setting output_power=false kills it, so the device
-  // runs only on USB and DIES on battery. (The false "battery low" we saw was the
-  // unreliable AXP2101 fuel-gauge %, fixed separately by voltage-based metering.)
-  cfg.output_power = true;
+  // CoreS3 power: output_power = false for this build. Verified on hardware:
+  //   false -> runs on USB-only (no battery) AND on a (correct-polarity) battery.
+  //   true  -> on bare USB with NO battery the rail shuts down after a few
+  //            seconds/minutes (the bus boost it enables has no battery to draw
+  //            from). The boost only sources 5V OUT to the Grove/M-Bus, which we
+  //            don't use (PCA9685 is externally powered) — so false is correct.
+  // NB: the earlier "dies on battery" was a REVERSED-polarity aftermarket cell,
+  // NOT this flag; and the false "battery low" was the unreliable fuel-gauge %,
+  // already fixed by voltage-based metering. (Reverts the mistaken 9309aaf.)
+  cfg.output_power = false;
   M5.begin(cfg);
   // Ensure the AXP2101 charges the pack (per M5's CoreS3 power example).
   // ~0.4C for the 500 mAh cell.
