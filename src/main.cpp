@@ -109,7 +109,20 @@ static void runSerialProvisioning() {
 
 void setup() {
   auto cfg = M5.config();
+  // CoreS3 power: keep output_power at the DEFAULT (true) — the config that ran
+  // for days in the DinBase. output_power turned out to be a RED HERRING in the
+  // long power saga: the real cause of the brownouts/choppy-audio/latch-offs was
+  // simply NO BATTERY in the circuit (the CoreS3's 500 mAh cell lives in the
+  // DinBase, which was disconnected when the board was pulled for the build).
+  // With a battery present, default true is correct; do NOT set it false (that
+  // was based on a wrong theory). The false "battery low" was the unreliable
+  // getBatteryLevel() %, fixed below by voltage-based metering.
+  cfg.output_power = true;
   M5.begin(cfg);
+  // Ensure the AXP2101 charges the pack (per M5's CoreS3 power example).
+  // ~0.4C for the 500 mAh cell.
+  M5.Power.setBatteryCharge(true);
+  M5.Power.setChargeCurrent(200);
   Serial.begin(115200);
   delay(200);
   Serial.println("\n=== Stack-chan v1 boot ===");
@@ -163,6 +176,36 @@ void loop() {
   lvglDisplay.tick();
   face.tick(now);
   wifi.tick();
+
+  // Discreet face status (battery + WiFi), refreshed ~every 2 s. Battery via
+  // the AXP2101 (M5.Power); WiFi from the live link state.
+  static uint32_t s_lastStatusMs  = 0;
+  static bool     s_lowBattWarned = false;
+  static int      s_lowStreak     = 0;
+  if (now - s_lastStatusMs >= 2000) {
+    s_lastStatusMs = now;
+    // Voltage-based: the AXP2101 fuel-gauge % is unreliable on CoreS3, so we
+    // use battery voltage (direct ADC) and treat high VBUS as "on USB power".
+    int  vbat = M5.Power.getBatteryVoltage();      // mV
+    int  vbus = M5.Power.getVBUSVoltage();         // mV
+    bool ext  = (vbus >= kVbusPresentMv) || ((int)M5.Power.isCharging() == 1);
+    int  pct  = batteryPctFromMv(vbat);
+    face.setStatus(pct, ext, wifi.isConnected());
+    Serial.printf("[PWR] vbat=%dmV vbus=%dmV chg=%d pct=%d ext=%d\n",
+                  vbat, vbus, (int)M5.Power.isCharging(), pct, (int)ext);
+
+    // One-shot spoken low-battery cue: gated on external power, debounced
+    // (~10 s sustained) + 30 s boot grace to avoid AXP settling false alarms.
+    bool lowNow = (!ext && vbat > 0 && vbat <= kLowBattMv);
+    s_lowStreak = lowNow ? s_lowStreak + 1 : 0;
+    if (ext || vbat <= 0 || vbat >= kLowBattClearMv) {
+      s_lowBattWarned = false;                     // re-arm once recovered/on USB
+    }
+    if (now >= 30000 && !s_lowBattWarned && s_lowStreak >= 5) {
+      // requestExternalSpeak only fires from IDLE; retries next tick if busy.
+      if (requestExternalSpeak(String(kLowBattMsg), "sad")) s_lowBattWarned = true;
+    }
+  }
 
   // Always-available USB escape hatch: while WiFi is down (e.g. a wrong
   // password was saved and the web UI is unreachable), accept a fresh
