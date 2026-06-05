@@ -189,10 +189,13 @@ void loop() {
     // heap/psram included to catch a per-voice-turn memory leak (the crash
     // happens after a couple interactions). If free heap / min-free-heap trends
     // DOWN each turn, that's a leak; getMinFreeHeap is the all-time low-water.
-    Serial.printf("[PWR] vbat=%dmV vbus=%dmV chg=%d pct=%d ext=%d | heap=%u min=%u psram=%u\n",
+    // maxblk = largest contiguous free block. If it shrinks toward ~40 KB while
+    // heap stays high, that's TLS FRAGMENTATION (each HTTPS handshake — STT+TTS,
+    // 2/turn — grabs ~40 KB then frees it fragmented) → next handshake fails.
+    Serial.printf("[PWR] vbat=%dmV vbus=%dmV chg=%d pct=%d ext=%d | heap=%u min=%u maxblk=%u psram=%u\n",
                   vbat, vbus, (int)M5.Power.isCharging(), pct, (int)ext,
                   (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getMinFreeHeap(),
-                  (unsigned)ESP.getFreePsram());
+                  (unsigned)ESP.getMaxAllocHeap(), (unsigned)ESP.getFreePsram());
 
     // One-shot spoken low-battery cue: gated on external power, debounced
     // (~10 s sustained) + 30 s boot grace to avoid AXP settling false alarms.
