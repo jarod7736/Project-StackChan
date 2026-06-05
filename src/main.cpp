@@ -108,14 +108,11 @@ static void runSerialProvisioning() {
 }
 
 void setup() {
-  // CoreS3 power: output_power=false for BATTERYLESS USB operation. Hardware
-  // data: with M5's default (true) and NO battery, the bare Core runs only a few
-  // minutes then dies (the bus boost wants a battery); with a battery, true is
-  // stable for days. Since we're running on USB with no battery (the DinBase that
-  // holds it is removed/faulty), false runs the system straight from USB. Revert
-  // to default true once a good battery is connected.
+  // CoreS3 power: M5 factory defaults (output_power defaults true) — matching the
+  // STOCK demo firmware, which runs stably on this hardware (DinBase + Core are
+  // fine). The crashes are in our firmware (or the servo-test wiring), not the
+  // board; this clean config is the apples-to-apples baseline vs stock.
   auto cfg = M5.config();
-  cfg.output_power = false;
   M5.begin(cfg);
   Serial.begin(115200);
   delay(200);
