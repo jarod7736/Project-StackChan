@@ -210,7 +210,10 @@ void loop() {
     // use battery voltage (direct ADC) and treat high VBUS as "on USB power".
     int  vbat = M5.Power.getBatteryVoltage();      // mV
     int  vbus = M5.Power.getVBUSVoltage();         // mV
-    int  ibat = M5.Power.getBatteryCurrent();      // mA, signed (<0 = discharging)
+    // NB: M5.Power.getBatteryCurrent() is hardcoded to 0 on CoreS3 (the AXP2101
+    // has no battery-current ADC), so we log AXP DIE TEMPERATURE instead — it
+    // reads live (reg 0x3C) and directly tests the DIE_OVER_TEMP shutdown path.
+    int  dieC = (int)M5.Power.Axp2101.getInternalTemperature();
     bool ext  = (vbus >= kVbusPresentMv) || ((int)M5.Power.isCharging() == 1);
     int  pct  = batteryPctFromMv(vbat);
     face.setStatus(pct, ext, wifi.isConnected());
@@ -220,8 +223,8 @@ void loop() {
     // maxblk = largest contiguous free block. If it shrinks toward ~40 KB while
     // heap stays high, that's TLS FRAGMENTATION (each HTTPS handshake — STT+TTS,
     // 2/turn — grabs ~40 KB then frees it fragmented) → next handshake fails.
-    Serial.printf("[PWR] vbat=%dmV vbus=%dmV ibat=%dmA chg=%d pct=%d ext=%d | heap=%u min=%u maxblk=%u psram=%u\n",
-                  vbat, vbus, ibat, (int)M5.Power.isCharging(), pct, (int)ext,
+    Serial.printf("[PWR] vbat=%dmV vbus=%dmV die=%dC chg=%d pct=%d ext=%d | heap=%u min=%u maxblk=%u psram=%u\n",
+                  vbat, vbus, dieC, (int)M5.Power.isCharging(), pct, (int)ext,
                   (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getMinFreeHeap(),
                   (unsigned)ESP.getMaxAllocHeap(), (unsigned)ESP.getFreePsram());
     // Live PMIC read: the AXP latches warning/fault bits (low-V, over-current,
