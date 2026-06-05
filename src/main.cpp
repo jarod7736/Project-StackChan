@@ -224,6 +224,11 @@ void loop() {
                   vbat, vbus, ibat, (int)M5.Power.isCharging(), pct, (int)ext,
                   (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getMinFreeHeap(),
                   (unsigned)ESP.getMaxAllocHeap(), (unsigned)ESP.getFreePsram());
+    // Live PMIC read: the AXP latches warning/fault bits (low-V, over-current,
+    // thermal) the instant they trip, so the LAST [AXP] line before serial dies
+    // captures the fault that preceded the cut — even a sub-ms current spike a
+    // voltage poll would miss. Survives the "unplug USB to recover" workflow.
+    dumpAxpFault("live");
 
     // One-shot spoken low-battery cue: gated on external power, debounced
     // (~10 s sustained) + 30 s boot grace to avoid AXP settling false alarms.
