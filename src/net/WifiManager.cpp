@@ -22,6 +22,18 @@ static void kickNtpSync() {
                   stkchan::kTimezoneDefault);
 }
 
+// ── WiFi TX-power cap (brownout mitigation) ────────────────────────────────
+// Default ESP32-S3 TX power is ~19.5 dBm; each TX burst is the largest, spikiest
+// current draw on the chip. Captured crash data points to an AXP2101 protection
+// LATCH on a peak-current spike (vbat/heap healthy at death; recovers only by
+// disconnecting the DinBase battery). Cutting TX power shrinks that spike and is
+// the canonical ESP32 brownout fix — 11 dBm is ample for a home LAN. Must be
+// re-applied after every (re)connect (the driver resets it to default on assoc).
+static void applyTxPowerCap() {
+    WiFi.setTxPower(WIFI_POWER_11dBm);
+    Serial.printf("[WIFI] TX power cap -> %d (0.25dBm units)\n", (int)WiFi.getTxPower());
+}
+
 // ── Slot-priority connect loop (Jarvis PR #20) ────────────────────────────
 // Reads up to 3 SSID/PSK slots from NVS (ssid1/psk1 … ssid3/psk3).
 // Each slot gets kPerSlotTimeoutMs before we move on; the total is also
@@ -98,6 +110,7 @@ static bool connectInSlotOrder(uint32_t connectTimeoutMs) {
                           WiFi.channel(),
                           (unsigned)i + 1,
                           WiFi.macAddress().c_str());
+            applyTxPowerCap();
             kickNtpSync();
 
             // Register mDNS hostname so OtaService (T7) and other hosts can
@@ -152,6 +165,7 @@ void WifiManager::tick() {
     } else if (!s_was_connected && now) {
         Serial.printf("[WIFI] Reconnected. ip=%s\n",
                       WiFi.localIP().toString().c_str());
+        applyTxPowerCap();
         kickNtpSync();
         // ESPmDNS does not re-register on auto-reconnect; without this,
         // stackchan.local stops resolving and OTA breaks after any drop.

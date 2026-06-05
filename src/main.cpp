@@ -147,7 +147,18 @@ void setup() {
   Serial.printf("[BOOT] reset reason: %d\n", (int)esp_reset_reason());
   // PMIC forensics: shows what the AXP latched before the LAST power-off. If
   // the previous death was a PMIC cut, the IRQ/status bits here say why.
+  // (NOTE: clearing the latch by switching the DinBase battery OFF resets the
+  // AXP domain, so this boot read may show clean — the live trail is primary.)
   dumpAxpFault("boot");
+  // One-shot config read: M5.begin never raises the AXP input limits, so they
+  // sit at hardware defaults. If the VBUS input-current limit (0x16) is low,
+  // load spikes pull from the battery FET and trip its over-current latch —
+  // exactly the observed failure. Read-only; tells us if raising it is the next
+  // lever should the TX-power cap not fully fix it.
+  Serial.printf("[AXP cfg] inVlim(0x15)=0x%02X inIlim(0x16)=0x%02X chgcur(0x62)=0x%02X\n",
+                M5.In_I2C.readRegister8(0x34, 0x15, 400000),
+                M5.In_I2C.readRegister8(0x34, 0x16, 400000),
+                M5.In_I2C.readRegister8(0x34, 0x62, 400000));
 
   if (!nvs.begin()) {
     Serial.println("WARN: NVS open failed");
