@@ -117,6 +117,10 @@ void setup() {
   Serial.begin(115200);
   delay(200);
   Serial.println("\n=== Stack-chan v1 boot ===");
+  // Why did we last reset? Prints on the NEXT boot (survives the USB-CDC drop),
+  // so a crash that reboots reveals its cause. 1=POWERON 2=EXT 3=SW 4=PANIC
+  // 5=INT_WDT 6=TASK_WDT 7=WDT 8=DEEPSLEEP 9=BROWNOUT.
+  Serial.printf("[BOOT] reset reason: %d\n", (int)esp_reset_reason());
 
   if (!nvs.begin()) {
     Serial.println("WARN: NVS open failed");
@@ -182,8 +186,13 @@ void loop() {
     bool ext  = (vbus >= kVbusPresentMv) || ((int)M5.Power.isCharging() == 1);
     int  pct  = batteryPctFromMv(vbat);
     face.setStatus(pct, ext, wifi.isConnected());
-    Serial.printf("[PWR] vbat=%dmV vbus=%dmV chg=%d pct=%d ext=%d\n",
-                  vbat, vbus, (int)M5.Power.isCharging(), pct, (int)ext);
+    // heap/psram included to catch a per-voice-turn memory leak (the crash
+    // happens after a couple interactions). If free heap / min-free-heap trends
+    // DOWN each turn, that's a leak; getMinFreeHeap is the all-time low-water.
+    Serial.printf("[PWR] vbat=%dmV vbus=%dmV chg=%d pct=%d ext=%d | heap=%u min=%u psram=%u\n",
+                  vbat, vbus, (int)M5.Power.isCharging(), pct, (int)ext,
+                  (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getMinFreeHeap(),
+                  (unsigned)ESP.getFreePsram());
 
     // One-shot spoken low-battery cue: gated on external power, debounced
     // (~10 s sustained) + 30 s boot grace to avoid AXP settling false alarms.
