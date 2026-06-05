@@ -190,6 +190,7 @@ void setup() {
   controlBridge.begin();   // queue for web → main-loop control commands
 
   wifi.begin();
+#if !STKCHAN_SOAK_MINIMAL
   connectivity.begin();
 
   // v2: bring up the always-on LAN control server once WiFi is connected.
@@ -197,6 +198,9 @@ void setup() {
   if (wifi.isConnected()) {
     portal.beginLan();
   }
+#else
+  Serial.println("[SOAK] minimal mode: web server / mDNS / OTA / probe disabled");
+#endif
 
   initStateMachine();
 }
@@ -264,6 +268,7 @@ void loop() {
     pollSerialProvisioning();
   }
 
+#if !STKCHAN_SOAK_MINIMAL
   // T7: OTA — initialize once WiFi connects (ota.tick() is a no-op until begin())
   if (!ota_begun && wifi.isConnected()) {
     ota.begin();
@@ -280,6 +285,9 @@ void loop() {
   }
 
   connectivity.tick(now);
+#else
+  (void)ota_begun;  // unused in soak mode
+#endif
   motion.tick(now);
   controlBridge.tick();   // apply queued web-control commands on this task
 

@@ -5,6 +5,14 @@
 #include <stddef.h>
 #include <stdint.h>
 
+// ── Diagnostic soak toggle ─────────────────────────────────────────────────
+// 1 = skip the always-on network services (AsyncTCP web server, mDNS, OTA
+// listener, the 30 s connectivity probe) to isolate the AXP2101 power-off.
+// WiFi STA still connects (same as the OEM/other stable firmwares) and the
+// face + [PWR]/[AXP] diagnostics still run — so this is a clean "WiFi on but
+// no extra network stack" idle-soak. Set back to 0 to restore full function.
+#define STKCHAN_SOAK_MINIMAL 1
+
 namespace stkchan {
 
 // === NVS ===

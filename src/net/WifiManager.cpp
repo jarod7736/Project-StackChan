@@ -113,11 +113,13 @@ static bool connectInSlotOrder(uint32_t connectTimeoutMs) {
             applyTxPowerCap();
             kickNtpSync();
 
+#if !STKCHAN_SOAK_MINIMAL
             // Register mDNS hostname so OtaService (T7) and other hosts can
             // reach the device as stackchan.local on the LAN.
             if (MDNS.begin("stackchan")) {
                 Serial.println("[WIFI] mDNS: stackchan.local");
             }
+#endif
 
             return true;
         }
@@ -167,11 +169,13 @@ void WifiManager::tick() {
                       WiFi.localIP().toString().c_str());
         applyTxPowerCap();
         kickNtpSync();
+#if !STKCHAN_SOAK_MINIMAL
         // ESPmDNS does not re-register on auto-reconnect; without this,
         // stackchan.local stops resolving and OTA breaks after any drop.
         if (MDNS.begin("stackchan")) {
             Serial.println("[WIFI] mDNS re-registered: stackchan.local");
         }
+#endif
     }
     s_was_connected = now;
 }
