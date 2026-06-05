@@ -109,15 +109,14 @@ static void runSerialProvisioning() {
 
 void setup() {
   auto cfg = M5.config();
-  // CoreS3 power: keep output_power at the DEFAULT (true) — the config that ran
-  // for days in the DinBase. output_power turned out to be a RED HERRING in the
-  // long power saga: the real cause of the brownouts/choppy-audio/latch-offs was
-  // simply NO BATTERY in the circuit (the CoreS3's 500 mAh cell lives in the
-  // DinBase, which was disconnected when the board was pulled for the build).
-  // With a battery present, default true is correct; do NOT set it false (that
-  // was based on a wrong theory). The false "battery low" was the unreliable
-  // getBatteryLevel() %, fixed below by voltage-based metering.
-  cfg.output_power = true;
+  // CoreS3 power: output_power = false. With true, the Core needs a healthy
+  // battery in the loop or it destabilizes on USB and shuts down after a while.
+  // The DinBase battery is currently OUT of the circuit (its switch won't
+  // power-on), so we run the system straight from USB with output_power=false —
+  // stable on USB whether or not a battery is present. Revert to true (default)
+  // once a reliable battery is reconnected. (Charging below still works either
+  // way — it's the AXP charger, independent of this bus-output flag.)
+  cfg.output_power = false;
   M5.begin(cfg);
   // Ensure the AXP2101 charges the pack (per M5's CoreS3 power example).
   // ~0.4C for the 500 mAh cell.
