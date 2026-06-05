@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <ArduinoJson.h>
-#include <AudioFileSource.h>
 #include <HTTPClient.h>
 #include <WiFiClientSecure.h>
 
@@ -46,72 +45,26 @@ String buildElevenBody(const String& text, const String& model) {
     return body;
 }
 
-// ── Streaming MP3 source ───────────────────────────────────────────────────
-// Owns the HTTP/TLS client and feeds MP3 bytes to the decoder as they arrive,
-// so playback starts on the first frame instead of after the whole download.
-// Lifetime: AudioPlayer::playStream() takes ownership and deletes this on
-// teardown, which closes the connection (~TtsStreamSource → close()).
-class TtsStreamSource : public AudioFileSource {
-public:
-    TtsStreamSource(WiFiClientSecure* tls, HTTPClient* http)
-        : tls_(tls), http_(http) {
-        stream_ = http_ ? http_->getStreamPtr() : nullptr;
-        size_   = http_ ? http_->getSize() : -1;  // -1 = unknown (HTTP/1.0 close)
-    }
-    ~TtsStreamSource() override { close(); }
-
-    bool     open(const char*) override { return stream_ != nullptr; }
-    bool     isOpen() override          { return stream_ != nullptr; }
-    uint32_t getSize() override         { return size_ > 0 ? (uint32_t)size_ : 0x7FFFFFFFu; }
-    uint32_t getPos() override          { return pos_; }
-    bool     seek(int32_t, int) override { return false; }  // no seeking on a live stream
-
-    uint32_t read(void* dst, uint32_t len) override {
-        if (!stream_ || len == 0) return 0;
-        uint8_t* out = static_cast<uint8_t*>(dst);
-        uint32_t got = 0;
-        uint32_t lastByte = millis();
-        while (got < len) {
-            int avail = stream_->available();
-            if (avail > 0) {
-                int n = stream_->readBytes(
-                    out + got, std::min((uint32_t)avail, len - got));
-                if (n > 0) { got += n; lastByte = millis(); }
-            } else {
-                // Clean EOF: HTTP/1.0 server closed and the buffer is drained.
-                if (http_ && !http_->connected() && stream_->available() == 0) break;
-                if (millis() - lastByte > 3000) break;  // stall guard
-                // Don't busy-block the main loop: hand back what we have and
-                // let the decoder ask again next tick. Only wait if we have
-                // nothing at all yet.
-                if (got > 0) break;
-                delay(2);
-            }
-        }
-        pos_ += got;
-        return got;
-    }
-
-    bool close() override {
-        if (http_) { http_->end(); delete http_; http_ = nullptr; }
-        if (tls_)  { delete tls_;  tls_  = nullptr; }
-        stream_ = nullptr;
-        return true;
-    }
-
-private:
-    WiFiClientSecure* tls_    = nullptr;
-    HTTPClient*       http_   = nullptr;
-    Stream*           stream_ = nullptr;
-    int               size_   = -1;
-    uint32_t          pos_    = 0;
-};
-
-// Open an authed TTS POST and, on HTTP 200, return a streaming source that
-// owns the HTTP/TLS client. Returns nullptr on any failure (client freed).
-TtsStreamSource* openStream(const String& provider, const String& text,
-                            const String& voice, const String& model,
-                            const String& apiKey) {
+// ── Buffered MP3 fetch ─────────────────────────────────────────────────────
+// Download the ENTIRE MP3 into a PSRAM buffer, then close the connection
+// BEFORE playback. This is deliberately buffered, not streamed:
+//
+//   The streamed path held the HTTPS/TLS connection open and decoded MP3 off
+//   the wire during playback — so WiFi-RX + TLS-decrypt ran concurrently with
+//   the audio amp + decoder for the whole track. That concurrent current peak
+//   tripped the AXP2101 battery-path over-current protection: the device
+//   powered off right at "track done" (recoverable only by disconnecting the
+//   DinBase battery). Heavy WiFi *without* audio (STT/chat) never crashed it;
+//   only WiFi *during* audio did. Downloading first, then playing, separates
+//   the two current peaks so neither window hits the trip threshold. It also
+//   eliminates on-the-wire decode starvation (the choppy-audio symptom).
+//
+// Returns a ps_malloc'd buffer (caller frees) + length in *outLen, or nullptr
+// on any failure. Honours the http.end()-on-every-exit-path invariant.
+uint8_t* fetchMp3ToPsram(const String& provider, const String& text,
+                         const String& voice, const String& model,
+                         const String& apiKey, size_t* outLen) {
+    *outLen = 0;
     auto* tls = new WiFiClientSecure();
     tls->setInsecure();  // cert pinning is Phase 2 (spec risk R1)
     auto* http = new HTTPClient();
@@ -140,7 +93,7 @@ TtsStreamSource* openStream(const String& provider, const String& text,
     http->addHeader("Content-Type", "application/json");
     http->addHeader("Accept",       "audio/mpeg");
 
-    Serial.printf("[TtsClient] POST %s body=%u chars (streaming)\n",
+    Serial.printf("[TtsClient] POST %s body=%u chars (buffered)\n",
                   url.c_str(), (unsigned)body.length());
     int code = http->POST(body);
     if (code != 200) {
@@ -148,7 +101,50 @@ TtsStreamSource* openStream(const String& provider, const String& text,
         http->end(); delete http; delete tls;
         return nullptr;
     }
-    return new TtsStreamSource(tls, http);
+
+    // Pull the whole response into PSRAM (cap at kMp3MaxBytes), then close.
+    uint8_t* buf = static_cast<uint8_t*>(ps_malloc(stkchan::kMp3MaxBytes));
+    if (!buf) {
+        Serial.println("[TtsClient] ps_malloc failed");
+        http->end(); delete http; delete tls;
+        return nullptr;
+    }
+    Stream*  stream   = http->getStreamPtr();
+    size_t   total    = 0;
+    uint32_t lastByte = millis();
+    for (;;) {
+        int avail = stream ? stream->available() : 0;
+        if (avail > 0) {
+            size_t room = stkchan::kMp3MaxBytes - total;
+            if (room == 0) {
+                Serial.printf("[TtsClient] response exceeds %u B cap — truncated\n",
+                              (unsigned)stkchan::kMp3MaxBytes);
+                break;
+            }
+            int n = stream->readBytes(buf + total,
+                                      std::min((size_t)avail, room));
+            if (n > 0) { total += n; lastByte = millis(); }
+        } else {
+            // Clean EOF: HTTP/1.0 server closed and the buffer is drained.
+            if (!http->connected() && (!stream || stream->available() == 0)) break;
+            if (millis() - lastByte > 3000) {            // stall guard
+                Serial.println("[TtsClient] download stalled");
+                break;
+            }
+            delay(2);
+        }
+    }
+    http->end(); delete http; delete tls;
+
+    if (total == 0) {
+        Serial.println("[TtsClient] empty MP3 response");
+        free(buf);
+        return nullptr;
+    }
+    Serial.printf("[TtsClient] downloaded %u B MP3, connection closed\n",
+                  (unsigned)total);
+    *outLen = total;
+    return buf;
 }
 
 }  // namespace
@@ -196,19 +192,25 @@ void TtsClient::synth(const String& text, std::function<void(bool)> onDone) {
         return;
     }
 
-    // Open the streaming POST. On 200 we get a source that owns the HTTP/TLS
-    // client; the decoder consumes it off the wire (no full download).
-    TtsStreamSource* src = openStream(provider, text, voice, model, apiKey);
-    if (!src) {
-        Serial.println("[TtsClient] synth failed (no stream)");
+    // Download the full MP3 to PSRAM and CLOSE the connection before playing,
+    // so WiFi-RX and the audio amp never peak at the same time (see
+    // fetchMp3ToPsram). This is the fix for the "powers off at track done"
+    // AXP over-current latch — and for the choppy audio.
+    size_t   mp3Len = 0;
+    uint8_t* mp3    = fetchMp3ToPsram(provider, text, voice, model, apiKey, &mp3Len);
+    if (!mp3) {
+        Serial.println("[TtsClient] synth failed (no audio)");
         onDone(false);
         return;
     }
 
-    // AudioPlayer takes ownership of the source from here (and frees it +
-    // closes the connection on teardown / failure).
-    if (!audio.playStream(src)) {
-        Serial.println("[TtsClient] AudioPlayer::playStream rejected");
+    // Connection is now closed. Play from PSRAM — no network during audio.
+    // AudioPlayer::play() copies the buffer into its own PSRAM, so we free
+    // our download buffer immediately after.
+    bool ok = audio.play(mp3, mp3Len);
+    free(mp3);
+    if (!ok) {
+        Serial.println("[TtsClient] AudioPlayer::play rejected");
         onDone(false);
         return;
     }
