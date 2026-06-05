@@ -6,14 +6,17 @@ namespace stkchan {
 
 Servos servos;
 
-// M5Stack Module13.2 Servo2 on CoreS3. Per the official compatibility chart
-// the module's I2C is a FIXED connection to the M-Bus:
-//   I2C_SDA → G43,  I2C_SCL → G44.
-// We drive it on the secondary I2C peripheral (Wire1) so it doesn't collide
-// with the CoreS3's internal Wire (display/touch/power on G11/G12). The
-// PCA9685 sits at 0x40 (to confirm against the module datasheet on arrival).
-constexpr int kServoSDA  = 43;
-constexpr int kServoSCL  = 44;
+// PCA9685 servo driver on CoreS3 via PORT C (G17/G18). The M-Bus is occupied by
+// the DinBase (which holds the battery), so the original M-Bus pins (G43/G44)
+// aren't reachable — we solder the PCA's I2C to Port C instead. ESP32-S3 routes
+// I2C to any GPIO, so we run it on the secondary peripheral (Wire1) to keep off
+// the CoreS3's internal Wire (display/touch/power/codecs on G11/G12 — note the
+// ES7210 mic codec is ALSO 0x40 there, so the PCA must stay on its own bus).
+//   PCA SDA → G17 (Port C),  PCA SCL → G18 (Port C)
+//   PCA VCC → 3V3 (NOT the Grove 5V — keeps the bus 3.3V-safe), GND common.
+// PCA9685 at default address 0x40.
+constexpr int kServoSDA  = 17;   // Port C
+constexpr int kServoSCL  = 18;   // Port C
 constexpr uint8_t kServoAddr = 0x40;
 static Adafruit_PWMServoDriver g_pwm = Adafruit_PWMServoDriver(kServoAddr, Wire1);
 
@@ -25,10 +28,10 @@ static int degToPwm(int deg) {
 }
 
 bool Servos::begin() {
-  // Secondary I2C bus on the Servo2 module's fixed M-Bus pins.
+  // Secondary I2C bus on Port C (G17/G18).
   Wire1.begin(kServoSDA, kServoSCL, 400000);
   if (!g_pwm.begin()) {
-    Serial.println("ERR: PCA9685 init failed (SERVO2 module not detected on Wire1 G43/G44)");
+    Serial.println("ERR: PCA9685 init failed (not detected on Wire1 Port C G17/G18 @0x40)");
     return false;
   }
   g_pwm.setOscillatorFrequency(27000000);
