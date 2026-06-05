@@ -108,11 +108,14 @@ static void runSerialProvisioning() {
 }
 
 void setup() {
-  // Power: M5Unified FACTORY DEFAULTS — no output_power override, no charge
-  // overrides. The power troubles traced to hardware (a faulty DinBase / the
-  // board), not to these settings, so run the AXP2101 exactly as M5 configures
-  // it out of the box. (cfg.output_power defaults to true in M5Unified.)
+  // CoreS3 power: output_power=false for BATTERYLESS USB operation. Hardware
+  // data: with M5's default (true) and NO battery, the bare Core runs only a few
+  // minutes then dies (the bus boost wants a battery); with a battery, true is
+  // stable for days. Since we're running on USB with no battery (the DinBase that
+  // holds it is removed/faulty), false runs the system straight from USB. Revert
+  // to default true once a good battery is connected.
   auto cfg = M5.config();
+  cfg.output_power = false;
   M5.begin(cfg);
   Serial.begin(115200);
   delay(200);
