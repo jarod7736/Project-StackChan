@@ -108,20 +108,12 @@ static void runSerialProvisioning() {
 }
 
 void setup() {
+  // Power: M5Unified FACTORY DEFAULTS — no output_power override, no charge
+  // overrides. The power troubles traced to hardware (a faulty DinBase / the
+  // board), not to these settings, so run the AXP2101 exactly as M5 configures
+  // it out of the box. (cfg.output_power defaults to true in M5Unified.)
   auto cfg = M5.config();
-  // CoreS3 power: output_power = false. With true, the Core needs a healthy
-  // battery in the loop or it destabilizes on USB and shuts down after a while.
-  // The DinBase battery is currently OUT of the circuit (its switch won't
-  // power-on), so we run the system straight from USB with output_power=false —
-  // stable on USB whether or not a battery is present. Revert to true (default)
-  // once a reliable battery is reconnected. (Charging below still works either
-  // way — it's the AXP charger, independent of this bus-output flag.)
-  cfg.output_power = false;
   M5.begin(cfg);
-  // Ensure the AXP2101 charges the pack (per M5's CoreS3 power example).
-  // ~0.4C for the 500 mAh cell.
-  M5.Power.setBatteryCharge(true);
-  M5.Power.setChargeCurrent(200);
   Serial.begin(115200);
   delay(200);
   Serial.println("\n=== Stack-chan v1 boot ===");
