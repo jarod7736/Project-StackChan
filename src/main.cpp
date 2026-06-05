@@ -107,6 +107,30 @@ static void runSerialProvisioning() {
   }
 }
 
+// ── AXP2101 power-fault forensics (read-only) ──────────────────────────────
+// The crash signature — "screen black, stays OFF, no serial, no reboot" — is
+// the AXP2101 PMIC latching a rail OFF. A CPU panic / watchdog / brownout
+// DETECTOR would reboot and print (reset reason 4/5/6/9); we see neither, so
+// esp_reset_reason() is blind to it (a manual power-on just reads POWERON=1).
+// The AXP's own registers live in its always-on domain and PERSIST across the
+// off period as long as VBUS or BAT stays connected — so reading them on the
+// next boot reveals WHY it cut power. 0x00/0x01 = live PMU status (input
+// current-limit / thermal-throttle / charge state); 0x48-0x4A = latched IRQ
+// flags (over/under-temp, low-V warnings, key press) recording what fired.
+// Pure I2C reads on the internal bus (AXP @0x34) — nothing here alters power.
+// NOTE: to keep these flags valid after a crash, recover with the POWER BUTTON
+// (leave USB/battery connected) — yanking all power resets the AXP domain.
+static void dumpAxpFault(const char* when) {
+  constexpr uint8_t kAxp = 0x34;
+  uint8_t s1 = M5.In_I2C.readRegister8(kAxp, 0x00, 400000);
+  uint8_t s2 = M5.In_I2C.readRegister8(kAxp, 0x01, 400000);
+  uint8_t i0 = M5.In_I2C.readRegister8(kAxp, 0x48, 400000);
+  uint8_t i1 = M5.In_I2C.readRegister8(kAxp, 0x49, 400000);
+  uint8_t i2 = M5.In_I2C.readRegister8(kAxp, 0x4A, 400000);
+  Serial.printf("[AXP %s] status1=0x%02X status2=0x%02X irq=0x%02X/0x%02X/0x%02X\n",
+                when, s1, s2, i0, i1, i2);
+}
+
 void setup() {
   // CoreS3 power: M5 factory defaults (output_power defaults true) — matching the
   // STOCK demo firmware, which runs stably on this hardware (DinBase + Core are
@@ -121,6 +145,9 @@ void setup() {
   // so a crash that reboots reveals its cause. 1=POWERON 2=EXT 3=SW 4=PANIC
   // 5=INT_WDT 6=TASK_WDT 7=WDT 8=DEEPSLEEP 9=BROWNOUT.
   Serial.printf("[BOOT] reset reason: %d\n", (int)esp_reset_reason());
+  // PMIC forensics: shows what the AXP latched before the LAST power-off. If
+  // the previous death was a PMIC cut, the IRQ/status bits here say why.
+  dumpAxpFault("boot");
 
   if (!nvs.begin()) {
     Serial.println("WARN: NVS open failed");
@@ -183,6 +210,7 @@ void loop() {
     // use battery voltage (direct ADC) and treat high VBUS as "on USB power".
     int  vbat = M5.Power.getBatteryVoltage();      // mV
     int  vbus = M5.Power.getVBUSVoltage();         // mV
+    int  ibat = M5.Power.getBatteryCurrent();      // mA, signed (<0 = discharging)
     bool ext  = (vbus >= kVbusPresentMv) || ((int)M5.Power.isCharging() == 1);
     int  pct  = batteryPctFromMv(vbat);
     face.setStatus(pct, ext, wifi.isConnected());
@@ -192,8 +220,8 @@ void loop() {
     // maxblk = largest contiguous free block. If it shrinks toward ~40 KB while
     // heap stays high, that's TLS FRAGMENTATION (each HTTPS handshake — STT+TTS,
     // 2/turn — grabs ~40 KB then frees it fragmented) → next handshake fails.
-    Serial.printf("[PWR] vbat=%dmV vbus=%dmV chg=%d pct=%d ext=%d | heap=%u min=%u maxblk=%u psram=%u\n",
-                  vbat, vbus, (int)M5.Power.isCharging(), pct, (int)ext,
+    Serial.printf("[PWR] vbat=%dmV vbus=%dmV ibat=%dmA chg=%d pct=%d ext=%d | heap=%u min=%u maxblk=%u psram=%u\n",
+                  vbat, vbus, ibat, (int)M5.Power.isCharging(), pct, (int)ext,
                   (unsigned)ESP.getFreeHeap(), (unsigned)ESP.getMinFreeHeap(),
                   (unsigned)ESP.getMaxAllocHeap(), (unsigned)ESP.getFreePsram());
 
