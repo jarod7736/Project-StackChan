@@ -20,6 +20,12 @@
 // trigger is in our app code (add it back one piece at a time, battery on).
 #define STKCHAN_BARE_WIFI 1
 
+// Bisection on top of the bare-WiFi baseline (which ran all night clean). Add ONE
+// subsystem at a time; whichever makes it trip is the culprit. Audio first — the
+// fastest deaths were during voice, and audio.begin() turns on the AW88298 amp
+// rail (ALDO3) and leaves it on. 1 = also init audio + beep every 15 s.
+#define STKCHAN_BARE_AUDIO 1
+
 namespace stkchan {
 
 // === NVS ===

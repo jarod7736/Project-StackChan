@@ -160,12 +160,19 @@ void setup() {
     Serial.printf("[BARE] connected=%d ip=%s\n",
                   WiFi.status() == WL_CONNECTED,
                   WiFi.localIP().toString().c_str());
-    uint32_t last = 0;
+#if STKCHAN_BARE_AUDIO
+    audio.begin();   // turns on the AW88298 amp rail (ALDO3) and leaves it on
+    Serial.println("[BARE] +AUDIO: amp enabled, beeping every 15s");
+    const char* kLabel = "BARE+AUDIO";
+#else
+    const char* kLabel = "BARE WIFI";
+#endif
+    uint32_t last = 0, lastTone = 0;
     for (;;) {
       if (millis() - last >= 1000) {
         last = millis();
         M5.Display.setCursor(8, 8);
-        M5.Display.printf("BARE WIFI\nup %lus   \nwifi %d   ",
+        M5.Display.printf("%s\nup %lus   \nwifi %d   ", kLabel,
                           (unsigned long)(millis() / 1000),
                           (int)(WiFi.status() == WL_CONNECTED));
         Serial.printf("[BARE] up=%lus wifi=%d heap=%u\n",
@@ -173,6 +180,9 @@ void setup() {
                       (int)(WiFi.status() == WL_CONNECTED),
                       (unsigned)ESP.getFreeHeap());
       }
+#if STKCHAN_BARE_AUDIO
+      if (millis() - lastTone >= 15000) { lastTone = millis(); M5.Speaker.tone(1200, 150); }
+#endif
       delay(10);
     }
   }
