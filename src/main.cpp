@@ -161,13 +161,18 @@ void setup() {
                   WiFi.status() == WL_CONNECTED,
                   WiFi.localIP().toString().c_str());
 #if STKCHAN_BARE_AUDIO
-    audio.begin();   // turns on the AW88298 amp rail (ALDO3) and leaves it on
-    Serial.println("[BARE] +AUDIO: amp enabled, beeping every 15s");
-    const char* kLabel = "BARE+AUDIO";
+    // Sub-step 2a: enable the AW88298 amp rail (ALDO3) and HOLD it on, idle,
+    // SILENTLY. Tests whether merely powering the amp rail continuously trips
+    // the AXP — separate from playback current draw (sub-step 2b). No beep:
+    // a 150 ms blip is a poor proxy for multi-second TTS draw anyway, and the
+    // silent idle test is the cleaner first cut.
+    audio.begin();
+    Serial.println("[BARE] +AUDIO: amp rail (ALDO3) ON, idle, silent");
+    const char* kLabel = "AMP-ON idle";
 #else
     const char* kLabel = "BARE WIFI";
 #endif
-    uint32_t last = 0, lastTone = 0;
+    uint32_t last = 0;
     for (;;) {
       if (millis() - last >= 1000) {
         last = millis();
@@ -180,9 +185,6 @@ void setup() {
                       (int)(WiFi.status() == WL_CONNECTED),
                       (unsigned)ESP.getFreeHeap());
       }
-#if STKCHAN_BARE_AUDIO
-      if (millis() - lastTone >= 15000) { lastTone = millis(); M5.Speaker.tone(1200, 150); }
-#endif
       delay(10);
     }
   }
