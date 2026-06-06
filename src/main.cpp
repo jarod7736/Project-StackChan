@@ -2,6 +2,7 @@
 // See docs/superpowers/specs/2026-06-02-stackchan-design.md
 #include <Arduino.h>
 #include <M5CoreS3.h>
+#include <WiFi.h>
 
 #include <ArduinoJson.h>
 
@@ -132,6 +133,51 @@ static void dumpAxpFault(const char* when) {
 }
 
 void setup() {
+#if STKCHAN_BARE_WIFI
+  // ── Bare WiFi isolation test (no app) ──────────────────────────────────────
+  // M5.begin (factory-default power) + WiFi STA + a minimal uptime loop. NO
+  // audio, LVGL face, servos, motion, FSM, or diagnostics — mirrors the proven-
+  // good OpenClaw continuous-WiFi load. The screen shows incrementing uptime
+  // (alive); it goes black if the AXP cuts power. Trips here -> the unit's WiFi
+  // power path (no app-code fix helps). Runs indefinitely -> the trigger is in
+  // OUR app code, added back one piece at a time. Loops forever; the real app
+  // below never runs. Set STKCHAN_BARE_WIFI 0 to restore.
+  {
+    auto cfg = M5.config();          // factory-default power (output_power=true)
+    M5.begin(cfg);
+    Serial.begin(115200);
+    delay(200);
+    Serial.println("\n=== BARE WIFI TEST (no app) ===");
+    nvs.begin();
+    M5.Display.setTextSize(2);
+    M5.Display.setTextColor(0xFFFF, 0x0000);
+    M5.Display.fillScreen(0x0000);
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(nvs.getString(kNvsSsid1, "").c_str(),
+               nvs.getString(kNvsPsk1, "").c_str());
+    uint32_t t0 = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - t0 < 20000) delay(200);
+    Serial.printf("[BARE] connected=%d ip=%s\n",
+                  WiFi.status() == WL_CONNECTED,
+                  WiFi.localIP().toString().c_str());
+    uint32_t last = 0;
+    for (;;) {
+      if (millis() - last >= 1000) {
+        last = millis();
+        M5.Display.setCursor(8, 8);
+        M5.Display.printf("BARE WIFI\nup %lus   \nwifi %d   ",
+                          (unsigned long)(millis() / 1000),
+                          (int)(WiFi.status() == WL_CONNECTED));
+        Serial.printf("[BARE] up=%lus wifi=%d heap=%u\n",
+                      (unsigned long)(millis() / 1000),
+                      (int)(WiFi.status() == WL_CONNECTED),
+                      (unsigned)ESP.getFreeHeap());
+      }
+      delay(10);
+    }
+  }
+#endif
+
   // CoreS3 power: DISABLE the 5V bus-boost (output_power). Evidence: identical
   // firmware died in ~3 min on a strong charger but ran ~2 h on a weak computer
   // USB port. A stronger supply dying FASTER rules out brownout/marginal-supply

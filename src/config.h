@@ -13,6 +13,13 @@
 // no extra network stack" idle-soak. Set back to 0 to restore full function.
 #define STKCHAN_SOAK_MINIMAL 1
 
+// 1 = bare WiFi isolation test: M5.begin (factory-default power) + WiFi STA + a
+// minimal on-screen uptime loop. NO app at all — no audio, LVGL face, servos,
+// motion, FSM, or diagnostics. Mirrors the proven-good OpenClaw continuous-WiFi
+// load. Trips here -> the unit's WiFi power path; runs indefinitely -> the
+// trigger is in our app code (add it back one piece at a time, battery on).
+#define STKCHAN_BARE_WIFI 1
+
 namespace stkchan {
 
 // === NVS ===
