@@ -26,6 +26,11 @@
 #include "state_machine.h"
 #include "app/ControlBridge.h"
 
+#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_DECODE
+#include <AudioFileSourcePROGMEM.h>   // ESP8266Audio: stream MP3 from flash, no copy
+#include "diag/diag_clip_mp3.h"
+#endif
+
 using namespace stkchan;
 
 static bool    g_pressedLast = false;
@@ -167,7 +172,15 @@ void setup() {
     // a 150 ms blip is a poor proxy for multi-second TTS draw anyway, and the
     // silent idle test is the cleaner first cut.
     audio.begin();
-  #if STKCHAN_AUDIO_PLAYBACK
+  #if STKCHAN_AUDIO_DECODE
+    // Sub-step 2c: real STREAMING MP3 decode path at AUDIBLE volume. 230/255 —
+    // config.h notes 200 was sub-audible, so this is also the first FULL-current
+    // amp test (2b ran at 200). Re-asserted before each play().
+    M5.Speaker.setVolume(230);
+    Serial.printf("[BARE] +AUDIO: amp ON + STREAM-DECODE %u-byte clip from flash every 3min\n",
+                  (unsigned)kDiagClipMp3Len);
+    const char* kLabel = "AMP+DECODE";
+  #elif STKCHAN_AUDIO_PLAYBACK
     // Sub-step 2b: drive real playback current. Set a solid volume so the amp
     // actually sources current into the speaker (default can be sub-audible
     // after a begin cycle — see feedback-m5unified-speaker-volume).
@@ -194,7 +207,23 @@ void setup() {
                       (int)(WiFi.status() == WL_CONNECTED),
                       (unsigned)ESP.getFreeHeap());
       }
-#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_PLAYBACK
+#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_DECODE
+      // Sub-step 2c: every 3 min STREAM-decode the embedded clip via the real
+      // ESP8266Audio path (decoder CPU + I2S amp drive), read incrementally off
+      // flash (AudioFileSourcePROGMEM) — NO full-buffer PSRAM copy. tick() pumps
+      // the decoder each iteration and tears the track down at end-of-stream, so
+      // isPlaying() drops and we re-arm. Network/STT/LVGL/FSM stay out.
+      audio.tick();
+      if (!audio.isPlaying() && millis() - lastTone >= 180000) {
+        lastTone = millis();
+        M5.Speaker.setVolume(230);  // re-assert: a begin/teardown cycle can reset it
+        // playStream() takes ownership and deletes the source on teardown.
+        AudioFileSource* src = new AudioFileSourcePROGMEM(kDiagClipMp3, kDiagClipMp3Len);
+        if (!audio.playStream(src)) {
+          Serial.println("[BARE] +AUDIO: stream-decode playStream() FAILED");
+        }
+      }
+#elif STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_PLAYBACK
       // Synthetic "TTS phrase" every 3 min: a run of short speech-band tones
       // with inter-syllable gaps. Mimics the BURSTY current envelope of real
       // speech — syllable-onset transients + pauses — far better than one flat

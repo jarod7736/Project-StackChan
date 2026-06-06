@@ -35,6 +35,16 @@
 // would be a weaker, less faithful test. Flip to 1 only after 2a is cleared.
 #define STKCHAN_AUDIO_PLAYBACK 1
 
+// Sub-step 2c: only meaningful with STKCHAN_BARE_AUDIO. Adds the real MP3 DECODE
+// path on top of amp-drive (2b). Every 3 min, STREAM the embedded broadband clip
+// (src/diag/diag_clip_mp3.h) straight from flash via AudioFileSourcePROGMEM →
+// AudioPlayer::playStream() — decoded incrementally, NO full-buffer PSRAM copy.
+// Deliberately the STREAMING path (not the buffered play() that ecf953b added to
+// de-overlap current peaks): isolates streaming-decode CPU + amp-drive current,
+// still free of network/STT/LVGL/FSM. Runs at audible 230/255 (200 was sub-
+// audible), so it's also the first FULL-current amp test. Supersedes 2b when 1.
+#define STKCHAN_AUDIO_DECODE 1
+
 namespace stkchan {
 
 // === NVS ===
