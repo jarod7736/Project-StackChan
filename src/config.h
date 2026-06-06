@@ -33,7 +33,7 @@
 // happened (amp sourcing current + onset transients, no network/decode/LVGL).
 // Full volume on purpose — current draw scales with volume, so a quiet tone
 // would be a weaker, less faithful test. Flip to 1 only after 2a is cleared.
-#define STKCHAN_AUDIO_PLAYBACK 0
+#define STKCHAN_AUDIO_PLAYBACK 1
 
 namespace stkchan {
 
