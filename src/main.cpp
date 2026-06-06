@@ -167,12 +167,21 @@ void setup() {
     // a 150 ms blip is a poor proxy for multi-second TTS draw anyway, and the
     // silent idle test is the cleaner first cut.
     audio.begin();
+  #if STKCHAN_AUDIO_PLAYBACK
+    // Sub-step 2b: drive real playback current. Set a solid volume so the amp
+    // actually sources current into the speaker (default can be sub-audible
+    // after a begin cycle — see feedback-m5unified-speaker-volume).
+    M5.Speaker.setVolume(200);
+    Serial.println("[BARE] +AUDIO: amp ON + synthetic TTS phrase every 3min (playback draw)");
+    const char* kLabel = "AMP+PLAY";
+  #else
     Serial.println("[BARE] +AUDIO: amp rail (ALDO3) ON, idle, silent");
     const char* kLabel = "AMP-ON idle";
+  #endif
 #else
     const char* kLabel = "BARE WIFI";
 #endif
-    uint32_t last = 0;
+    uint32_t last = 0, lastTone = 0;
     for (;;) {
       if (millis() - last >= 1000) {
         last = millis();
@@ -185,6 +194,26 @@ void setup() {
                       (int)(WiFi.status() == WL_CONNECTED),
                       (unsigned)ESP.getFreeHeap());
       }
+#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_PLAYBACK
+      // Synthetic "TTS phrase" every 3 min: a run of short speech-band tones
+      // with inter-syllable gaps. Mimics the BURSTY current envelope of real
+      // speech — syllable-onset transients + pauses — far better than one flat
+      // tone (transient peaks are what trip an over-current latch). Stays free
+      // of the decoder/network, so this isolates amp-DRIVE current alone. If
+      // this passes, the next rung adds the MP3 decode path (embedded clip).
+      if (millis() - lastTone >= 180000) {
+        lastTone = millis();
+        // ~12 syllables, speech-band Hz, ~215 ms each → a ~2.6 s "sentence".
+        static const uint16_t kSyl[] = {
+            300, 220, 480, 260, 600, 350, 240, 520, 300, 200, 420, 280};
+        for (size_t s = 0; s < sizeof(kSyl) / sizeof(kSyl[0]); ++s) {
+          M5.Speaker.tone(kSyl[s], 160);  // syllable
+          delay(160 + 55);                // play + inter-syllable gap
+        }
+      }
+#else
+      (void)lastTone;
+#endif
       delay(10);
     }
   }

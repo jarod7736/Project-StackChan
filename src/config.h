@@ -23,8 +23,17 @@
 // Bisection on top of the bare-WiFi baseline (which ran all night clean). Add ONE
 // subsystem at a time; whichever makes it trip is the culprit. Audio first — the
 // fastest deaths were during voice, and audio.begin() turns on the AW88298 amp
-// rail (ALDO3) and leaves it on. 1 = also init audio + beep every 15 s.
+// rail (ALDO3) and leaves it on. 1 = also init audio (amp rail on, idle, silent).
 #define STKCHAN_BARE_AUDIO 1
+
+// Sub-step 2b: only meaningful with STKCHAN_BARE_AUDIO. 0 = amp rail held on but
+// silent (tests rail-on-idle). 1 = also play a synthetic "TTS phrase" (a run of
+// short speech-band tones with gaps) every 3 min — a faithful proxy for the
+// bursty current envelope of real TTS playback, where the fastest deaths
+// happened (amp sourcing current + onset transients, no network/decode/LVGL).
+// Full volume on purpose — current draw scales with volume, so a quiet tone
+// would be a weaker, less faithful test. Flip to 1 only after 2a is cleared.
+#define STKCHAN_AUDIO_PLAYBACK 0
 
 namespace stkchan {
 
