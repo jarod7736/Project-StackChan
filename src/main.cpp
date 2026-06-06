@@ -132,11 +132,17 @@ static void dumpAxpFault(const char* when) {
 }
 
 void setup() {
-  // CoreS3 power: M5 factory defaults (output_power defaults true) — matching the
-  // STOCK demo firmware, which runs stably on this hardware (DinBase + Core are
-  // fine). The crashes are in our firmware (or the servo-test wiring), not the
-  // board; this clean config is the apples-to-apples baseline vs stock.
+  // CoreS3 power: DISABLE the 5V bus-boost (output_power). Evidence: identical
+  // firmware died in ~3 min on a strong charger but ran ~2 h on a weak computer
+  // USB port. A stronger supply dying FASTER rules out brownout/marginal-supply
+  // and points at the boost: on a weak supply the battery buffers the rail; on a
+  // strong supply the battery floats and the SY7088 5V boost (BUS_EN) has no
+  // battery to lean on — the documented "bus boost wants a battery → ~3 min"
+  // failure (see reference-cores3-hardware). We drive NOTHING from the Grove /
+  // M-Bus 5V (PCA9685 runs on 3V3, servos on an external supply), so turning the
+  // boost off removes an unstable consumer at zero functional cost. Reversible.
   auto cfg = M5.config();
+  cfg.output_power = false;
   M5.begin(cfg);
   Serial.begin(115200);
   delay(200);
