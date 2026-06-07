@@ -155,10 +155,16 @@ void setup() {
   // below never runs. Set STKCHAN_BARE_WIFI 0 to restore.
   {
     auto cfg = M5.config();          // factory-default power (output_power=true)
+    cfg.output_power = false;        // CONFOUND TEST (2026-06-07): the bare build
+                                     // SURVIVED 54min with output_power=TRUE; the full
+                                     // app DIES with output_power=FALSE. Match the
+                                     // full-app setting here, changing ONLY this flag.
+                                     // dies ~7min -> output_power=false is the killer;
+                                     // survives -> killer is in the app subsystems.
     M5.begin(cfg);
     Serial.begin(115200);
     delay(200);
-    Serial.println("\n=== BARE WIFI TEST (no app) ===");
+    Serial.println("\n=== BARE WIFI TEST (no app) — output_power=FALSE confound test ===");
     nvs.begin();
     M5.Display.setTextSize(2);
     M5.Display.setTextColor(0xFFFF, 0x0000);
@@ -234,6 +240,14 @@ void setup() {
 #endif
     uint32_t last = 0, lastTone = 0;
     for (;;) {
+      // SUSPECT TEST (2026-06-07): M5.update() is the ONLY command-capable delta
+      // present in the dying full-app loop and ABSENT from this 60-min-survivor
+      // bare loop. It services the AXP power-button/PWRON path — a silent off with
+      // healthy rails + zero fault IRQ looks like a COMMANDED soft-off. Add it as
+      // the single actuator change; PWR_TELEMETRY (passive) shows vbat collapse vs
+      // silent. dies -> M5.update()/button path is the trigger (and not a bf4b46b
+      // artifact, since the bare path has no bf4b46b ilim write / TX cap).
+      M5.update();
       if (millis() - last >= 1000) {
         last = millis();
         M5.Display.setCursor(8, 8);
@@ -370,6 +384,13 @@ void setup() {
   // (the observed/production failure). 0b101=2000mA gives VBUS the headroom to
   // serve the spike so the battery isn't pulled. Done before the heavy init
   // (display/face/audio/servos) so the boot inrush is covered too.
+  // DECONFOUND TEST (2026-06-07): the 0x16 ilim write (bf4b46b) is present in EVERY
+  // dying build and absent from EVERY 54–60min survivor, AND it coincides with the
+  // failure-signature flip (production=vbat-collapse → this-session=silent). Disable
+  // ONLY this write, keep every other subsystem + the 2dBm cap + [AXPT]. Survives →
+  // this write IS the cause (self-induced). Dies silent → write deconfounded, it's a
+  // subsystem. Dies vbat-collapsing → the raise was MASKING the real battery-path bug.
+#if 0  // bf4b46b 0x16 ilim raise — DISABLED for the deconfound test
   {
     uint8_t v0x16 = M5.In_I2C.readRegister8(0x34, 0x16, 400000);
     uint8_t want  = (uint8_t)((v0x16 & 0xF8) | 0x05);  // IIN_LIM[2:0]=101 -> 2000mA
@@ -377,6 +398,7 @@ void setup() {
     Serial.printf("[AXP fix] inIlim 0x16: 0x%02X -> 0x%02X (1500->2000mA)\n",
                   v0x16, M5.In_I2C.readRegister8(0x34, 0x16, 400000));
   }
+#endif
 
   if (!nvs.begin()) {
     Serial.println("WARN: NVS open failed");
@@ -439,29 +461,35 @@ void loop() {
 
   M5.update();
 
-  // Fault-triggered power capture (temporary, root-cause): poll vbat at 100ms.
-  // Healthy float is ~4.15V; a battery-path cut collapses it below 1V. On any
-  // reading under 3800mV, dump the full AXP forensics each cycle so we catch the
-  // trigger + trajectory — which IRQ fires (BATFET-OCP / LDO-OCP / VBUS-remove),
-  // and whether it's boot inrush or runtime (uptime in ms).
+  // CONTINUOUS AXP TRAIL (root-cause for the SILENT power-off). The prior
+  // vbat-gated [TRIP] was BLIND to the real death: battery+USB powers off at
+  // ~6min (single-source ~2min) with vbat HEALTHY (4.14V) and vbus solid, so
+  // vbat<3800 never fired and the AXP fault regs sat constant. Log the full AXP
+  // register set UNCONDITIONALLY every 100ms so we can see whether ANY register
+  // moves in the final samples before the AXP cuts the system rail (DCDC1) — or
+  // whether the off is truly instantaneous/unwarned.
+  //   - cid(0x03)=0x4A : I2C-health positive control (rules out bus corruption).
+  //   - ilim(0x16)     : confirms the AXP didn't silently reset its config.
+  //   - s1(0x00)/s2(0x01)            : PMU status.
+  //   - irq(0x48/0x49/0x4A)          : latched IRQ status (= the off cause if AXP-driven).
+  // RAW reads only — NOT the isXxxIrq() helpers, which write-1-clear and would
+  // erase the latch we need to catch. Nothing here writes/clears, so a fault bit
+  // that sets just before the off survives into the last printed sample.
   {
-    static uint32_t s_pwrPoll = 0;
-    if (now - s_pwrPoll >= 100) {
-      s_pwrPoll = now;
-      int vb = M5.Power.getBatteryVoltage();
-      if (vb < 3800) {
-        Serial.printf("[TRIP] up=%lums vbat=%dmV vbus=%dmV s1=0x%02X s2=0x%02X "
-                      "irq=0x%02X/0x%02X/0x%02X bocp=%d ldooc=%d vrem=%d\n",
-                      (unsigned long)now, vb, M5.Power.getVBUSVoltage(),
-                      M5.In_I2C.readRegister8(0x34, 0x00, 400000),
-                      M5.In_I2C.readRegister8(0x34, 0x01, 400000),
-                      M5.In_I2C.readRegister8(0x34, 0x48, 400000),
-                      M5.In_I2C.readRegister8(0x34, 0x49, 400000),
-                      M5.In_I2C.readRegister8(0x34, 0x4A, 400000),
-                      (int)M5.Power.Axp2101.isBatfetOverCurrentIrq(),
-                      (int)M5.Power.Axp2101.isLdoOverCurrentIrq(),
-                      (int)M5.Power.Axp2101.isVbusRemoveIrq());
-      }
+    static uint32_t s_axptPoll = 0;
+    if (now - s_axptPoll >= 100) {
+      s_axptPoll = now;
+      Serial.printf("[AXPT] up=%lums vbat=%dmV vbus=%dmV cid=0x%02X ilim=0x%02X "
+                    "s1=0x%02X s2=0x%02X irq=0x%02X/0x%02X/0x%02X\n",
+                    (unsigned long)now,
+                    M5.Power.getBatteryVoltage(), M5.Power.getVBUSVoltage(),
+                    M5.In_I2C.readRegister8(0x34, 0x03, 400000),
+                    M5.In_I2C.readRegister8(0x34, 0x16, 400000),
+                    M5.In_I2C.readRegister8(0x34, 0x00, 400000),
+                    M5.In_I2C.readRegister8(0x34, 0x01, 400000),
+                    M5.In_I2C.readRegister8(0x34, 0x48, 400000),
+                    M5.In_I2C.readRegister8(0x34, 0x49, 400000),
+                    M5.In_I2C.readRegister8(0x34, 0x4A, 400000));
     }
   }
 

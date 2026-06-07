@@ -1,0 +1,1158 @@
+>>> PORT /dev/ttyACM0 UP at 09:39:54.078
+[  1200][I][esp32-hal-psram.c:96] psramInit(): PSRAM enabled
+[  1222][I][M5GFX.cpp:805] init_impl(): [M5GFX] [Autodetect] load from NVS : board:10
+[  1231][I][esp32-hal-i2c.c:75] i2cInit(): Initialising I2C Master: sda=12 scl=11 freq=100000
+[  1244][I][M5GFX.cpp:1513] autodetect(): [M5GFX] [Autodetect] board_M5StackCoreS3
+[  1404][I][esp32-hal-i2c.c:75] i2cInit(): Initialising I2C Master: sda=12 scl=11 freq=100000
+[  1413][I][esp32-hal-i2c.c:75] i2cInit(): Initialising I2C Master: sda=12 scl=11 freq=100000
+[  1458][I][esp32-hal-i2c.c:75] i2cInit(): Initialising I2C Master: sda=12 scl=11 freq=100000
+[  1469][I][esp32-hal-i2c.c:75] i2cInit(): Initialising I2C Master: sda=12 scl=11 freq=100000
+
+=== Stack-chan v1 boot ===
+[BOOT] reset reason: 1
+[AXP boot] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[AXP cfg] inVlim(0x15)=0x06 inIlim(0x16)=0x04 chgcur(0x62)=0x08
+[AXP fix] inIlim 0x16: 0x04 -> 0x05 (1500->2000mA)
+[LvglDisplay] ready (LVGL v9, 320x240 RGB565)
+[Face] ready (LVGL widgets)
+[MenuScreen] ready
+[AudioPlayer] ready (sample_rate=24000, vch=0, gain=4.0)
+[  1918][W][Wire.cpp:301] begin(): Bus already started in Master Mode.
+[  1924][W][Wire.cpp:301] begin(): Bus already started in Master Mode.
+[WIFI] begin()
+[WIFI] saved[1] "holdfast"
+[  1957][E][Preferences.cpp:483] getString(): nvs_get_str len fail: ssid2 NOT_FOUND
+[  1965][E][Preferences.cpp:483] getString(): nvs_get_str len fail: ssid3 NOT_FOUND
+[  1973][E][Preferences.cpp:483] getString(): nvs_get_str len fail: ssid2 NOT_FOUND
+[  1981][E][Preferences.cpp:483] getString(): nvs_get_str len fail: psk2 NOT_FOUND
+[  1988][E][Preferences.cpp:483] getString(): nvs_get_str len fail: ssid3 NOT_FOUND
+[  1996][E][Preferences.cpp:483] getString(): nvs_get_str len fail: psk3 NOT_FOUND
+[WIFI] slot 1 "holdfast" (budget=8000ms)...
+[WIFI] OK ssid="holdfast" ip=192.168.1.121 rssi=-70 ch=1 slot=1 mac=10:20:BA:26:E8:98
+[WIFI] TX power cap -> 8 (0.25dBm units)
+[WIFI] NTP sync requested (server=pool.ntp.org tz=CST6CDT,M3.2.0,M11.1.0)
+[WIFI] mDNS: stackchan.local
+[Portal] LAN control server up — http://192.168.1.121/  (stackchan.local)
+[TRIP] up=2801ms vbat[burst]=82 82 82 82 82 82 82 82 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=82mV vbus=5126mV die=385C chg=0 pct=0 ext=1 | heap=162608 min=160896 maxblk=147444 psram=8165031
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[  2870][I][ArduinoOTA.cpp:141] begin(): OTA server at: stackchan.local:3232
+[OTA] ready hostname=stackchan.local port=3232
+[TRIP] up=2938ms vbat[burst]=82 82 82 82 82 82 82 82 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3039ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3142ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3247ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3350ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3451ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3553ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3655ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3760ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3862ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=3965ms vbat[burst]=36 36 36 36 36 36 36 36 | vbus=5109mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4069ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4172ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4275ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4379ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4481ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4581ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4682ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4785ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=13mV vbus=5130mV die=385C chg=0 pct=0 ext=1 | heap=159736 min=156876 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=4886ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=4989ms vbat[burst]=13 13 13 13 13 13 13 13 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5090ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5190ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5294ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5395ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5497ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5599ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5701ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5804ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=5904ms vbat[burst]=3 3 3 3 3 3 3 3 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=16382mV vbus=5133mV die=385C chg=0 pct=100 ext=1 | heap=159976 min=156876 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=8060ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=8164ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=8264ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=8365ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=8468ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=8568ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=8670ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=8770ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=2109mV vbus=5111mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=156684 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=8871ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5111mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=8974ms vbat[burst]=2109 2109 2109 2109 2109 2109 2109 2109 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9075ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9175ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9276ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9378ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9478ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9580ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9684ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9788ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9889ms vbat[burst]=603 603 603 603 603 603 603 603 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=9990ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=10092ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=10192ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=10292ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=10394ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=10498ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=10599ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=10700ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=10800ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=277mV vbus=5132mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=156684 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=10900ms vbat[burst]=277 277 277 277 277 277 277 277 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11000ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11101ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11202ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11302ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11406ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11506ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11609ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11710ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11811ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=11913ms vbat[burst]=126 126 126 126 126 126 126 126 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12022ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12125ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12228ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12329ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12429ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12529ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12629ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12733ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=55mV vbus=5129mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=156684 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=12833ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=12937ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13037ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13141ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13241ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13341ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13441ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13545ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13645ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13746ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13846ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=13946ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14050ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14153ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14256ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14357ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14459ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14562ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14665ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14765ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=6mV vbus=5129mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=156284 maxblk=147444 psram=8162431
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=14869ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5129mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=14971ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5128mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=15995ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=16097ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=16200ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=16300ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=16400ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=16500ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=16600ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=16701ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=16801ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=2105mV vbus=5141mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=156284 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=16903ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17003ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17103ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17205ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17308ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17408ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17509ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17610ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17710ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17812ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=17914ms vbat[burst]=600 600 600 600 600 600 600 600 | vbus=5105mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18014ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18114ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18214ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18319ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18421ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18523ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18623ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18725ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=273mV vbus=5134mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=156284 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=18830ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=18931ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19033ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19133ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19233ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19337ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19437ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19538ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19641ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19741ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19843ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=19946ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20047ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20148ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20253ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20353ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20453ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20553ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20657ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20758ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=55mV vbus=5110mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=156284 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=20858ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=20960ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21060ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21162ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21264ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21364ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21466ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21567ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21669ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21772ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21874ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=21977ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=22077ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=22177ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=22281ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=22385ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=22485ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=22587ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=22688ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=22788ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=6mV vbus=5132mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=156284 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=22889ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24022ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24124ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24225ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24327ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24431ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24531ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24632ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24737ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=2107mV vbus=5113mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=156284 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=24845ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5113mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=24946ms vbat[burst]=2107 2107 2107 2107 2107 2107 2107 2107 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25051ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25154ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25256ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25357ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25457ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25557ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25658ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25762ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25862ms vbat[burst]=601 601 601 601 601 601 601 601 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=25964ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26069ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26170ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26271ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26372ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26476ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26578ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26679ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26780ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=273mV vbus=5134mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=156284 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=26884ms vbat[burst]=273 273 273 273 273 273 273 273 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=26993ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27094ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27196ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27298ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27398ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27500ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27602ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27703ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27803ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=27903ms vbat[burst]=125 125 125 125 125 125 125 125 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28003ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28104ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28205ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28308ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28410ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28510ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28611ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28713ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=28814ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=54mV vbus=5131mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=156284 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=28914ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29014ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29114ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29215ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29319ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29420ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29522ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29624ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29724ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29827ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=29928ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30030ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30131ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30235ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30339ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30440ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30544ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30645ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30746ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=5mV vbus=5134mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=156284 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=30848ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=30949ms vbat[burst]=5 5 5 16382 16382 16382 16382 16382 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=31974ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32078ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32179ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32281ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32382ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32485ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32586ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32690ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32793ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=2106mV vbus=5140mV die=385C chg=0 pct=0 ext=1 | heap=158280 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=32897ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=32999ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33100ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33202ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33304ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33406ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33508ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33608ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33711ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33814ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=33916ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34017ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34119ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34220ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34320ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34420ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34521ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34622ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34724ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=34827ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=271mV vbus=5135mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=34927ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35028ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35130ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35232ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35333ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35434ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35536ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35639ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35741ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35845ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=35946ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36047ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36149ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36253ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36353ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36454ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36554ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36657ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36759ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=53mV vbus=5135mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=36864ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=36969ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37069ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37173ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37275ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37375ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37475ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37576ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37679ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37780ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37882ms vbat[burst]=22 22 22 22 22 22 22 22 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=37984ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=38085ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=38186ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=38286ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=38386ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=38488ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=38589ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=38693ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=38794ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=5mV vbus=5132mV die=385C chg=0 pct=0 ext=1 | heap=158160 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=38895ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40014ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40116ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40216ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40318ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40418ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40522ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40622ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40722ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=40822ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=2103mV vbus=5116mV die=385C chg=0 pct=0 ext=1 | heap=158160 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=40923ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41026ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41130ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41230ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41331ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41433ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41535ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41637ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41737ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41840ms vbat[burst]=597 597 597 597 597 597 597 597 | vbus=5140mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=41943ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42047ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42147ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42248ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42349ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42454ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42555ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42659ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42759ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=271mV vbus=5136mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=42859ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=42962ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43065ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43170ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43271ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43371ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43472ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43572ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43676ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43780ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43884ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=43987ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=44091ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=44193ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=44295ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=44399ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=44500ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=44601ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=44702ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=44802ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5103mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=55mV vbus=5103mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=44903ms vbat[burst]=55 55 55 55 55 55 55 55 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45007ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45108ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45212ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45312ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45413ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45513ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45615ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45717ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45818ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=45919ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46019ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46121ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46221ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46324ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46426ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46526ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46626ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46727ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=46829ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=5mV vbus=5137mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=47955ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48055ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48157ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48257ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48359ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48463ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48564ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48668ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48768ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=2105mV vbus=5141mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=48877ms vbat[burst]=2105 2105 2105 2105 2105 2105 2105 2105 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=48979ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49081ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49184ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49284ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49384ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49484ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49586ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49689ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49791ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49893ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=49994ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=50097ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=50198ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=50300ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=50404ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=50504ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=50604ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=50706ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=50809ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=271mV vbus=5141mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=50912ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51014ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51115ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51216ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51317ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51418ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51520ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51624ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51728ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51828ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=51933ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52036ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52139ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52242ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52344ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52445ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52549ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52651ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52752ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=52855ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=53mV vbus=5110mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=52955ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53056ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53156ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53256ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53356ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53456ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53556ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53656ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53756ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53856ms vbat[burst]=23 23 23 23 23 23 23 23 | vbus=5130mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=53956ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=54056ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=54160ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=54261ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=54362ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=54463ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=54564ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=54666ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=54767ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=5mV vbus=5134mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=54873ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56001ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56101ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56202ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56303ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56406ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56508ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56609ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56709ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=56810ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=2104mV vbus=5134mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=56911ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57016ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57120ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57220ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57323ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57427ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57528ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57628ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57728ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57829ms vbat[burst]=596 596 596 596 596 596 596 596 | vbus=5131mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=57929ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58033ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58134ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58235ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58337ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58441ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58543ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58645ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58749ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=58851ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=271mV vbus=5138mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=58951ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59052ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59152ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59252ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59353ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59456ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59557ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59659ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59759ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59859ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=59959ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60064ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60164ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60265ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60367ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60469ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60570ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60674ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60778ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=54mV vbus=5135mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155492 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=60878ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=60978ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61081ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61184ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61288ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61392ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61495ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61600ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61702ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61807ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=61908ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62010ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62111ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62212ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62314ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62416ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62516ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62617ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62719ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=62842ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=4mV vbus=5108mV die=385C chg=0 pct=0 ext=1 | heap=158280 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=63974ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64076ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64176ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64280ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64384ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64486ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64587ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64689ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64792ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5141mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=2104mV vbus=5136mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=64896ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=64997ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65099ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65200ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65302ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65402ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65506ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65606ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65706ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65806ms vbat[burst]=594 594 594 594 594 594 594 594 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=65907ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66009ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66111ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66212ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66313ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66416ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66516ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66616ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66716ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=66816ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=271mV vbus=5136mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=66920ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67023ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67128ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67228ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67328ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67431ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67533ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67637ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67741ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67842ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=67945ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68048ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68150ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68252ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68352ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68453ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68555ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68657ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68758ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5110mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=68859ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=54mV vbus=5135mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=68959ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69061ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69163ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69264ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69364ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69467ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69567ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69667ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69767ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69867ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=69967ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70067ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70167ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70268ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70370ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70473ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70575ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70676ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70777ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=70878ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=16382mV vbus=5136mV die=385C chg=0 pct=100 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=71896ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=71997ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=72099ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=72201ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=72302ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=72402ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=72504ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=72605ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=72706ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=72807ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5116mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=595mV vbus=5132mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=72912ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73014ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73117ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73218ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73321ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73422ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73524ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73627ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73729ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73830ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=73931ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74034ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74135ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74235ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74335ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74436ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74540ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74641ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74745ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=74848ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=123mV vbus=5112mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=74948ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75051ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75154ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75258ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75360ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75462ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75563ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75664ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75766ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5112mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75867ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=75968ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76068ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76168ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76269ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76373ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76475ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76576ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76680ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76780ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=76880ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=19mV vbus=5134mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=76985ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77085ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77188ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77292ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77395ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77495ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77595ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77695ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77795ms vbat[burst]=19 19 19 19 19 19 19 19 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77896ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=77996ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=78098ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=78201ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=78304ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=78405ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=78507ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=78608ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=78710ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=78810ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=16381mV vbus=5111mV die=385C chg=0 pct=100 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=79941ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80042ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80142ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80244ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80348ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80449ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80550ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80651ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80751ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=80852ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=595mV vbus=5135mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=80953ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81057ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81160ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81262ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81363ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81467ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81568ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81668ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81769ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81870ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=81970ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82073ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82174ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82276ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82377ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82479ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82581ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82682ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82783ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=82883ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=122mV vbus=5134mV die=385C chg=0 pct=0 ext=1 | heap=158240 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=82984ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83086ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83190ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83290ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83390ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83490ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83592ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83694ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83794ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=83896ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84000ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84103ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84207ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84307ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84407ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84507ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84607ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84707ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=84807ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=21mV vbus=5136mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=84914ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85014ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85114ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85215ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85319ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85419ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85519ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85623ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85727ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85827ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=85931ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86035ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86138ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86239ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86341ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86442ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86544ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86646ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86750ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=86850ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=16382mV vbus=5135mV die=385C chg=0 pct=100 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=87878ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=87978ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88081ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88183ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88286ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88387ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88487ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88590ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88692ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88794ms vbat[burst]=2102 2102 2102 2102 2102 2102 2102 2102 | vbus=5144mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=88896ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=595mV vbus=5133mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=88996ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89096ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89196ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89296ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89396ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89498ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89598ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89700ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89801ms vbat[burst]=595 595 595 595 595 595 595 595 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=89904ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90007ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90107ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90207ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90308ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90411ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90511ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90611ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90715ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=90819ms vbat[burst]=269 269 269 269 269 269 269 269 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=124mV vbus=5135mV die=385C chg=0 pct=0 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=90920ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91024ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91124ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91225ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91326ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91427ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91529ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91630ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91731ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91832ms vbat[burst]=124 124 124 124 124 124 124 124 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=91933ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92033ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92134ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92237ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92340ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92441ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92542ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92644ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92744ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=92845ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=21mV vbus=5121mV die=385C chg=0 pct=0 ext=1 | heap=158584 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=92947ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93048ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93149ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93252ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93352ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93453ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93553ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93654ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93754ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5121mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93854ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=93955ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=94056ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=94157ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=94258ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=94360ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=94464ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=94567ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=94669ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=94770ms vbat[burst]=4 4 4 4 4 4 4 4 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=16381mV vbus=5137mV die=385C chg=0 pct=100 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=95896ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=95998ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=96099ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=96199ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=96299ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=96399ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=96499ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=96602ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=96705ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=96805ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5145mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=593mV vbus=5133mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=96912ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97014ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97116ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97216ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97319ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97419ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97519ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97621ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97722ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5133mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97825ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=97928ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98029ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98129ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98229ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98331ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98431ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98531ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98631ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98731ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=98831ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=122mV vbus=5136mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=98934ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99035ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99137ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99237ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99340ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99443ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99544ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99645ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99746ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99846ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=99949ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100049ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100149ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100250ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100352ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100454ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100555ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100655ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100760ms vbat[burst]=54 54 54 54 54 54 54 54 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=100860ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=20mV vbus=5135mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=100963ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101063ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101164ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101264ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101365ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101468ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101570ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101672ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101775ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101877ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=101980ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=102083ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=102186ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=102290ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=102392ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=102493ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=102596ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=102698ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=102798ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=16381mV vbus=5134mV die=385C chg=0 pct=100 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=103928ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104029ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104131ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104233ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104333ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104435ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104538ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104641ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104744ms vbat[burst]=2104 2104 2104 2104 2104 2104 2104 2104 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=104846ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=592mV vbus=5136mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=104946ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105048ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105148ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105248ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105348ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105449ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105551ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105652ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105752ms vbat[burst]=592 592 592 592 592 592 592 592 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105855ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=105957ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106057ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106159ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106260ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106364ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106465ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106567ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106668ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106768ms vbat[burst]=270 270 270 270 270 270 270 270 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=106870ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=123mV vbus=5137mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=106970ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107073ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107173ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107277ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107382ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107483ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107584ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107686ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107787ms vbat[burst]=123 123 123 123 123 123 123 123 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107887ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=107988ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108092ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108196ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108297ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108399ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108502ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108603ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108705ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5134mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108809ms vbat[burst]=53 53 53 53 53 53 53 53 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=108909ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=20mV vbus=5137mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=109010ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109115ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109216ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109317ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109417ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109521ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109623ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109723ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5137mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109823ms vbat[burst]=20 20 20 20 20 20 20 20 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=109923ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=110023ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=110123ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=110223ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=110325ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=110427ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=110528ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=110629ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=110729ms vbat[burst]=6 6 6 6 6 6 6 6 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=16382mV vbus=5143mV die=385C chg=0 pct=100 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=111853ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=111955ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112063ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112165ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112267ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112367ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112467ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112571ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112674ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112774ms vbat[burst]=2106 2106 2106 2106 2106 2106 2106 2106 | vbus=5147mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=112874ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=593mV vbus=5132mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=112977ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113080ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113181ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113283ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113386ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113487ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113591ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113694ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113794ms vbat[burst]=593 593 593 593 593 593 593 593 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113895ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=113997ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114099ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114199ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114303ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114406ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114507ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114608ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114709ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5135mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114813ms vbat[burst]=271 271 271 271 271 271 271 271 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=114915ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=122mV vbus=5136mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=115016ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115117ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115218ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115319ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115422ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115525ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115626ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115727ms vbat[burst]=122 122 122 122 122 122 122 122 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115829ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=115929ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116029ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116129ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116229ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116329ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116429ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116531ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116632ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116733ms vbat[burst]=52 52 52 52 52 52 52 52 | vbus=5126mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=116834ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=21mV vbus=5136mV die=385C chg=0 pct=0 ext=1 | heap=158616 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=116936ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117039ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117139ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117239ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117340ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117443ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117547ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117647ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117747ms vbat[burst]=21 21 21 21 21 21 21 21 | vbus=5136mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117848ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=117950ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=118054ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=118158ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=118262ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=118362ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=118467ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=118567ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=118667ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=118767ms vbat[burst]=5 5 5 5 5 5 5 5 | vbus=5138mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[PWR] vbat=16379mV vbus=5134mV die=385C chg=0 pct=100 ext=1 | heap=158312 min=155308 maxblk=147444 psram=8164759
+[AXP live] status1=0x20 status2=0x15 irq=0x40/0x80/0x00
+[TRIP] up=119890ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=119993ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=120094ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=120198ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=120301ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=120402ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=120505ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+[TRIP] up=120608ms vbat[burst]=2103 2103 2103 2103 2103 2103 2103 2103 | vbus=5132mV i2c:chipid(0x03)=0x4A(want4A) ilim(0x16)=0x05 s1=0x20 s2=0x15 irq=0x40/0x80/0x00 bocp=0 ldooc=0 vrem=0
+>>> PORT DROPPED at 09:41:54.205 (SoC power-off / USB gone)
