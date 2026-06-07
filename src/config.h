@@ -67,6 +67,15 @@
 #define STKCHAN_AUDIO_HTTPS 1
 #define STKCHAN_AUDIO_HTTPS_URL "https://192.168.1.178:8443/clip.mp3"
 
+// Power-path telemetry for the bare soak. 1 = log [PWR] (vbat/vbus/die-temp/
+// charging/pct) + [AXP] latched fault regs every tick, and reset-reason + AXP
+// fault dump at boot. Reuses the forensics from a900ad7/312dbd0/e2bbaef/583b5d9.
+// Needed to INTERPRET a "clear": every rung survived, but with no power readings
+// we can't tell if a playback peak neared the battery-discharge OCP — or whether
+// the battery is even discharging on USB (getBatteryCurrent is hardwired 0 on
+// CoreS3, so we infer from vbat-dip / isCharging / die-temp / latched AXP IRQs).
+#define STKCHAN_PWR_TELEMETRY 1
+
 // ── Feature: on-device presence awareness ──────────────────────────────────
 // 1 = enable camera face-DETECTION presence behaviors (perk up + greet on
 // arrival, servo look-toward-you tracking, sleepy when the desk is empty).

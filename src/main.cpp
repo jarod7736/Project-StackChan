@@ -171,6 +171,13 @@ void setup() {
     Serial.printf("[BARE] connected=%d ip=%s\n",
                   WiFi.status() == WL_CONNECTED,
                   WiFi.localIP().toString().c_str());
+#if STKCHAN_PWR_TELEMETRY
+    // Boot: reset reason (esp_reset_reason is blind to an AXP rail latch — a
+    // power-off looks like POWERON) + the AXP's own latched fault from the
+    // PREVIOUS power-off (its regs are always-on and survive the cut).
+    Serial.printf("[BOOT] reset_reason=%d\n", (int)esp_reset_reason());
+    dumpAxpFault("boot");
+#endif
 #if STKCHAN_BARE_AUDIO
     // Sub-step 2a: enable the AW88298 amp rail (ALDO3) and HOLD it on, idle,
     // SILENTLY. Tests whether merely powering the amp rail continuously trips
@@ -224,6 +231,17 @@ void setup() {
                       (unsigned long)(millis() / 1000),
                       (int)(WiFi.status() == WL_CONNECTED),
                       (unsigned)ESP.getFreeHeap());
+#if STKCHAN_PWR_TELEMETRY
+        // Power path each tick. getBatteryCurrent() is hardwired 0 on CoreS3, so
+        // discharge shows up as a vbat DIP under load + isCharging flipping off;
+        // die-temp tests the over-temp shutdown path; [AXP] catches latched OCP.
+        Serial.printf("[PWR] up=%lus vbat=%dmV vbus=%dmV die=%dC chg=%d pct=%d\n",
+                      (unsigned long)(millis() / 1000),
+                      M5.Power.getBatteryVoltage(), M5.Power.getVBUSVoltage(),
+                      (int)M5.Power.Axp2101.getInternalTemperature(),
+                      (int)M5.Power.isCharging(), M5.Power.getBatteryLevel());
+        dumpAxpFault("live");
+#endif
       }
 #if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTPS
       // Rung 2e: every 3 min stream the clip LIVE over HTTPS and decode off the
