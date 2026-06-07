@@ -362,6 +362,22 @@ void setup() {
                 M5.In_I2C.readRegister8(0x34, 0x16, 400000),
                 M5.In_I2C.readRegister8(0x34, 0x62, 400000));
 
+  // STABILIZE the AXP battery-path power-off: raise the VBUS input-current limit
+  // to its 2000mA max. At the 1500mA default (reg 0x16 IIN_LIM=0b100), a full-app
+  // load spike exceeds it, so the AXP pulls the deficit through the battery FET
+  // and trips the DinBase pack's over-current protection — vbat collapses 4.15V
+  // ->~0, the device drops to USB, and recovery needs a battery+USB power-cycle
+  // (the observed/production failure). 0b101=2000mA gives VBUS the headroom to
+  // serve the spike so the battery isn't pulled. Done before the heavy init
+  // (display/face/audio/servos) so the boot inrush is covered too.
+  {
+    uint8_t v0x16 = M5.In_I2C.readRegister8(0x34, 0x16, 400000);
+    uint8_t want  = (uint8_t)((v0x16 & 0xF8) | 0x05);  // IIN_LIM[2:0]=101 -> 2000mA
+    M5.In_I2C.writeRegister8(0x34, 0x16, want, 400000);
+    Serial.printf("[AXP fix] inIlim 0x16: 0x%02X -> 0x%02X (1500->2000mA)\n",
+                  v0x16, M5.In_I2C.readRegister8(0x34, 0x16, 400000));
+  }
+
   if (!nvs.begin()) {
     Serial.println("WARN: NVS open failed");
   }
@@ -422,6 +438,33 @@ void loop() {
   uint32_t now = millis();
 
   M5.update();
+
+  // Fault-triggered power capture (temporary, root-cause): poll vbat at 100ms.
+  // Healthy float is ~4.15V; a battery-path cut collapses it below 1V. On any
+  // reading under 3800mV, dump the full AXP forensics each cycle so we catch the
+  // trigger + trajectory — which IRQ fires (BATFET-OCP / LDO-OCP / VBUS-remove),
+  // and whether it's boot inrush or runtime (uptime in ms).
+  {
+    static uint32_t s_pwrPoll = 0;
+    if (now - s_pwrPoll >= 100) {
+      s_pwrPoll = now;
+      int vb = M5.Power.getBatteryVoltage();
+      if (vb < 3800) {
+        Serial.printf("[TRIP] up=%lums vbat=%dmV vbus=%dmV s1=0x%02X s2=0x%02X "
+                      "irq=0x%02X/0x%02X/0x%02X bocp=%d ldooc=%d vrem=%d\n",
+                      (unsigned long)now, vb, M5.Power.getVBUSVoltage(),
+                      M5.In_I2C.readRegister8(0x34, 0x00, 400000),
+                      M5.In_I2C.readRegister8(0x34, 0x01, 400000),
+                      M5.In_I2C.readRegister8(0x34, 0x48, 400000),
+                      M5.In_I2C.readRegister8(0x34, 0x49, 400000),
+                      M5.In_I2C.readRegister8(0x34, 0x4A, 400000),
+                      (int)M5.Power.Axp2101.isBatfetOverCurrentIrq(),
+                      (int)M5.Power.Axp2101.isLdoOverCurrentIrq(),
+                      (int)M5.Power.Axp2101.isVbusRemoveIrq());
+      }
+    }
+  }
+
   lvglDisplay.tick();
   face.tick(now);
   wifi.tick();

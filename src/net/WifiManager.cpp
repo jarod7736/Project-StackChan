@@ -27,10 +27,14 @@ static void kickNtpSync() {
 // current draw on the chip. Captured crash data points to an AXP2101 protection
 // LATCH on a peak-current spike (vbat/heap healthy at death; recovers only by
 // disconnecting the DinBase battery). Cutting TX power shrinks that spike and is
-// the canonical ESP32 brownout fix — 11 dBm is ample for a home LAN. Must be
+// the canonical ESP32 brownout fix. 11 dBm still let the battery-path protection
+// trip (two power-offs on the full app), so cut harder to 2 dBm — the device sits
+// at rssi ~-51 (very strong), so range is a non-issue and the TX-burst spike is
+// minimized. Paired with the AXP VBUS input-limit raise (2000mA) in setup(): less
+// demand spike + more supply headroom, attacking the OCP from both sides. Must be
 // re-applied after every (re)connect (the driver resets it to default on assoc).
 static void applyTxPowerCap() {
-    WiFi.setTxPower(WIFI_POWER_11dBm);
+    WiFi.setTxPower(WIFI_POWER_2dBm);
     Serial.printf("[WIFI] TX power cap -> %d (0.25dBm units)\n", (int)WiFi.getTxPower());
 }
 
