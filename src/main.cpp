@@ -177,6 +177,14 @@ void setup() {
     // PREVIOUS power-off (its regs are always-on and survive the cut).
     Serial.printf("[BOOT] reset_reason=%d\n", (int)esp_reset_reason());
     dumpAxpFault("boot");
+    // AXP input-limit config — the ceiling that decides whether a load spike is
+    // served by VBUS or forced onto the battery FET (whose OCP is the trip).
+    // inVlim 0x15, inIlim 0x16 (VBUS current limit), chgcur 0x62.
+    Serial.printf("[AXP cfg] inVlim(0x15)=0x%02X inIlim(0x16)=0x%02X chgcur(0x62)=0x%02X output_power=%d\n",
+                  M5.In_I2C.readRegister8(0x34, 0x15, 400000),
+                  M5.In_I2C.readRegister8(0x34, 0x16, 400000),
+                  M5.In_I2C.readRegister8(0x34, 0x62, 400000),
+                  (int)cfg.output_power);
 #endif
 #if STKCHAN_BARE_AUDIO
     // Sub-step 2a: enable the AW88298 amp rail (ALDO3) and HOLD it on, idle,
@@ -189,7 +197,12 @@ void setup() {
     // Rung 2e: live HTTPS/TLS stream — WiFi-RX + TLS-decrypt overlap the amp +
     // decoder (the production failing path). Audible 230/255.
     M5.Speaker.setVolume(230);
+  #if STKCHAN_MAXLOAD
+    M5.Display.setBrightness(255);  // max backlight — part of the max-load draw
+    Serial.println("[BARE] +AUDIO: amp ON + HTTPS/TLS STREAM-DECODE " STKCHAN_AUDIO_HTTPS_URL " BACK-TO-BACK (maxload)");
+  #else
     Serial.println("[BARE] +AUDIO: amp ON + HTTPS/TLS STREAM-DECODE " STKCHAN_AUDIO_HTTPS_URL " every 3min");
+  #endif
     const char* kLabel = "AMP+HTTPS";
   #elif STKCHAN_AUDIO_HTTP
     // Rung 2d: live HTTP stream — decode off the wire so WiFi-RX overlaps the
@@ -235,9 +248,10 @@ void setup() {
         // Power path each tick. getBatteryCurrent() is hardwired 0 on CoreS3, so
         // discharge shows up as a vbat DIP under load + isCharging flipping off;
         // die-temp tests the over-temp shutdown path; [AXP] catches latched OCP.
-        Serial.printf("[PWR] up=%lus vbat=%dmV vbus=%dmV die=%dC chg=%d pct=%d\n",
+        Serial.printf("[PWR] up=%lus vbat=%dmV vbus=%dmV ibus=%dmA die=%dC chg=%d pct=%d\n",
                       (unsigned long)(millis() / 1000),
                       M5.Power.getBatteryVoltage(), M5.Power.getVBUSVoltage(),
+                      (int)M5.Power.Axp2101.getVBUSCurrent(),
                       (int)M5.Power.Axp2101.getInternalTemperature(),
                       (int)M5.Power.isCharging(), M5.Power.getBatteryLevel());
         dumpAxpFault("live");
@@ -250,7 +264,7 @@ void setup() {
       // owns the WiFiClientSecure + HTTPClient; playStream() owns the source and
       // deletes it on teardown (closes the TLS connection).
       audio.tick();
-      if (!audio.isPlaying() && millis() - lastTone >= 180000) {
+      if (!audio.isPlaying() && millis() - lastTone >= STKCHAN_PLAY_GAP_MS) {
         lastTone = millis();
         M5.Speaker.setVolume(230);  // re-assert: a begin/teardown cycle can reset it
         AudioFileSource* src = new DiagTlsStreamSource(STKCHAN_AUDIO_HTTPS_URL);

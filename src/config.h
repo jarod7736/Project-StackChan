@@ -76,6 +76,15 @@
 // CoreS3, so we infer from vbat-dip / isCharging / die-temp / latched AXP IRQs).
 #define STKCHAN_PWR_TELEMETRY 1
 
+// Max-load mode: drive the heaviest achievable CoreS3-side load to test whether
+// ANY load can push past the VBUS input-current limit and force the battery into
+// the discharge path (servos don't count — they're on an external supply). 1 =
+// back-to-back playback (no 3-min gap) + max display brightness, stacked on the
+// active audio rung. Watch [PWR] vbat: a dip off its floating ~4.15V = battery
+// now sourcing (OCP reachable); pinned = load still under VBUS limit.
+#define STKCHAN_MAXLOAD 1
+#define STKCHAN_PLAY_GAP_MS (STKCHAN_MAXLOAD ? 800u : 180000u)
+
 // ── Feature: on-device presence awareness ──────────────────────────────────
 // 1 = enable camera face-DETECTION presence behaviors (perk up + greet on
 // arrival, servo look-toward-you tracking, sleepy when the desk is empty).
