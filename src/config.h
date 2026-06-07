@@ -45,6 +45,17 @@
 // audible), so it's also the first FULL-current amp test. Supersedes 2b when 1.
 #define STKCHAN_AUDIO_DECODE 1
 
+// Rung 2d (network): only meaningful with STKCHAN_BARE_AUDIO. Supersedes 2c.
+// Stream the clip LIVE over plain HTTP from a LAN host and decode off the wire
+// DURING playback, so WiFi-RX + decode + amp current OVERLAP — the exact
+// concurrency ecf953b's buffer-then-play fix removed. Production tripped the
+// AXP2101 *battery-path* OCP this way but over HTTPS/TLS; plain HTTP strips TLS,
+// so this isolates whether streaming-overlap ALONE trips it: trips -> overlap is
+// enough; clears -> TLS is the needed ingredient (next rung = HTTPS). The
+// DinBase battery must be connected — the OCP that fires is on the battery path.
+#define STKCHAN_AUDIO_HTTP 1
+#define STKCHAN_AUDIO_HTTP_URL "http://192.168.1.178:8088/clip.mp3"
+
 namespace stkchan {
 
 // === NVS ===

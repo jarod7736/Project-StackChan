@@ -26,7 +26,9 @@
 #include "state_machine.h"
 #include "app/ControlBridge.h"
 
-#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_DECODE
+#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTP
+#include <AudioFileSourceHTTPStream.h>   // ESP8266Audio: live HTTP stream, decode off the wire
+#elif STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_DECODE
 #include <AudioFileSourcePROGMEM.h>   // ESP8266Audio: stream MP3 from flash, no copy
 #include "diag/diag_clip_mp3.h"
 #endif
@@ -172,7 +174,13 @@ void setup() {
     // a 150 ms blip is a poor proxy for multi-second TTS draw anyway, and the
     // silent idle test is the cleaner first cut.
     audio.begin();
-  #if STKCHAN_AUDIO_DECODE
+  #if STKCHAN_AUDIO_HTTP
+    // Rung 2d: live HTTP stream — decode off the wire so WiFi-RX overlaps the
+    // amp + decoder (the concurrency ecf953b removed). Audible 230/255.
+    M5.Speaker.setVolume(230);
+    Serial.println("[BARE] +AUDIO: amp ON + HTTP STREAM-DECODE " STKCHAN_AUDIO_HTTP_URL " every 3min");
+    const char* kLabel = "AMP+HTTP";
+  #elif STKCHAN_AUDIO_DECODE
     // Sub-step 2c: real STREAMING MP3 decode path at AUDIBLE volume. 230/255 —
     // config.h notes 200 was sub-audible, so this is also the first FULL-current
     // amp test (2b ran at 200). Re-asserted before each play().
@@ -207,7 +215,22 @@ void setup() {
                       (int)(WiFi.status() == WL_CONNECTED),
                       (unsigned)ESP.getFreeHeap());
       }
-#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_DECODE
+#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTP
+      // Rung 2d: every 3 min stream the clip LIVE over HTTP and decode off the
+      // wire — WiFi-RX runs concurrently with the amp + decoder for the whole
+      // track (the overlap ecf953b's buffer-then-play removed). playStream()
+      // owns the source and deletes it on teardown (closes the HTTP client);
+      // tick() pumps the decoder + pulls bytes off the network each iteration.
+      audio.tick();
+      if (!audio.isPlaying() && millis() - lastTone >= 180000) {
+        lastTone = millis();
+        M5.Speaker.setVolume(230);  // re-assert: a begin/teardown cycle can reset it
+        AudioFileSource* src = new AudioFileSourceHTTPStream(STKCHAN_AUDIO_HTTP_URL);
+        if (!audio.playStream(src)) {
+          Serial.println("[BARE] +AUDIO: HTTP playStream() FAILED");
+        }
+      }
+#elif STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_DECODE
       // Sub-step 2c: every 3 min STREAM-decode the embedded clip via the real
       // ESP8266Audio path (decoder CPU + I2S amp drive), read incrementally off
       // flash (AudioFileSourcePROGMEM) — NO full-buffer PSRAM copy. tick() pumps
