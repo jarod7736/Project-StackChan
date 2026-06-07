@@ -95,19 +95,28 @@ else.
   still likely plenty for presence and cheaper.
 - **Decision:** where debounce + greeting-suppression state lives (net-new, no home today).
 
-### Phase 2 — Agent / MCP tools
+### Phase 2 — Agent conversations: streaming + follow-up memory
 
-Evolve the existing `brainMode` seam into the real assistant path (it already routes to
-`oc-personal` with server-side tools — this is evolution, not a graft).
-- **2a — server question:** brain mode is one-shot *by design* (`ChatClient.h:24-26`). True
-  multi-turn needs a session id passed to `oc-personal`. **Confirm `oc-personal` supports
-  sessions before designing the device side.**
-- **2b — Decision, routing:** today `transcriptWantsBrain` (`state_machine.cpp:41`) is
-  brittle case-insensitive substring matching. Options: expand keywords / a classifier
-  round-trip (adds latency *before* chat) / have the casual model emit a route tag. Flag the
-  latency cost of each.
-- **2b — Enhancement, latency UX:** progressive feedback over 5–30 s agent/tool waits (build
-  on the existing core-0 chat task + idle-motion-during-wait).
+Evolve the existing `brainMode`→`oc-personal` seam (it already routes to server-side tools —
+evolution, not a graft). **Designed in detail** — see the plan; scoped to the two things the
+owner flagged: the dead 5–30 s wait and no follow-ups. (Routing accuracy and raw-reply
+quality were explicitly left out of scope.)
+
+- **2a — Streaming pipeline (the latency fix), DECIDED: unified.** Both casual *and* agent
+  replies stream through one pipeline: LLM streams tokens → device segments sentences → TTS
+  per sentence → a 2-deep audio queue plays sentence-by-sentence while the next generates.
+  Cuts time-to-first-audio to *(first sentence + its TTS)*. One interleaved core-0 task keeps
+  a single TLS session live at a time (chat *or* TTS), using TCP backpressure to hold the LLM
+  at sentence boundaries. **Buffer-then-play is retired** ([[audio-streaming-decision]]); the
+  power overlap this re-introduces is acceptable — **rung 2e cleared 30 min clean on
+  battery**. Persona format changes to `<expr>` *before* `<speech>` so the face is set before
+  speech streams. New host-tested `StreamParser`; new `AudioQueue`; new `STREAMING` FSM state.
+- **2b — Hybrid follow-up memory (the follow-ups fix), DECIDED.** RAM `session_id` sent to
+  `oc-personal` + a small device-side replay-ring fallback + a ~90 s sticky conversation
+  window so "what about Friday?" continues the thread without keyword routing.
+- **2c — Server contract (oc-personal, out of this repo):** SSE un-chunked streaming
+  (`stream:true`, `data: … [DONE]`); honor `session_id` with a TTL; *optionally* adopt the
+  `<expr>`-first format so agent replies can drive expression (else agent stays neutral-faced).
 
 ### Phase 3 — Wake-word / hands-free
 
