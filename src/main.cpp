@@ -25,6 +25,8 @@
 #include "motion/MotionDirector.h"
 #include "state_machine.h"
 #include "app/ControlBridge.h"
+#include "vision/PresenceSensor.h"
+#include "prompts/greetings.h"
 
 #if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTP
 #include <AudioFileSourceHTTPStream.h>   // ESP8266Audio: live HTTP stream, decode off the wire
@@ -321,6 +323,16 @@ void setup() {
   }
   motion.begin();
 
+#if STKCHAN_PRESENCE
+  // On-device camera face-detection presence (perk up / greet / look-toward-you
+  // / sleepy). Default-off feature; see config.h. begin() inits the GC0308 +
+  // spawns the core-0 infer task. The I2C/coexistence + power behaviour MUST be
+  // validated by the on-device spike before trusting this on battery.
+  if (!presence.begin()) {
+    Serial.println("WARN: presence sensor init failed");
+  }
+#endif
+
   if (!mic.begin()) {
     Serial.println("WARN: mic alloc failed");
   }
@@ -435,6 +447,42 @@ void loop() {
 #endif
   motion.tick(now);
   controlBridge.tick();   // apply queued web-control commands on this task
+
+#if STKCHAN_PRESENCE
+  // Presence is advisory and IDLE-only: it perks up + greets on arrival, tracks
+  // the face, and goes sleepy when the desk empties — but never interrupts a
+  // turn. Capture pauses whenever we're not IDLE (frees camera/CPU/power).
+  {
+    bool presenceIdle = (currentState() == State::IDLE) && !menu.isActive();
+    presence.setScanEnabled(presenceIdle);
+    presence.tick(now);
+    if (presenceIdle) {
+      if (presence.consumeArrived()) {
+        face.setExpression("happy");
+        motion.onExpressionChange("happy");
+        motion.startTracking();
+        // Spoken greeting: skip if greeted recently; silently degrade to the
+        // perk-up above when LAN/TTS is unreachable.
+        static uint32_t s_lastGreetMs = 0;
+        bool due = (s_lastGreetMs == 0) || (now - s_lastGreetMs >= kGreetCooldownMs);
+        if (due && connectivity.current() == Tier::LAN_OK) {
+          if (requestExternalSpeak(String(pickGreeting()), "happy")) s_lastGreetMs = now;
+        }
+      }
+      if (presence.consumeLeft()) {
+        face.setExpression("sleepy");
+        motion.onExpressionChange("sleepy");
+        motion.stopTracking();
+      }
+      if (presence.present()) {
+        int cx, cy, w, h;
+        if (presence.hasFace(cx, cy, w, h)) {
+          motion.lookAt(cx, cy, presence.frameW(), presence.frameH());
+        }
+      }
+    }
+  }
+#endif
 
   // Touch → FSM events + swipe-up gesture for menu reveal.
   // When the menu screen is active, LVGL widget handlers own the touch

@@ -56,6 +56,16 @@
 #define STKCHAN_AUDIO_HTTP 1
 #define STKCHAN_AUDIO_HTTP_URL "http://192.168.1.178:8088/clip.mp3"
 
+// ── Feature: on-device presence awareness ──────────────────────────────────
+// 1 = enable camera face-DETECTION presence behaviors (perk up + greet on
+// arrival, servo look-toward-you tracking, sleepy when the desk is empty).
+// Default 0: the feature ships dark until the camera/I2C spike clears and the
+// AXP brownout work above lands. See vision/PresenceSensor + vision/PresenceLogic.
+// #ifndef-guarded so a build flag (-DSTKCHAN_PRESENCE=1) can force it on.
+#ifndef STKCHAN_PRESENCE
+#define STKCHAN_PRESENCE 0
+#endif
+
 namespace stkchan {
 
 // === NVS ===
@@ -82,6 +92,9 @@ constexpr const char* kNvsElKey     = "el_key";
 constexpr const char* kNvsOtaPass   = "ota_pass";
 constexpr const char* kNvsPersona   = "persona";
 constexpr const char* kNvsSpkVolume = "spk_vol";  // 0-255 M5.Speaker.setVolume
+constexpr const char* kNvsPresEnable = "pres_en";   // "1"/"0" presence on/off (NVS override)
+constexpr const char* kNvsGreetMin   = "greet_min"; // spoken-greeting cooldown, minutes
+constexpr const char* kNvsPresGain    = "pres_gain"; // tracking gain x100 (e.g. "50" = 0.50)
 
 // === Defaults ===
 constexpr const char* kDefaultChatModel = "gemma3n:e4b";
@@ -141,6 +154,19 @@ constexpr uint32_t kMaxRecordMs         = 6000;
 constexpr uint32_t kRecordSampleRate = 16000;
 constexpr size_t   kRecordMaxBytes   = 192 * 1024;  // 6 s @ 16 kHz mono 16-bit
 constexpr size_t   kMp3MaxBytes      = 256 * 1024;  // PSRAM cap (PR #55 in Jarvis)
+
+// === Presence (on-device face detection) ===
+// Defaults feed vision/PresenceLogic params; NVS keys above can override at runtime (T7).
+constexpr uint32_t kPresIdleScanMs  = 1200;    // capture cadence with no face (power save)
+constexpr uint32_t kPresTrackScanMs = 250;     // capture cadence while tracking (~4 Hz pursuit)
+constexpr int      kPresArriveHits  = 3;       // consecutive detections -> "present"
+constexpr uint32_t kPresAbsentMs    = 30000;   // sustained no-detection -> "absent"
+constexpr uint32_t kGreetCooldownMs = 600000;  // 10 min between spoken greetings
+constexpr float    kTrackDeadband   = 0.12f;   // normalized; below this, hold still
+constexpr float    kTrackYawGain    = 0.5f;    // fraction of full-scale per unit error
+constexpr float    kTrackPitchGain  = 0.5f;
+constexpr int      kTrackYawSlew    = 8;        // max deg yaw change per update
+constexpr int      kTrackPitchSlew  = 5;        // max deg pitch change per update
 
 // === Conversation ===
 constexpr size_t kHistoryTurns = 6;
