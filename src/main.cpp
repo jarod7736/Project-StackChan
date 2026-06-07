@@ -28,7 +28,9 @@
 #include "vision/PresenceSensor.h"
 #include "prompts/greetings.h"
 
-#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTP
+#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTPS
+#include "diag/DiagTlsStreamSource.h"    // WiFiClientSecure live stream (TLS overlap)
+#elif STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTP
 #include <AudioFileSourceHTTPStream.h>   // ESP8266Audio: live HTTP stream, decode off the wire
 #elif STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_DECODE
 #include <AudioFileSourcePROGMEM.h>   // ESP8266Audio: stream MP3 from flash, no copy
@@ -176,7 +178,13 @@ void setup() {
     // a 150 ms blip is a poor proxy for multi-second TTS draw anyway, and the
     // silent idle test is the cleaner first cut.
     audio.begin();
-  #if STKCHAN_AUDIO_HTTP
+  #if STKCHAN_AUDIO_HTTPS
+    // Rung 2e: live HTTPS/TLS stream — WiFi-RX + TLS-decrypt overlap the amp +
+    // decoder (the production failing path). Audible 230/255.
+    M5.Speaker.setVolume(230);
+    Serial.println("[BARE] +AUDIO: amp ON + HTTPS/TLS STREAM-DECODE " STKCHAN_AUDIO_HTTPS_URL " every 3min");
+    const char* kLabel = "AMP+HTTPS";
+  #elif STKCHAN_AUDIO_HTTP
     // Rung 2d: live HTTP stream — decode off the wire so WiFi-RX overlaps the
     // amp + decoder (the concurrency ecf953b removed). Audible 230/255.
     M5.Speaker.setVolume(230);
@@ -217,7 +225,22 @@ void setup() {
                       (int)(WiFi.status() == WL_CONNECTED),
                       (unsigned)ESP.getFreeHeap());
       }
-#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTP
+#if STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTPS
+      // Rung 2e: every 3 min stream the clip LIVE over HTTPS and decode off the
+      // wire — WiFi-RX + TLS-decrypt run concurrently with the amp + decoder for
+      // the whole track (the exact production failing path). DiagTlsStreamSource
+      // owns the WiFiClientSecure + HTTPClient; playStream() owns the source and
+      // deletes it on teardown (closes the TLS connection).
+      audio.tick();
+      if (!audio.isPlaying() && millis() - lastTone >= 180000) {
+        lastTone = millis();
+        M5.Speaker.setVolume(230);  // re-assert: a begin/teardown cycle can reset it
+        AudioFileSource* src = new DiagTlsStreamSource(STKCHAN_AUDIO_HTTPS_URL);
+        if (!audio.playStream(src)) {
+          Serial.println("[BARE] +AUDIO: HTTPS playStream() FAILED");
+        }
+      }
+#elif STKCHAN_BARE_AUDIO && STKCHAN_AUDIO_HTTP
       // Rung 2d: every 3 min stream the clip LIVE over HTTP and decode off the
       // wire — WiFi-RX runs concurrently with the amp + decoder for the whole
       // track (the overlap ecf953b's buffer-then-play removed). playStream()

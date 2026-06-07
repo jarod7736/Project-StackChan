@@ -56,6 +56,17 @@
 #define STKCHAN_AUDIO_HTTP 1
 #define STKCHAN_AUDIO_HTTP_URL "http://192.168.1.178:8088/clip.mp3"
 
+// Rung 2e (TLS): only meaningful with STKCHAN_BARE_AUDIO. Supersedes 2d. Same
+// live-stream overlap as 2d but over HTTPS — adds the TLS handshake + per-record
+// decrypt current (WiFiClientSecure) on top of WiFi-RX + decode + amp. This is
+// the LAST differentiator from the production failing path (which streamed TTS
+// over HTTPS/TLS and tripped the AXP2101 battery-path OCP). Uses
+// src/diag/DiagTlsStreamSource (mirrors the TtsStreamSource ecf953b removed):
+// trips -> TLS streaming-overlap is the culprit (validates buffer-then-play);
+// clears 30 min -> trigger is elsewhere in the real path (POST/STT/larger MP3).
+#define STKCHAN_AUDIO_HTTPS 1
+#define STKCHAN_AUDIO_HTTPS_URL "https://192.168.1.178:8443/clip.mp3"
+
 // ── Feature: on-device presence awareness ──────────────────────────────────
 // 1 = enable camera face-DETECTION presence behaviors (perk up + greet on
 // arrival, servo look-toward-you tracking, sleepy when the desk is empty).
