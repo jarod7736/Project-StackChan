@@ -11,20 +11,20 @@
 // WiFi STA still connects (same as the OEM/other stable firmwares) and the
 // face + [PWR]/[AXP] diagnostics still run — so this is a clean "WiFi on but
 // no extra network stack" idle-soak. Set back to 0 to restore full function.
-#define STKCHAN_SOAK_MINIMAL 1
+#define STKCHAN_SOAK_MINIMAL 0
 
 // 1 = bare WiFi isolation test: M5.begin (factory-default power) + WiFi STA + a
 // minimal on-screen uptime loop. NO app at all — no audio, LVGL face, servos,
 // motion, FSM, or diagnostics. Mirrors the proven-good OpenClaw continuous-WiFi
 // load. Trips here -> the unit's WiFi power path; runs indefinitely -> the
 // trigger is in our app code (add it back one piece at a time, battery on).
-#define STKCHAN_BARE_WIFI 1
+#define STKCHAN_BARE_WIFI 0
 
 // Bisection on top of the bare-WiFi baseline (which ran all night clean). Add ONE
 // subsystem at a time; whichever makes it trip is the culprit. Audio first — the
 // fastest deaths were during voice, and audio.begin() turns on the AW88298 amp
 // rail (ALDO3) and leaves it on. 1 = also init audio (amp rail on, idle, silent).
-#define STKCHAN_BARE_AUDIO 1
+#define STKCHAN_BARE_AUDIO 0
 
 // Sub-step 2b: only meaningful with STKCHAN_BARE_AUDIO. 0 = amp rail held on but
 // silent (tests rail-on-idle). 1 = also play a synthetic "TTS phrase" (a run of
@@ -33,7 +33,7 @@
 // happened (amp sourcing current + onset transients, no network/decode/LVGL).
 // Full volume on purpose — current draw scales with volume, so a quiet tone
 // would be a weaker, less faithful test. Flip to 1 only after 2a is cleared.
-#define STKCHAN_AUDIO_PLAYBACK 1
+#define STKCHAN_AUDIO_PLAYBACK 0
 
 // Sub-step 2c: only meaningful with STKCHAN_BARE_AUDIO. Adds the real MP3 DECODE
 // path on top of amp-drive (2b). Every 3 min, STREAM the embedded broadband clip
@@ -43,7 +43,7 @@
 // de-overlap current peaks): isolates streaming-decode CPU + amp-drive current,
 // still free of network/STT/LVGL/FSM. Runs at audible 230/255 (200 was sub-
 // audible), so it's also the first FULL-current amp test. Supersedes 2b when 1.
-#define STKCHAN_AUDIO_DECODE 1
+#define STKCHAN_AUDIO_DECODE 0
 
 // Rung 2d (network): only meaningful with STKCHAN_BARE_AUDIO. Supersedes 2c.
 // Stream the clip LIVE over plain HTTP from a LAN host and decode off the wire
@@ -53,7 +53,7 @@
 // so this isolates whether streaming-overlap ALONE trips it: trips -> overlap is
 // enough; clears -> TLS is the needed ingredient (next rung = HTTPS). The
 // DinBase battery must be connected — the OCP that fires is on the battery path.
-#define STKCHAN_AUDIO_HTTP 1
+#define STKCHAN_AUDIO_HTTP 0
 #define STKCHAN_AUDIO_HTTP_URL "http://192.168.1.178:8088/clip.mp3"
 
 // Rung 2e (TLS): only meaningful with STKCHAN_BARE_AUDIO. Supersedes 2d. Same
@@ -64,7 +64,7 @@
 // src/diag/DiagTlsStreamSource (mirrors the TtsStreamSource ecf953b removed):
 // trips -> TLS streaming-overlap is the culprit (validates buffer-then-play);
 // clears 30 min -> trigger is elsewhere in the real path (POST/STT/larger MP3).
-#define STKCHAN_AUDIO_HTTPS 1
+#define STKCHAN_AUDIO_HTTPS 0
 #define STKCHAN_AUDIO_HTTPS_URL "https://192.168.1.178:8443/clip.mp3"
 
 // Power-path telemetry for the bare soak. 1 = log [PWR] (vbat/vbus/die-temp/
@@ -74,7 +74,7 @@
 // we can't tell if a playback peak neared the battery-discharge OCP — or whether
 // the battery is even discharging on USB (getBatteryCurrent is hardwired 0 on
 // CoreS3, so we infer from vbat-dip / isCharging / die-temp / latched AXP IRQs).
-#define STKCHAN_PWR_TELEMETRY 1
+#define STKCHAN_PWR_TELEMETRY 0
 
 // Max-load mode: drive the heaviest achievable CoreS3-side load to test whether
 // ANY load can push past the VBUS input-current limit and force the battery into
@@ -82,7 +82,7 @@
 // back-to-back playback (no 3-min gap) + max display brightness, stacked on the
 // active audio rung. Watch [PWR] vbat: a dip off its floating ~4.15V = battery
 // now sourcing (OCP reachable); pinned = load still under VBUS limit.
-#define STKCHAN_MAXLOAD 1
+#define STKCHAN_MAXLOAD 0
 #define STKCHAN_PLAY_GAP_MS (STKCHAN_MAXLOAD ? 800u : 180000u)
 
 // ── Feature: on-device presence awareness ──────────────────────────────────
