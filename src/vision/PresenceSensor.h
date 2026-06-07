@@ -24,6 +24,10 @@ class PresenceSensor {
   bool consumeLeft()    { return debounce_.consumeLeft(); }
   // Latest detected face bbox center + size (frame pixel coords). False if absent.
   bool hasFace(int& cx, int& cy, int& w, int& h) const;
+  // Edge variant: true at most once per NEW detection (the infer cadence, not
+  // the loop rate). Use this to drive tracking so each eased servo move has time
+  // to complete instead of being restarted every main-loop iteration.
+  bool takeFreshFace(int& cx, int& cy, int& w, int& h);
   int  frameW() const { return box_.fw; }
   int  frameH() const { return box_.fh; }
 
@@ -39,6 +43,7 @@ class PresenceSensor {
   PresenceDebounce  debounce_{ PresenceParams{ kPresArriveHits, kPresAbsentMs } };
   Det               latest_{};                    // written by infer task
   Det               box_{};                       // last detected box (hasFace)
+  bool              fresh_          = false;       // a new detected box landed
   volatile uint32_t seq_            = 0;           // bumped per new capture
   uint32_t          processedSeq_   = 0;
   volatile uint32_t scanIntervalMs_ = kPresIdleScanMs;

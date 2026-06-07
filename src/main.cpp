@@ -474,9 +474,13 @@ void loop() {
         motion.onExpressionChange("sleepy");
         motion.stopTracking();
       }
+      // Drive tracking only on a FRESH detection (the ~250 ms infer cadence),
+      // not every loop iteration — otherwise each call restarts the servo ease
+      // and the head only crawls. takeFreshFace() returns true at most once per
+      // new capture.
       if (presence.present()) {
         int cx, cy, w, h;
-        if (presence.hasFace(cx, cy, w, h)) {
+        if (presence.takeFreshFace(cx, cy, w, h)) {
           motion.lookAt(cx, cy, presence.frameW(), presence.frameH());
         }
       }

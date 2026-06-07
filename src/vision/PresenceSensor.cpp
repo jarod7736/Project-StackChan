@@ -58,11 +58,13 @@ void PresenceSensor::taskLoop() {
     if (!CoreS3.Camera.get()) { vTaskDelay(pdMS_TO_TICKS(20)); continue; }
     camera_fb_t* fb = CoreS3.Camera.fb;
 
+    uint32_t t0 = millis();
     std::vector<int> shape = {(int)fb->height, (int)fb->width, 3};
     std::list<dl::detect::result_t>& cand =
         s1.infer((uint16_t*)fb->buf, shape);
     std::list<dl::detect::result_t>& res =
         s2.infer((uint16_t*)fb->buf, shape, cand);
+    uint32_t inferMs = millis() - t0;
 
     Det d;
     d.stamp = now;
@@ -89,6 +91,16 @@ void PresenceSensor::taskLoop() {
     latest_ = d;
     seq_++;
     taskEXIT_CRITICAL(&s_resultMux);
+
+    // Spike instrumentation (steps 3/4): inference time, detection, task stack
+    // high-water, free PSRAM. Throttled so it doesn't flood the serial log.
+    static uint32_t s_logCtr = 0;
+    if ((++s_logCtr % 16) == 0) {
+      Serial.printf("[PRES] infer=%lums det=%d score=%.2f stackHW=%u psram=%u\n",
+                    (unsigned long)inferMs, (int)d.detected, d.score,
+                    (unsigned)uxTaskGetStackHighWaterMark(nullptr),
+                    (unsigned)ESP.getFreePsram());
+    }
   }
 }
 
@@ -104,7 +116,7 @@ void PresenceSensor::tick(uint32_t nowMs) {
   if (seq != processedSeq_) {            // process each capture exactly once
     processedSeq_ = seq;
     debounce_.update(d.detected, d.stamp);
-    if (d.detected) box_ = d;
+    if (d.detected) { box_ = d; fresh_ = true; }
   }
   // Faster pursuit while a face is present; lazy poll when the desk is empty.
   scanIntervalMs_ = debounce_.present() ? kPresTrackScanMs : kPresIdleScanMs;
@@ -116,12 +128,20 @@ bool PresenceSensor::hasFace(int& cx, int& cy, int& w, int& h) const {
   return true;
 }
 
+bool PresenceSensor::takeFreshFace(int& cx, int& cy, int& w, int& h) {
+  if (!fresh_) return false;
+  fresh_ = false;
+  cx = box_.cx; cy = box_.cy; w = box_.w; h = box_.h;
+  return true;
+}
+
 #else  // STKCHAN_PRESENCE == 0 — feature compiled out; stubs keep `presence` linkable.
 
 bool PresenceSensor::begin() { return false; }
 void PresenceSensor::tick(uint32_t) {}
 void PresenceSensor::setScanEnabled(bool) {}
 bool PresenceSensor::hasFace(int&, int&, int&, int&) const { return false; }
+bool PresenceSensor::takeFreshFace(int&, int&, int&, int&) { return false; }
 
 #endif
 
