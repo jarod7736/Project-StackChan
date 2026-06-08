@@ -12,11 +12,11 @@ PY=/home/jarod7736/.platformio/penv/bin/python
 ESPTOOL=/home/jarod7736/.platformio/packages/tool-esptoolpy/esptool.py
 BUILD=/home/jarod7736/projects/Project-StackChan/.pio/build/cores3_linux
 BOOT_APP0=/home/jarod7736/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin
-PORT=/dev/ttyACM0
 
-echo "fast-flash armed at $(date '+%H:%M:%S'); polling $PORT every 0.3s ..."
+echo "fast-flash armed at $(date '+%H:%M:%S'); polling /dev/ttyACM* every 0.3s ..."
 for i in $(seq 1 6000); do          # ~30 min at 0.3s
-  if [ -e "$PORT" ]; then
+  PORT=$(ls /dev/ttyACM* 2>/dev/null | head -1)
+  if [ -n "$PORT" ] && [ -e "$PORT" ]; then
     echo ">>> PORT UP at $(date '+%H:%M:%S.%3N') — firing esptool immediately"
     "$PY" "$ESPTOOL" --chip esp32s3 --port "$PORT" --baud 921600 \
       --before default_reset --after hard_reset write_flash -z \
