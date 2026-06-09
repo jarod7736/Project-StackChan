@@ -1,3 +1,12 @@
+> **⛔ SUPERSEDED (2026-06-09) — root cause FOUND & FIXED.** The silent AXP power-off is an
+> **I2C-controller collision**: `Servos::begin()` does `Wire1.begin(17,18)` = `I2C_NUM_1`,
+> the SAME controller M5Unified uses for the internal AXP2101 bus → a stray write disables a
+> core rail → silent off; the AXP holds the bad state → battery-pull recovery. Source-confirmed
+> (`M5Unified.cpp:1620-1631`) + empirically proven. **The current-spike / battery-PCM-OCP /
+> "reduce firmware peak current" gates in this plan are VOID** — the answer wasn't a load
+> problem. Fix shipped in `src/hal/Servos.cpp` (`Wire1`/I2C_NUM_1 → `Wire`/I2C_NUM_0).
+> Canonical record: the `axp-brownout-state` memory. Kept below for historical context only.
+
 # AXP power-off — structured debug plan (2026-06-07)
 
 Branch: `diag/axp-silent-poweroff`. Supersedes the ad-hoc grind; built to escape the
