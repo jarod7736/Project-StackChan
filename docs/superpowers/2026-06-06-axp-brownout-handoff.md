@@ -1,3 +1,12 @@
+> **⛔ SUPERSEDED (2026-06-09) — root cause FOUND & FIXED.** This is the oldest handoff and
+> its framing (brown-out / vbat collapse / current-load) is entirely **VOID**. The actual
+> root cause is an **I2C-controller collision**: `Servos::begin()` does `Wire1.begin(17,18)` =
+> `I2C_NUM_1`, the SAME controller M5Unified uses for the internal AXP2101 bus → a stray write
+> disables a core rail → silent off; the AXP holds the bad state → battery-pull recovery.
+> Source-confirmed (`M5Unified.cpp:1620-1631`) + empirically proven. Fix shipped in
+> `src/hal/Servos.cpp` (`Wire1`/I2C_NUM_1 → `Wire`/I2C_NUM_0). Canonical record: the
+> `axp-brownout-state` memory. Kept below for historical context only.
+
 # AXP2101 brown-out / power-off — investigation handoff (2026-06-06)
 
 Branch: `feat/presence-awareness`. Resume here.
