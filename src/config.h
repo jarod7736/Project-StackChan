@@ -85,6 +85,24 @@
 #define STKCHAN_MAXLOAD 0
 #define STKCHAN_PLAY_GAP_MS (STKCHAN_MAXLOAD ? 800u : 180000u)
 
+// ── Bisection rung: DISPLAY/LVGL/face ───────────────────────────────────────
+// Only meaningful with STKCHAN_BARE_WIFI. B0 (bare) already proves the backlight
+// RAIL on-idle is clean (M5.begin powers it), so this rung's delta is the
+// continuous LVGL render loop (lv_timer_handler + partial-buffer SPI flushes) +
+// face animation (blink timer/anims). INDEPENDENT additive #if (not elif), so it
+// composes with STKCHAN_BARE_AUDIO below. Keep brightness at the M5.begin default
+// (no setBrightness) so RENDER activity is the only variable. Display is the prime
+// suspect — biggest continuous draw the bare path lacks, never isolated before.
+#define STKCHAN_BARE_DISPLAY 0
+
+// ── Bisection rung: MOTION/servos ───────────────────────────────────────────
+// Only meaningful with STKCHAN_BARE_WIFI. Inits the PCA9685 on Wire1 (Port C) and
+// drives a periodic ease move so the bus actually transacts. CoreS3-side delta is
+// only PCA9685 3V3 + Wire1 I2C traffic (servos run on an EXTERNAL supply) — a
+// deliberately weak rung, ordered last. VOID unless the PCA9685 + servo supply are
+// physically connected (servos.begin() returns false with no PCA -> zero traffic).
+#define STKCHAN_BARE_MOTION 0
+
 // ── Feature: on-device presence awareness ──────────────────────────────────
 // 1 = enable camera face-DETECTION presence behaviors (perk up + greet on
 // arrival, servo look-toward-you tracking, sleepy when the desk is empty).

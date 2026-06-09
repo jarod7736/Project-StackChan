@@ -238,6 +238,26 @@ void setup() {
 #else
     const char* kLabel = "BARE WIFI";
 #endif
+#if STKCHAN_BARE_DISPLAY
+    // Rung B1: LVGL + face. face.begin() calls lvglDisplay.begin() internally
+    // (Face.cpp) — builds the eye/mouth/brow widgets and starts the blink anim.
+    // No menu.begin()/FSM needed: face widgets live on the LVGL active screen and
+    // the menu.show() path is a touch callback only. Rendering is driven from the
+    // loop via lvglDisplay.tick() + face.tick(). Brightness stays at the M5.begin
+    // default so RENDER activity is the only variable this rung adds.
+    face.begin();
+    Serial.println("[BARE] +DISPLAY: LVGL render loop + face animation");
+#endif
+#if STKCHAN_BARE_MOTION
+    // Rung B3: servos. servos.begin() = Wire1.begin(Port C) + PCA9685 init. Returns
+    // false if the PCA isn't attached -> NO bus traffic -> rung is VOID (servos also
+    // run on an external supply, so the CoreS3-side delta is only PCA9685 3V3 + Wire1).
+    if (!servos.begin()) {
+      Serial.println("[BARE] +MOTION: servos.begin() FAILED (PCA9685 not on Wire1 Port C) — RUNG VOID");
+    } else {
+      Serial.println("[BARE] +MOTION: PCA9685 on Wire1 + periodic ease moves");
+    }
+#endif
     uint32_t last = 0, lastTone = 0;
     for (;;) {
       // SUSPECT TEST (2026-06-07): M5.update() is the ONLY command-capable delta
@@ -248,6 +268,32 @@ void setup() {
       // silent. dies -> M5.update()/button path is the trigger (and not a bf4b46b
       // artifact, since the bare path has no bf4b46b ilim write / TX cap).
       M5.update();
+      // [AXPT] continuous heartbeat — REQUIRED for every ladder soak: a survival
+      // without continuous [AXPT] to the end is void (the bare loop's own [BARE]
+      // line is only 1 Hz). Ported verbatim from the full-app loop() (main.cpp
+      // ~478): raw reads only, no write-1-clear, so a fault bit that sets just
+      // before the off survives into the last printed sample. 100 ms here is a
+      // LIVENESS + at-death register snapshot — the idle death leaves vbat healthy
+      // and regs constant at any rate, so a faster sampler buys nothing for THIS
+      // death (the higher-rate + SD-logged sampler is the battery-ONLY tool).
+      {
+        static uint32_t s_axptPoll = 0;
+        uint32_t nowA = millis();
+        if (nowA - s_axptPoll >= 100) {
+          s_axptPoll = nowA;
+          Serial.printf("[AXPT] up=%lums vbat=%dmV vbus=%dmV cid=0x%02X ilim=0x%02X "
+                        "s1=0x%02X s2=0x%02X irq=0x%02X/0x%02X/0x%02X\n",
+                        (unsigned long)nowA,
+                        M5.Power.getBatteryVoltage(), M5.Power.getVBUSVoltage(),
+                        M5.In_I2C.readRegister8(0x34, 0x03, 400000),
+                        M5.In_I2C.readRegister8(0x34, 0x16, 400000),
+                        M5.In_I2C.readRegister8(0x34, 0x00, 400000),
+                        M5.In_I2C.readRegister8(0x34, 0x01, 400000),
+                        M5.In_I2C.readRegister8(0x34, 0x48, 400000),
+                        M5.In_I2C.readRegister8(0x34, 0x49, 400000),
+                        M5.In_I2C.readRegister8(0x34, 0x4A, 400000));
+        }
+      }
       if (millis() - last >= 1000) {
         last = millis();
         M5.Display.setCursor(8, 8);
@@ -336,6 +382,25 @@ void setup() {
       }
 #else
       (void)lastTone;
+#endif
+#if STKCHAN_BARE_DISPLAY
+      lvglDisplay.tick();      // lv_tick_inc + lv_timer_handler (the render load)
+      face.tick(millis());     // blink/expression animation advance
+#endif
+#if STKCHAN_BARE_MOTION
+      servos.tick(millis());   // advance any active ease
+      {
+        // Drive a small ease move every 10 s so Wire1/PCA9685 actually transacts
+        // (a static hold writes the bus once at begin, then goes quiet).
+        static uint32_t s_lastMove = 0;
+        static bool s_dir = false;
+        if (millis() - s_lastMove >= 10000) {
+          s_lastMove = millis();
+          s_dir = !s_dir;
+          servos.easeYawTo(s_dir ? 20 : -20, 600);
+          servos.easePitchTo(s_dir ? 10 : -10, 600);
+        }
+      }
 #endif
       delay(10);
     }
