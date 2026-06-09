@@ -8,17 +8,24 @@ Servos servos;
 
 // PCA9685 servo driver on CoreS3 via PORT C (G17/G18). The M-Bus is occupied by
 // the DinBase (which holds the battery), so the original M-Bus pins (G43/G44)
-// aren't reachable — we solder the PCA's I2C to Port C instead. ESP32-S3 routes
-// I2C to any GPIO, so we run it on the secondary peripheral (Wire1) to keep off
-// the CoreS3's internal Wire (display/touch/power/codecs on G11/G12 — note the
-// ES7210 mic codec is ALSO 0x40 there, so the PCA must stay on its own bus).
+// aren't reachable — we solder the PCA's I2C to Port C instead.
 //   PCA SDA → G17 (Port C),  PCA SCL → G18 (Port C)
 //   PCA VCC → 3V3 (NOT the Grove 5V — keeps the bus 3.3V-safe), GND common.
 // PCA9685 at default address 0x40.
+//
+// ⚠ MUST use Arduino `Wire` (I2C_NUM_0), NOT `Wire1` (I2C_NUM_1). On CoreS3,
+// M5Unified binds its INTERNAL bus (AXP2101 0x34 + codec/touch/AW9523B) to
+// I2C_NUM_1 (M5Unified.cpp:1624) — so `Wire1.begin(17,18)` reconfigured the very
+// controller driving the AXP power chip; a stray byte then disabled a rail → the
+// long-hunted silent "AXP power-off" (vbat healthy, battery-pull-only recovery).
+// Root cause found 2026-06-09; PROVEN by an I2C scan on Wire1/Port C returning the
+// whole internal constellation (0x34 AXP, 0x38 touch, 0x40 codec, 0x58 AW9523…).
+// I2C_NUM_0 is free (the app uses no Port A / Ex_I2C devices). NOTE: Port C has no
+// external pull-ups — for a real PCA add ~4.7k pull-ups or move it to Port A (G1/G2).
 constexpr int kServoSDA  = 17;   // Port C
 constexpr int kServoSCL  = 18;   // Port C
 constexpr uint8_t kServoAddr = 0x40;
-static Adafruit_PWMServoDriver g_pwm = Adafruit_PWMServoDriver(kServoAddr, Wire1);
+static Adafruit_PWMServoDriver g_pwm = Adafruit_PWMServoDriver(kServoAddr, Wire);
 
 // PCA9685 PWM range for SG90: ~150 .. 600 counts at 50 Hz.
 static int degToPwm(int deg) {
@@ -28,10 +35,10 @@ static int degToPwm(int deg) {
 }
 
 bool Servos::begin() {
-  // Secondary I2C bus on Port C (G17/G18).
-  Wire1.begin(kServoSDA, kServoSCL, 400000);
+  // Secondary I2C on Port C via Wire (I2C_NUM_0) — see the controller warning above.
+  Wire.begin(kServoSDA, kServoSCL, 400000);
   if (!g_pwm.begin()) {
-    Serial.println("ERR: PCA9685 init failed (not detected on Wire1 Port C G17/G18 @0x40)");
+    Serial.println("ERR: PCA9685 init failed (not detected on Wire Port C G17/G18 @0x40)");
     return false;
   }
   g_pwm.setOscillatorFrequency(27000000);
