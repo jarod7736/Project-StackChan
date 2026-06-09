@@ -22,22 +22,6 @@ static void kickNtpSync() {
                   stkchan::kTimezoneDefault);
 }
 
-// ── WiFi TX-power cap (brownout mitigation) ────────────────────────────────
-// Default ESP32-S3 TX power is ~19.5 dBm; each TX burst is the largest, spikiest
-// current draw on the chip. Captured crash data points to an AXP2101 protection
-// LATCH on a peak-current spike (vbat/heap healthy at death; recovers only by
-// disconnecting the DinBase battery). Cutting TX power shrinks that spike and is
-// the canonical ESP32 brownout fix. 11 dBm still let the battery-path protection
-// trip (two power-offs on the full app), so cut harder to 2 dBm — the device sits
-// at rssi ~-51 (very strong), so range is a non-issue and the TX-burst spike is
-// minimized. Paired with the AXP VBUS input-limit raise (2000mA) in setup(): less
-// demand spike + more supply headroom, attacking the OCP from both sides. Must be
-// re-applied after every (re)connect (the driver resets it to default on assoc).
-static void applyTxPowerCap() {
-    WiFi.setTxPower(WIFI_POWER_2dBm);
-    Serial.printf("[WIFI] TX power cap -> %d (0.25dBm units)\n", (int)WiFi.getTxPower());
-}
-
 // ── Slot-priority connect loop (Jarvis PR #20) ────────────────────────────
 // Reads up to 3 SSID/PSK slots from NVS (ssid1/psk1 … ssid3/psk3).
 // Each slot gets kPerSlotTimeoutMs before we move on; the total is also
@@ -114,16 +98,13 @@ static bool connectInSlotOrder(uint32_t connectTimeoutMs) {
                           WiFi.channel(),
                           (unsigned)i + 1,
                           WiFi.macAddress().c_str());
-            applyTxPowerCap();
             kickNtpSync();
 
-#if !STKCHAN_SOAK_MINIMAL
             // Register mDNS hostname so OtaService (T7) and other hosts can
             // reach the device as stackchan.local on the LAN.
             if (MDNS.begin("stackchan")) {
                 Serial.println("[WIFI] mDNS: stackchan.local");
             }
-#endif
 
             return true;
         }
@@ -171,15 +152,12 @@ void WifiManager::tick() {
     } else if (!s_was_connected && now) {
         Serial.printf("[WIFI] Reconnected. ip=%s\n",
                       WiFi.localIP().toString().c_str());
-        applyTxPowerCap();
         kickNtpSync();
-#if !STKCHAN_SOAK_MINIMAL
         // ESPmDNS does not re-register on auto-reconnect; without this,
         // stackchan.local stops resolving and OTA breaks after any drop.
         if (MDNS.begin("stackchan")) {
             Serial.println("[WIFI] mDNS re-registered: stackchan.local");
         }
-#endif
     }
     s_was_connected = now;
 }

@@ -5,109 +5,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
-// ── Diagnostic soak toggle ─────────────────────────────────────────────────
-// 1 = skip the always-on network services (AsyncTCP web server, mDNS, OTA
-// listener, the 30 s connectivity probe) to isolate the AXP2101 power-off.
-// WiFi STA still connects (same as the OEM/other stable firmwares) and the
-// face + [PWR]/[AXP] diagnostics still run — so this is a clean "WiFi on but
-// no extra network stack" idle-soak. Set back to 0 to restore full function.
-#define STKCHAN_SOAK_MINIMAL 0
-
-// 1 = bare WiFi isolation test: M5.begin (factory-default power) + WiFi STA + a
-// minimal on-screen uptime loop. NO app at all — no audio, LVGL face, servos,
-// motion, FSM, or diagnostics. Mirrors the proven-good OpenClaw continuous-WiFi
-// load. Trips here -> the unit's WiFi power path; runs indefinitely -> the
-// trigger is in our app code (add it back one piece at a time, battery on).
-#define STKCHAN_BARE_WIFI 0
-
-// Bisection on top of the bare-WiFi baseline (which ran all night clean). Add ONE
-// subsystem at a time; whichever makes it trip is the culprit. Audio first — the
-// fastest deaths were during voice, and audio.begin() turns on the AW88298 amp
-// rail (ALDO3) and leaves it on. 1 = also init audio (amp rail on, idle, silent).
-#define STKCHAN_BARE_AUDIO 0
-
-// Sub-step 2b: only meaningful with STKCHAN_BARE_AUDIO. 0 = amp rail held on but
-// silent (tests rail-on-idle). 1 = also play a synthetic "TTS phrase" (a run of
-// short speech-band tones with gaps) every 3 min — a faithful proxy for the
-// bursty current envelope of real TTS playback, where the fastest deaths
-// happened (amp sourcing current + onset transients, no network/decode/LVGL).
-// Full volume on purpose — current draw scales with volume, so a quiet tone
-// would be a weaker, less faithful test. Flip to 1 only after 2a is cleared.
-#define STKCHAN_AUDIO_PLAYBACK 0
-
-// Sub-step 2c: only meaningful with STKCHAN_BARE_AUDIO. Adds the real MP3 DECODE
-// path on top of amp-drive (2b). Every 3 min, STREAM the embedded broadband clip
-// (src/diag/diag_clip_mp3.h) straight from flash via AudioFileSourcePROGMEM →
-// AudioPlayer::playStream() — decoded incrementally, NO full-buffer PSRAM copy.
-// Deliberately the STREAMING path (not the buffered play() that ecf953b added to
-// de-overlap current peaks): isolates streaming-decode CPU + amp-drive current,
-// still free of network/STT/LVGL/FSM. Runs at audible 230/255 (200 was sub-
-// audible), so it's also the first FULL-current amp test. Supersedes 2b when 1.
-#define STKCHAN_AUDIO_DECODE 0
-
-// Rung 2d (network): only meaningful with STKCHAN_BARE_AUDIO. Supersedes 2c.
-// Stream the clip LIVE over plain HTTP from a LAN host and decode off the wire
-// DURING playback, so WiFi-RX + decode + amp current OVERLAP — the exact
-// concurrency ecf953b's buffer-then-play fix removed. Production tripped the
-// AXP2101 *battery-path* OCP this way but over HTTPS/TLS; plain HTTP strips TLS,
-// so this isolates whether streaming-overlap ALONE trips it: trips -> overlap is
-// enough; clears -> TLS is the needed ingredient (next rung = HTTPS). The
-// DinBase battery must be connected — the OCP that fires is on the battery path.
-#define STKCHAN_AUDIO_HTTP 0
-#define STKCHAN_AUDIO_HTTP_URL "http://192.168.1.178:8088/clip.mp3"
-
-// Rung 2e (TLS): only meaningful with STKCHAN_BARE_AUDIO. Supersedes 2d. Same
-// live-stream overlap as 2d but over HTTPS — adds the TLS handshake + per-record
-// decrypt current (WiFiClientSecure) on top of WiFi-RX + decode + amp. This is
-// the LAST differentiator from the production failing path (which streamed TTS
-// over HTTPS/TLS and tripped the AXP2101 battery-path OCP). Uses
-// src/diag/DiagTlsStreamSource (mirrors the TtsStreamSource ecf953b removed):
-// trips -> TLS streaming-overlap is the culprit (validates buffer-then-play);
-// clears 30 min -> trigger is elsewhere in the real path (POST/STT/larger MP3).
-#define STKCHAN_AUDIO_HTTPS 0
-#define STKCHAN_AUDIO_HTTPS_URL "https://192.168.1.178:8443/clip.mp3"
-
-// Power-path telemetry for the bare soak. 1 = log [PWR] (vbat/vbus/die-temp/
-// charging/pct) + [AXP] latched fault regs every tick, and reset-reason + AXP
-// fault dump at boot. Reuses the forensics from a900ad7/312dbd0/e2bbaef/583b5d9.
-// Needed to INTERPRET a "clear": every rung survived, but with no power readings
-// we can't tell if a playback peak neared the battery-discharge OCP — or whether
-// the battery is even discharging on USB (getBatteryCurrent is hardwired 0 on
-// CoreS3, so we infer from vbat-dip / isCharging / die-temp / latched AXP IRQs).
-#define STKCHAN_PWR_TELEMETRY 0
-
-// Max-load mode: drive the heaviest achievable CoreS3-side load to test whether
-// ANY load can push past the VBUS input-current limit and force the battery into
-// the discharge path (servos don't count — they're on an external supply). 1 =
-// back-to-back playback (no 3-min gap) + max display brightness, stacked on the
-// active audio rung. Watch [PWR] vbat: a dip off its floating ~4.15V = battery
-// now sourcing (OCP reachable); pinned = load still under VBUS limit.
-#define STKCHAN_MAXLOAD 0
-#define STKCHAN_PLAY_GAP_MS (STKCHAN_MAXLOAD ? 800u : 180000u)
-
-// ── Bisection rung: DISPLAY/LVGL/face ───────────────────────────────────────
-// Only meaningful with STKCHAN_BARE_WIFI. B0 (bare) already proves the backlight
-// RAIL on-idle is clean (M5.begin powers it), so this rung's delta is the
-// continuous LVGL render loop (lv_timer_handler + partial-buffer SPI flushes) +
-// face animation (blink timer/anims). INDEPENDENT additive #if (not elif), so it
-// composes with STKCHAN_BARE_AUDIO below. Keep brightness at the M5.begin default
-// (no setBrightness) so RENDER activity is the only variable. Display is the prime
-// suspect — biggest continuous draw the bare path lacks, never isolated before.
-#define STKCHAN_BARE_DISPLAY 0
-
-// ── Bisection rung: MOTION/servos ───────────────────────────────────────────
-// Only meaningful with STKCHAN_BARE_WIFI. Inits the PCA9685 on Wire1 (Port C) and
-// drives a periodic ease move so the bus actually transacts. CoreS3-side delta is
-// only PCA9685 3V3 + Wire1 I2C traffic (servos run on an EXTERNAL supply) — a
-// deliberately weak rung, ordered last. VOID unless the PCA9685 + servo supply are
-// physically connected (servos.begin() returns false with no PCA -> zero traffic).
-#define STKCHAN_BARE_MOTION 0
-
 // ── Feature: on-device presence awareness ──────────────────────────────────
 // 1 = enable camera face-DETECTION presence behaviors (perk up + greet on
 // arrival, servo look-toward-you tracking, sleepy when the desk is empty).
-// Default 0: the feature ships dark until the camera/I2C spike clears and the
-// AXP brownout work above lands. See vision/PresenceSensor + vision/PresenceLogic.
+// Default 0: the feature ships dark until the camera/I2C spike clears.
+// See vision/PresenceSensor + vision/PresenceLogic.
 // #ifndef-guarded so a build flag (-DSTKCHAN_PRESENCE=1) can force it on.
 #ifndef STKCHAN_PRESENCE
 #define STKCHAN_PRESENCE 0
