@@ -145,10 +145,33 @@ void setup() {
     Serial.println("WARN: AudioPlayer init failed");
   }
 
-  if (!servos.begin()) {
+  bool servosOk = servos.begin();
+  if (!servosOk) {
     Serial.println("WARN: servo init failed");
   }
   motion.begin();
+
+  // Servo self-test sweep — runs ONCE at boot, before the loop's idle motion
+  // starts, so it exercises the FULL yaw/pitch travel with no interference. Idle
+  // only nudges yaw +/-8, so this is the way to verify the real mechanical range
+  // (and it doubles as a "wake up" flourish). Each ease is pumped to completion
+  // here because loop()/motion.tick() isn't running yet.
+  if (servosOk) {
+    Serial.println("[SERVO] self-test sweep: yaw +/-45, pitch +/-25");
+    auto sweep = [](int yaw, int pitch, uint32_t ms) {
+      servos.easeYawTo(yaw, ms);
+      servos.easePitchTo(pitch, ms);
+      uint32_t t0 = millis();
+      while (millis() - t0 <= ms + 60) { servos.tick(millis()); delay(10); }
+    };
+    sweep(0, 0, 300);
+    sweep(Servos::kYawMax, 0, 700);     // full right
+    sweep(Servos::kYawMin, 0, 1000);    // full left
+    sweep(0, 0, 500);                   // yaw center
+    sweep(0, Servos::kPitchMax, 500);   // up
+    sweep(0, Servos::kPitchMin, 700);   // down
+    sweep(0, 0, 400);                   // recenter
+  }
 
 #if STKCHAN_PRESENCE
   // On-device camera face-detection presence (perk up / greet / look-toward-you
