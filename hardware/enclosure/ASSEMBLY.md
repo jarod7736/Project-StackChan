@@ -1,5 +1,8 @@
 # StackChan (SG90 / Takao) — Assembly & Fitment Guide
 
+> 📷 Prefer pictures? See the **[Illustrated Assembly guide](ASSEMBLY-ILLUSTRATED.md)**
+> — exploded view + a render for every step, generated from the real STLs.
+
 This is the build we're using: the **SG90-servo "stack-chan_takao_base"** shell
 (Takao Akaki, via `mongonta0716/3DPrinter_Models`), driven by our CoreS3 +
 **PCA9685** firmware. It is **not** the M5 K151 shell (that one needs DYNAMIXEL
