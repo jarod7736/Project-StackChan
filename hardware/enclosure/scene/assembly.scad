@@ -47,9 +47,10 @@ module feet()    color(C_FEET)  import(str(stl_dir,"/stackchan_takao_feet.stl"))
 module hat()     color(C_HAT)   import(str(stl_dir,"/stackchan_takao_hat_cat_CoreS3.stl"));
 
 // ======================  STAND-INS  ===================================
-// SG90 micro servo: body 22.8(L,Y) x 12.6(W,X) x 22.5(H,Z); flange at 15.9;
-// output shaft offset ~5.9 toward one end. Built shaft-up at local origin,
-// body base at Z=0, shaft on +Z, centred on the OUTPUT SHAFT in X/Y.
+// 9 g micro servo (this build uses MG90S; SG90/MS18 share the same body class).
+// Body 22.8(L,Y) x 12.6(W,X) x 22.5(H,Z); flange at 15.9; output shaft offset
+// ~5.9 toward one end. Built shaft-up at local origin, body base at Z=0, shaft on
+// +Z, centred on the OUTPUT SHAFT in X/Y. (MG90S is ~1-2 mm longer than SG90.)
 module sg90(horn="round") {
     sx = 5.9;                       // shaft offset from body centre (+Y end)
     translate([0, -sx, 0]) {        // shift so shaft lands at local origin

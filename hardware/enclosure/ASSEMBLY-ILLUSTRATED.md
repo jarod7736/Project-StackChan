@@ -1,14 +1,14 @@
-# Stack-chan (SG90 / Takao) — Illustrated Assembly
+# Stack-chan (MG90S / SG90 · Takao) — Illustrated Assembly
 
 <p align="center"><img src="images/00-hero.png" width="380" alt="Assembled Stack-chan: CoreS3 face, cat-ear hat, on the SG90 Takao base"></p>
 
-A picture-by-picture build of the **SG90-servo "stack-chan_takao_base"** shell
-driven by our CoreS3 + **PCA9685** firmware. This is the visual companion to
-[`ASSEMBLY.md`](ASSEMBLY.md) — read that for the fitment notes, print tolerances,
-and the reasoning behind choosing this shell over the K151/XL330 design. The
-images here are rendered from the **actual Takao STLs**; the SG90 servos and the
-CoreS3 are simple stand-ins (we don't have STLs for them) so you can see where
-each one goes.
+A picture-by-picture build of the **"stack-chan_takao_base"** shell (the upstream
+"SG90 case" set), driven by **MG90S** servos on our CoreS3 + **PCA9685** firmware.
+This is the visual companion to [`ASSEMBLY.md`](ASSEMBLY.md) — read that for the
+fitment notes, print tolerances, and the reasoning behind choosing this shell over
+the K151/XL330 design. The images here are rendered from the **actual Takao STLs**;
+the servos and the CoreS3 are simple stand-ins (we don't have STLs for them) so you
+can see where each one goes.
 
 > **Orientation used in every render:** the **display faces −Y (front)**, the
 > head **pans (yaw)** about the vertical **Z** axis at the base, and **tilts
@@ -22,15 +22,20 @@ each one goes.
 | # | Part | Qty | Notes |
 |---|------|-----|-------|
 | 1 | `stackchan_takao_shell_v2_resin` | 1 | Head shell — wraps the CoreS3; speaker grille + "stack-chan" emboss on one side |
-| 2 | `stackchan_takao_bracket_v2.5`   | 1 | Servo bracket — holds **both** SG90s (pan lower, tilt upper) |
-| 3 | `stackchan_takao_feet`           | 1 | Base — two pads + a centre hub with the SG90 round-horn bolt pattern |
+| 2 | `stackchan_takao_bracket_v2.5`   | 1 | Servo bracket — holds **both** servos (pan lower, tilt upper) |
+| 3 | `stackchan_takao_feet`           | 1 | Base — two pads + a centre hub with the round-horn bolt pattern |
 | 4 | `stackchan_takao_hat_cat_CoreS3` | 1 | Optional cat-ear hat |
-| 5 | **SG90** 9 g micro servo (PWM)   | 2 | One pan (yaw), one tilt (pitch) — plus their round horns + screws |
+| 5 | **MG90S** metal-gear micro servo (PWM) | 2 | One pan (yaw), one tilt (pitch) — plus round horns + screws. **SG90 / MS18** (plastic-gear, ~9 g) are drop-in compatible. |
 | 6 | **M5Stack CoreS3**               | 1 | Display faces front |
 | 7 | PCA9685 + 5 V supply (barrel jack) | 1 | Servo driver; see the optional [`pedestal.scad`](pedestal-sg90.scad) base |
 
 Printed parts are toleranced for **resin**; on FDM/PLA open the servo pockets and
 screw holes slightly (≈102–103 %). See [`ASSEMBLY.md`](ASSEMBLY.md#printed-parts-sg90-takao-set).
+
+> **Servo fit:** the **MG90S** body is ~1–2 mm longer than SG90, so it's a **snug**
+> fit in the Takao pockets (which are cut for SG90); a plastic-gear **SG90/MS18**
+> sits a little looser in the same pocket. Either works with no firmware or horn
+> change — MG90S just trades a few grams for metal-gear durability.
 
 ---
 
@@ -39,7 +44,7 @@ screw holes slightly (≈102–103 %). See [`ASSEMBLY.md`](ASSEMBLY.md#printed-p
 | Feet | Bracket |
 |:---:|:---:|
 | <img src="images/10-part-feet.png" width="300"> | <img src="images/11-part-bracket.png" width="300"> |
-| Two pads + centre hub. The disc of holes is the **SG90 round-horn bolt pattern** — the pan horn screws here. The slot routes the servo cables down. | Chair-shaped. The **rectangular pocket** in the back wall takes the **tilt** servo body; the lower cradle holds the **pan** servo. |
+| Two pads + centre hub. The disc of holes is the **round-horn bolt pattern** (MG90S/SG90) — the pan horn screws here. The slot routes the servo cables down. | Chair-shaped. The **rectangular pocket** in the back wall takes the **tilt** servo body; the lower cradle holds the **pan** servo. |
 
 | Head shell | Cat-ear hat |
 |:---:|:---:|
@@ -48,10 +53,10 @@ screw holes slightly (≈102–103 %). See [`ASSEMBLY.md`](ASSEMBLY.md#printed-p
 
 ### Stand-ins (not printed — shown for clarity)
 
-| SG90 servo (×2) | M5Stack CoreS3 |
+| MG90S servo (×2) | M5Stack CoreS3 |
 |:---:|:---:|
 | <img src="images/14-stand-sg90.png" width="260"> | <img src="images/15-stand-cores3.png" width="260"> |
-| Body + mounting flange, output shaft, **round horn**, and the 3-wire lead (signal/+5 V/GND). | Display module that seats in the head, screen forward. |
+| Body + mounting flange, output shaft, **round horn**, and the 3-wire lead (signal/+5 V/GND). Same body class as SG90/MS18. | Display module that seats in the head, screen forward. |
 
 ---
 
@@ -69,7 +74,7 @@ front) **→ bracket → tilt servo** (pulled to the side) **→ pan servo → f
 ### 1 · Centre both servos first
 <img src="images/20-step1-center.png" width="300" align="right">
 
-Power each SG90 and command it to its **mid position (90°)** *before* attaching
+Power each servo and command it to its **mid position (90°)** *before* attaching
 any horn, so the mechanism's travel ends up centred. Do this for both the pan and
 the tilt servo.
 
@@ -89,7 +94,7 @@ will **rotate on the feet**. This is the **yaw** axis → **PCA9685 ch0**.
 <img src="images/22-step3-tilt.png" width="300" align="right">
 
 Drop the **bracket** over the pan servo (its lower cradle captures the pan servo
-body). Seat the second SG90 in the bracket's **upper pocket** with its shaft
+body). Seat the second servo in the bracket's **upper pocket** with its shaft
 **horizontal**, on the head-tilt axis. This is the **pitch** axis → **ch1**.
 Route both servo leads down through the bracket and the feet's centre slot.
 
@@ -151,7 +156,7 @@ STL_DIR=~/cloned/stackchan-sg90-models/stackchan_sg90_case_takao_version \
   hardware/enclosure/tools/render-assembly.sh
 ```
 
-- Scene: [`scene/assembly.scad`](scene/assembly.scad) — STL imports + SG90/CoreS3
+- Scene: [`scene/assembly.scad`](scene/assembly.scad) — STL imports + servo/CoreS3
   stand-ins, posed per stage (`-D 'stage="exploded"'`, `step1`…`step6`, etc.).
 - Renderer: [`tools/render-assembly.sh`](tools/render-assembly.sh) — writes every
   PNG in [`images/`](images/) (~2 s for the whole set).
