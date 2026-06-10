@@ -80,7 +80,9 @@ void Servos::writeYaw_(int deg) {
 }
 void Servos::writePitch_(int deg) {
   deg = clamp_(deg, kPitchMin, kPitchMax);
-  g_pwm.setPWM(1, 0, degToPwm(deg));
+  // Tilt servo sits mirrored in the assembled bracket, so the pulse sense is
+  // inverted: logical +deg = head UP needs the negated angle on the horn.
+  g_pwm.setPWM(1, 0, degToPwm(-deg));
   pitchDeg_ = deg;
 }
 
