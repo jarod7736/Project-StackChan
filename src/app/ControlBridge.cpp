@@ -73,7 +73,10 @@ void ControlBridge::tick() {
             }
             case CtrlCmd::SERVO: {
                 // Smooth move to the requested pose. Servos clamp internally
-                // to their mechanical limits.
+                // to their mechanical limits. Pause idle so saccades/nods
+                // don't restart the ease under a streamed slider; the FSM
+                // resumes idle after the next voice turn.
+                motion.pauseIdle();
                 servos.easeYawTo(c.a, 400);
                 servos.easePitchTo(c.b, 400);
                 break;

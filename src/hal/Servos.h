@@ -18,12 +18,13 @@ class Servos {
   int currentYaw()   const { return yawDeg_; }
   int currentPitch() const { return pitchDeg_; }
 
-  // Yaw range: -45..+45. Pitch range: -12..+25 (mechanical limits). Down-travel
-  // clipped from -25 to -12: at -25 the chin hit the base/feet. -12 still clears
-  // the deepest expression ("sad" = -10) and idle nods (+/-3) with margin.
+  // Yaw range: -45..+45. Pitch range: -4..+25 (mechanical limits). Down-travel
+  // clipped to -4 for the assembled case: any further forward and the chin
+  // fouls the base. Deeper requests (e.g. "sad" = -10) clamp here to a
+  // shallower droop; idle nods (-3..+3) still fit.
   static constexpr int kYawMin    = -45;
   static constexpr int kYawMax    =  45;
-  static constexpr int kPitchMin  = -12;
+  static constexpr int kPitchMin  = -4;
   static constexpr int kPitchMax  =  25;
 
  private:
