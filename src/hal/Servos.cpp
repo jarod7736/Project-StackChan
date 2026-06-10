@@ -6,12 +6,33 @@ namespace stkchan {
 
 Servos servos;
 
-// PCA9685 servo driver on CoreS3 via PORT C (G17/G18). The M-Bus is occupied by
-// the DinBase (which holds the battery), so the original M-Bus pins (G43/G44)
-// aren't reachable — we solder the PCA's I2C to Port C instead.
-//   PCA SDA → G17 (Port C),  PCA SCL → G18 (Port C)
-//   PCA VCC → 3V3 (NOT the Grove 5V — keeps the bus 3.3V-safe), GND common.
-// PCA9685 at default address 0x40.
+// PCA9685 servo driver on CoreS3. I2C SIGNALS on PORT C (G17/G18); LOGIC POWER
+// tapped from the M-Bus 3V3 rail. The M-Bus header is occupied by the DinBase
+// (which holds the battery), so the original M-Bus servo pins (G43/G44) aren't
+// reachable from the top — but every M-Bus pin is exposed as a SOLDER PAD on the
+// DinBase underside, so the 3V3 rail is reachable there.
+//
+// WIRING (schematic-confirmed, Sch_M5_CoreS3_v1.0 / M-Bus "BUS1"; see the diagram
+// docs/hardware/cores3-pca9685-wiring.png):
+//   PCA SDA  -> G17  (Port C Grove)
+//   PCA SCL  -> G18  (Port C Grove)
+//   PCA VCC  -> M-Bus pin 12 = VCC_3V3  (underside pad). This is AXP2101 DCDC3,
+//              3.3V / 1.5A, and is ALWAYS-ON: it is independent of
+//              cfg.output_power (which only gates the separate 5V bus-boost), so
+//              the rail is live even though this firmware disables that boost.
+//   PCA GND  -> M-Bus GND (pin 1/3/5) OR the Port C Grove GND — same ground plane.
+//   Servo V+ -> a SEPARATE external 5-6V supply (NEVER the CoreS3 battery/AXP
+//              path), common ground, with a 470-1000uF bulk cap at the PCA V+
+//              terminal for inrush/stall.
+//   PCA9685 default address 0x40.
+//
+// Powering VCC at 3.3V keeps the whole I2C bus at 3.3V => NO level shifter, and the
+// Adafruit PCA9685 BREAKOUT carries its own SDA/SCL pull-ups (to VCC) => NO added
+// pull-up resistors. (A BARE PCA9685 chip would need 2x ~4.7k to 3.3V.)
+// ⚠ DON'T tap M-Bus pin 28 (BUS_OUT = 5V boost) or pin 30 (VBAT = raw battery) for
+//   VCC — either would overvolt/destroy the 3.3V bus. Verify pin 12 reads ~3.30V to
+//   GND with a meter before soldering; watch for bridges to pin 11 (SPI_SCK) / 14
+//   (U0TXD). Underside view MIRRORS the columns (left<->right) vs the top.
 //
 // ⚠ MUST use Arduino `Wire` (I2C_NUM_0), NOT `Wire1` (I2C_NUM_1). On CoreS3,
 // M5Unified binds its INTERNAL bus (AXP2101 0x34 + codec/touch/AW9523B) to
@@ -20,8 +41,8 @@ Servos servos;
 // long-hunted silent "AXP power-off" (vbat healthy, battery-pull-only recovery).
 // Root cause found 2026-06-09; PROVEN by an I2C scan on Wire1/Port C returning the
 // whole internal constellation (0x34 AXP, 0x38 touch, 0x40 codec, 0x58 AW9523…).
-// I2C_NUM_0 is free (the app uses no Port A / Ex_I2C devices). NOTE: Port C has no
-// external pull-ups — for a real PCA add ~4.7k pull-ups or move it to Port A (G1/G2).
+// I2C_NUM_0 is free (the app uses no Port A / Ex_I2C devices). Port C itself has no
+// external pull-ups — fine here because the breakout provides them (above).
 constexpr int kServoSDA  = 17;   // Port C
 constexpr int kServoSCL  = 18;   // Port C
 constexpr uint8_t kServoAddr = 0x40;
