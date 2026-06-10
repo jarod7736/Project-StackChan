@@ -1,8 +1,11 @@
-# StackChan (SG90 / Takao) — Assembly & Fitment Guide
+# StackChan (MG90S / SG90 · Takao) — Assembly & Fitment Guide
 
-This is the build we're using: the **SG90-servo "stack-chan_takao_base"** shell
-(Takao Akaki, via `mongonta0716/3DPrinter_Models`), driven by our CoreS3 +
-**PCA9685** firmware. It is **not** the M5 K151 shell (that one needs DYNAMIXEL
+> 📷 Prefer pictures? See the **[Illustrated Assembly guide](ASSEMBLY-ILLUSTRATED.md)**
+> — exploded view + a render for every step, generated from the real STLs.
+
+This is the build we're using: the **"stack-chan_takao_base"** shell (the upstream
+"SG90 case" set by Takao Akaki, via `mongonta0716/3DPrinter_Models`), driven by
+**MG90S** servos on our CoreS3 + **PCA9685** firmware. It is **not** the M5 K151 shell (that one needs DYNAMIXEL
 XL330 serial-bus servos — see "Other design" at the bottom).
 
 ## Printed parts (SG90 Takao set)
@@ -13,8 +16,8 @@ Source: `mongonta0716/3DPrinter_Models/stackchan_sg90_case_takao_version`
 | STL | Role |
 |-----|------|
 | `stackchan_takao_shell_v2_resin` | Head shell — wraps the **CoreS3**; speaker grille + "stack-chan" emboss. Display faces front. Rides on the tilt servo. |
-| `stackchan_takao_bracket_v2.5`   | Servo bracket — holds **both SG90 servos** (rectangular pockets): pan (lower) + tilt (upper). |
-| `stackchan_takao_feet`           | Base feet (54 × 50 × 8 mm) — two pads + a center hub with the **SG90 round-horn screw pattern**. The pan servo horn screws here; the body pans on the feet. Central slot routes the servo cables down. |
+| `stackchan_takao_bracket_v2.5`   | Servo bracket — holds **both servos** (rectangular pockets): pan (lower) + tilt (upper). |
+| `stackchan_takao_feet`           | Base feet (54 × 50 × 8 mm) — two pads + a center hub with the **round-horn screw pattern** (shared by MG90S/SG90). The pan servo horn screws here; the body pans on the feet. Central slot routes the servo cables down. |
 | `stackchan_takao_hat_cat_CoreS3` | Optional cat-ear hat (CoreS3 fitment). |
 | `…/pedestal-*`                   | Our optional electronics base (PCA9685 + barrel jack) the feet nest on. See `pedestal.scad`. |
 
@@ -23,7 +26,14 @@ pockets / screw holes slightly or scale those features ~102–103%.
 
 ## Servos
 
-- **2 × SG90** (9 g micro servos), plain **PWM** (no IDs — unlike XL330).
+- **2 × MG90S** (metal-gear, ~13.4 g micro servos), plain **PWM** (no IDs — unlike XL330).
+  This is what the build uses. **SG90 / MS18** (plastic-gear, ~9 g) are
+  pin/PWM/horn-compatible drop-ins — fine for this light, low-load head, but the
+  MG90S metal gears give better durability and a slightly steadier hold.
+- **Fit note:** the MG90S body is **~1–2 mm longer** than SG90, so it's a **snug**
+  fit in the Takao pockets (which are cut for SG90). On FDM/PLA open the pockets a
+  touch (see the print note above); a plastic-gear SG90/MS18 sits a little looser in
+  the same pocket. No firmware or horn change either way.
 - **Pan (yaw)** servo → drives rotation on the feet. Wire to **PCA9685 ch0**.
 - **Tilt (pitch)** servo → drives head up/down. Wire to **PCA9685 ch1**.
 - Firmware already matches: `src/hal/Servos.cpp` `writeYaw_`→ch0, `writePitch_`→ch1,
@@ -33,12 +43,12 @@ pockets / screw holes slightly or scale those features ~102–103%.
 
 ## Assembly sequence
 
-1. **Center the servos first.** Power each SG90 and command it to its mid
+1. **Center the servos first.** Power each servo and command it to its mid
    position (90°) *before* attaching horns, so the mechanism's range is centered.
-2. **Pan servo → feet.** Screw the SG90 round horn to the **feet** center hub.
+2. **Pan servo → feet.** Screw the round horn to the **feet** center hub.
    Seat the pan servo body into the **bracket's lower pocket** so its output
    shaft engages that horn — the assembly now rotates on the feet.
-3. **Tilt servo → bracket.** Seat the second SG90 in the **bracket's upper
+3. **Tilt servo → bracket.** Seat the second servo in the **bracket's upper
    pocket** (output shaft on the head-tilt axis).
 4. **Head.** Attach the **shell** to the tilt servo's horn; route both servo
    cables down through the bracket and the feet's center slot.
@@ -58,8 +68,8 @@ pockets / screw holes slightly or scale those features ~102–103%.
 ## Other design (NOT used here)
 The M5 **K151** shell (`M5_Hardware/Products/K151_StackChan/`) is built for
 **DYNAMIXEL XL330-M288-T** serial-bus servos (IDs 1/2, TTL bus, tilt 5–85°). It
-is **incompatible** with SG90/PWM and the PCA9685. We chose the SG90 Takao shell
-instead so the existing PCA9685 firmware applies unchanged.
+is **incompatible** with MG90S/SG90 PWM servos and the PCA9685. We chose the SG90
+Takao shell (driven by MG90S) instead so the existing PCA9685 firmware applies unchanged.
 
 ## Sources
 - SG90 STLs: https://github.com/mongonta0716/3DPrinter_Models
