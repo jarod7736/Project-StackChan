@@ -161,8 +161,8 @@ uint8_t* fetchMp3ToPsram(const String& provider, const String& text,
 // caller falls through to cloud TTS — clips can only improve behavior.
 bool tryPlayClip(const String& text) {
     if (OtaService::isActive()) return false;  // FS reads stall the OTA writer
-    String path(clipPathForText(text.c_str()).c_str());
-    File f = LittleFS.open(path, "r");
+    std::string path = clipPathForText(text.c_str());
+    File f = LittleFS.open(path.c_str(), "r");
     if (!f) return false;                       // no clip (or FS unmounted)
     size_t len = f.size();
     if (len == 0 || len > stkchan::kMp3MaxBytes) { f.close(); return false; }
@@ -177,8 +177,8 @@ bool tryPlayClip(const String& text) {
         Serial.printf("[TtsClient] clip hit %s (%u B)\n", path.c_str(),
                       (unsigned)len);
     } else {
-        Serial.printf("[TtsClient] clip %s unplayable, falling back\n",
-                      path.c_str());
+        Serial.printf("[TtsClient] clip %s unplayable (got=%u/%u), falling back\n",
+                      path.c_str(), (unsigned)got, (unsigned)len);
     }
     return ok;
 }
