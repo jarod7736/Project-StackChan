@@ -23,7 +23,6 @@ class MicRecorder {
   bool     active_   = false;
   uint32_t startMs_  = 0;
 
-  void writeWavHeader_(uint32_t sampleCount);
 };
 
 extern MicRecorder mic;

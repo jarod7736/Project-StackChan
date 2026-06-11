@@ -2,12 +2,13 @@
 #include <M5CoreS3.h>
 #include "config.h"
 #include "hal/AudioPlayer.h"
+#include "hal/WavHeader.h"
 
 namespace stkchan {
 
 MicRecorder mic;
 
-static constexpr size_t kHeaderBytes = 44;  // RIFF / WAVE / fmt / data
+static constexpr size_t kHeaderBytes = kWavHeaderBytes;
 
 bool MicRecorder::begin() {
   if (wav_) return true;
@@ -76,7 +77,7 @@ bool MicRecorder::stop() {
   if (sampleCount > capSamples) sampleCount = capSamples;
 
   wavSize_ = kHeaderBytes + sampleCount * sizeof(int16_t);
-  writeWavHeader_(sampleCount);
+  writeWavHeader(wav_, sampleCount, kRecordSampleRate);
   active_ = false;
 
   Serial.printf("MicRecorder: %u samples (%u ms), %u bytes WAV\n",
@@ -84,35 +85,6 @@ bool MicRecorder::stop() {
                 (unsigned)(sampleCount * 1000 / kRecordSampleRate),
                 (unsigned)wavSize_);
   return true;
-}
-
-void MicRecorder::writeWavHeader_(uint32_t sampleCount) {
-  uint32_t dataBytes = sampleCount * sizeof(int16_t);
-  uint32_t fileBytes = dataBytes + kHeaderBytes - 8;
-
-  // RIFF
-  memcpy(wav_ + 0, "RIFF", 4);
-  memcpy(wav_ + 4, &fileBytes, 4);
-  memcpy(wav_ + 8, "WAVE", 4);
-  // fmt
-  memcpy(wav_ + 12, "fmt ", 4);
-  uint32_t fmtChunkSize = 16;
-  memcpy(wav_ + 16, &fmtChunkSize, 4);
-  uint16_t audioFormat = 1;        // PCM
-  uint16_t numChannels = 1;
-  uint32_t sampleRate  = kRecordSampleRate;
-  uint16_t bitsPerSamp = 16;
-  uint32_t byteRate    = sampleRate * numChannels * (bitsPerSamp / 8);
-  uint16_t blockAlign  = numChannels * (bitsPerSamp / 8);
-  memcpy(wav_ + 20, &audioFormat, 2);
-  memcpy(wav_ + 22, &numChannels, 2);
-  memcpy(wav_ + 24, &sampleRate,  4);
-  memcpy(wav_ + 28, &byteRate,    4);
-  memcpy(wav_ + 32, &blockAlign,  2);
-  memcpy(wav_ + 34, &bitsPerSamp, 2);
-  // data
-  memcpy(wav_ + 36, "data", 4);
-  memcpy(wav_ + 40, &dataBytes, 4);
 }
 
 }  // namespace stkchan
