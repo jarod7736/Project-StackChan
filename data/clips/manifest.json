@@ -1,8 +1,8 @@
 {
   "provider": "openai",
-  "voice": "nova",
+  "voice": "ash",
   "model": "tts-1",
-  "rendered_at": "2026-06-11T17:31:54.562366+00:00",
+  "rendered_at": "2026-06-11T21:03:47.227542+00:00",
   "clips": {
     "48a3af71.mp3": {
       "name": "kLowBattMsg",
