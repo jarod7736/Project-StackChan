@@ -22,9 +22,10 @@ enum class CtrlCmd : uint8_t {
 
 struct ControlCommand {
     CtrlCmd type;
-    char    text[192];
-    int     a;
-    int     b;
+    int     a = 0;
+    int     b = 0;
+    char    text[256];   // was 192 — MCP say allows 240 UTF-8 bytes + NUL headroom
+    char    expr[12];    // expression tag for SAY (e.g. "happy"); empty = happy
 };
 
 class ControlBridge {
@@ -37,7 +38,7 @@ public:
     bool pushExpression(const char* tag);
     bool pushServo(int yawDeg, int pitchDeg);
     bool pushVolume(int pct);
-    bool pushSay(const char* text);
+    bool pushSay(const char* text, const char* expr = nullptr);
 };
 
 extern ControlBridge controlBridge;
