@@ -31,6 +31,10 @@ static void test_path_zero_padded() {
   TEST_ASSERT_EQUAL_UINT32(7 + 8 + 4, (uint32_t)p.size());
   TEST_ASSERT_TRUE(p.rfind("/clips/", 0) == 0);
   TEST_ASSERT_EQUAL_STRING(".mp3", p.c_str() + p.size() - 4);
+  // Pinned leading-zero vectors: a %x (unpadded) bug would shorten these.
+  // "test21" → 0x0f6cda0c; "Yay, company!" (a real greeting) → 0x08f1e4ac.
+  TEST_ASSERT_EQUAL_STRING("/clips/0f6cda0c.mp3", clipPathForText("test21").c_str());
+  TEST_ASSERT_EQUAL_STRING("/clips/08f1e4ac.mp3", clipPathForText("Yay, company!").c_str());
 }
 static void test_path_deterministic() {
   TEST_ASSERT_EQUAL_STRING(clipPathForText("Oh! Hi there.").c_str(),
