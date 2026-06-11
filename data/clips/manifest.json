@@ -2,7 +2,7 @@
   "provider": "openai",
   "voice": "ash",
   "model": "tts-1",
-  "rendered_at": "2026-06-11T21:03:47.227542+00:00",
+  "rendered_at": "2026-06-11T22:23:00.468460+00:00",
   "clips": {
     "48a3af71.mp3": {
       "name": "kLowBattMsg",
@@ -27,6 +27,10 @@
     "d6f48de8.mp3": {
       "name": "kErrChatFailed",
       "text": "Brain's stuck, try again."
+    },
+    "da81199d.mp3": {
+      "name": "kWakeAck",
+      "text": "Yes?"
     },
     "df94c10c.mp3": {
       "name": "kGreetings[0]",

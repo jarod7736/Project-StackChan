@@ -130,4 +130,18 @@ constexpr const char* kErrSttFailed   = "My ears aren't working.";
 constexpr const char* kErrChatFailed  = "Brain's stuck, try again.";
 constexpr const char* kErrTtsFailed   = "";  // display-only, no speech
 
+// ── Wake-word (VAD-then-confirm) ──────────────────────────────────────────
+// Spec: docs/superpowers/specs/2026-06-11-wake-word-design.md
+constexpr const char* kWakeAck         = "Yes?";  // offline ack clip (stock-clips pipeline)
+constexpr const char* kNvsWakeEn       = "wake_en";      // bool, default on
+constexpr const char* kNvsWakeWord     = "wake_word";    // default below
+constexpr const char* kDefaultWakeWord = "hey stack chan";
+constexpr uint32_t kWakeBufSeconds     = 4;      // continuous capture buffer
+constexpr uint32_t kWakeFrameSamples   = 480;    // 30 ms @ 16 kHz
+constexpr uint32_t kWakeLeadInFrames   = 10;     // 300 ms kept before the trip
+constexpr uint32_t kWakeCooldownMs     = 2000;   // after a non-match
+constexpr uint32_t kWakeResumeGuardMs  = 700;    // quiet time before re-arming
+constexpr uint32_t kWakeOpenSilenceMs  = 800;    // wake-opened LISTENING end-of-speech
+constexpr uint32_t kWakeOpenMaxMs      = 6000;   // wake-opened LISTENING hard cap
+
 }  // namespace stkchan

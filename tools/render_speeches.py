@@ -60,7 +60,7 @@ def extract_phrases() -> dict:
     phrases = {}
     cfg = CONFIG_H.read_text()
     for name, raw in CONST_RE.findall(cfg):
-        if name.startswith("kErr") or name == "kLowBattMsg":
+        if name.startswith("kErr") or name in ("kLowBattMsg", "kWakeAck"):
             text = unescape(raw)
             if text:
                 phrases[name] = text
