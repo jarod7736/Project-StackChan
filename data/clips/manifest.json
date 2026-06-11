@@ -1,0 +1,56 @@
+{
+  "provider": "openai",
+  "voice": "nova",
+  "model": "tts-1",
+  "rendered_at": "2026-06-11T17:31:54.562366+00:00",
+  "clips": {
+    "48a3af71.mp3": {
+      "name": "kLowBattMsg",
+      "text": "My battery is low. Please plug me in."
+    },
+    "5fd6b68c.mp3": {
+      "name": "kErrNoWifi",
+      "text": "I can't connect to anything."
+    },
+    "125d8aae.mp3": {
+      "name": "kErrChatOffline",
+      "text": "My brain's not on the network."
+    },
+    "c84e306e.mp3": {
+      "name": "kErrMicEmpty",
+      "text": "Hm, didn't catch that."
+    },
+    "98e4b026.mp3": {
+      "name": "kErrSttFailed",
+      "text": "My ears aren't working."
+    },
+    "d6f48de8.mp3": {
+      "name": "kErrChatFailed",
+      "text": "Brain's stuck, try again."
+    },
+    "df94c10c.mp3": {
+      "name": "kGreetings[0]",
+      "text": "Oh! Hi there."
+    },
+    "cd7fd34f.mp3": {
+      "name": "kGreetings[1]",
+      "text": "There you are!"
+    },
+    "65cbeba7.mp3": {
+      "name": "kGreetings[2]",
+      "text": "Hello again."
+    },
+    "8ef7b73d.mp3": {
+      "name": "kGreetings[3]",
+      "text": "Hi! You're back."
+    },
+    "b24637af.mp3": {
+      "name": "kGreetings[4]",
+      "text": "Oh, hey!"
+    },
+    "08f1e4ac.mp3": {
+      "name": "kGreetings[5]",
+      "text": "Yay, company!"
+    }
+  }
+}
