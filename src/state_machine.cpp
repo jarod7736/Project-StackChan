@@ -3,6 +3,7 @@
 #include "hal/MicRecorder.h"
 #include "hal/AudioPlayer.h"
 #include "hal/Display.h"
+#include "hal/WavHeader.h"
 #include "face/Face.h"
 #include "motion/MotionDirector.h"
 #include "face/ExpressionMap.h"
@@ -14,9 +15,12 @@
 #include "net/TtsClient.h"
 #include "net/ConnectivityTier.h"
 #include "services/NvsStore.h"
+#include "app/WakeListener.h"
+#include "app/WakeVad.h"
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <math.h>
 
 namespace stkchan {
 
@@ -35,6 +39,12 @@ static TaskHandle_t  g_chatTask  = nullptr;
 static volatile bool g_chatDone  = false;
 static volatile bool g_chatOk    = false;
 static bool          g_brainMode = false;
+
+// Wake-word integration state.
+static bool               g_openListenAfterAck = false;  // ack done → open wake window
+static bool               g_wakeOpenedListen   = false;  // LISTENING entered via wake
+static uint32_t           g_wakeListenStartMs  = 0;
+static stkchan::WakeVad   g_openVad;                     // end-of-speech for wake windows
 
 // Case-insensitive substring scan of the transcript for any brain stem.
 // Routes brain/email/calendar utterances to the oc-personal agent.
@@ -86,10 +96,36 @@ bool requestExternalSpeak(const String& text, const char* exprTag) {
   g_parsed.ok     = true;
   // Mirror the THINKING_CHAT → SPEAKING_TTS handoff: set face/motion, then
   // let the SPEAKING_TTS tick run the (blocking) synth + playback.
+  wakeListener.pause();  // speaker needs I2S0 back before any playback
   face.setExpression(expr);
   motion.onExpressionChange(expr);
   motion.startSpeechBob(expressionFor(expr).bobAmp);
   g_state = State::SPEAKING_TTS;
+  return true;
+}
+
+bool onWakeDetected(const String& remainder) {
+  if (g_state != State::IDLE) return false;
+  auto t = connectivity.current();
+  if (t != Tier::LAN_OK) return false;  // silent refusal — no error speech
+
+  motion.pauseIdle();
+  if (remainder.length() > 0) {
+    // One-breath UX: the rest of the utterance IS the request.
+    g_transcript = remainder;
+    Serial.printf("USER (wake): %s\n", g_transcript.c_str());
+    face.setExpression(std::string("neutral"));
+    display.showStatusOverlay("thinking...", 0xFFE0);
+    g_state = State::THINKING_CHAT;
+  } else {
+    // Bare wake: instant offline ack (stock clip), then open a window.
+    // WakeListener already paused itself before calling us, so the speaker
+    // is back online for the clip.
+    g_openListenAfterAck = true;
+    face.setExpression(std::string("happy"));
+    tts.synth(String(kWakeAck), [](bool /*ok*/) { onAudioDone(); });
+    g_state = State::SPEAKING;
+  }
   return true;
 }
 
@@ -118,6 +154,7 @@ void onPressCancel() {
 // (e.g. kErrTtsFailed == "").  The ERROR case in tickStateMachine drains
 // g_audioDoneFlag back to IDLE.
 static void enterError(const char* spoken, const char* exprTag) {
+  wakeListener.pause();
   Serial.printf("ERR state: %s\n", spoken ? spoken : "");
   face.setExpression(std::string(exprTag ? exprTag : "neutral"));
   display.showStatusOverlay(String(spoken ? spoken : ""), 0xF800 /* red */);
@@ -152,6 +189,7 @@ void tickStateMachine(uint32_t nowMs) {
         if (t == Tier::NO_WIFI)        { enterError(kErrNoWifi,      "sleepy"); break; }
         if (t == Tier::LAN_NO_BACKEND) { enterError(kErrChatOffline, "doubt");  break; }
         // Start LISTENING.
+        wakeListener.pause();  // release I2S0 for MicRecorder
         face.setExpression(std::string("neutral"));
         display.showStatusOverlay("listening...", 0x07E0);
         motion.pauseIdle();
@@ -163,16 +201,48 @@ void tickStateMachine(uint32_t nowMs) {
     }
 
     case State::LISTENING: {
-      bool tooLong = (nowMs - g_pressStartMs) >= kMaxRecordMs;
-      if (g_releaseFlag || tooLong) {
-        g_releaseFlag = false;
-        mic.stop();
-        if (mic.wavSize() < 1024) { enterError(kErrMicEmpty, "doubt"); break; }
-        face.setExpression(std::string("neutral"));
-        // Show "thinking..." BEFORE the blocking STT HTTP call.
-        display.showStatusOverlay("thinking...", 0xFFE0);
-        g_state = State::THINKING_STT;
+      bool stopNow = false;
+      if (g_wakeOpenedListen) {
+        g_releaseFlag = false;  // presses are ignored in a wake window
+        // Feed 30 ms frames from MicRecorder's live buffer to the VAD.
+        // Fill estimated from elapsed time (same trick as MicRecorder::stop),
+        // one frame behind to avoid reading a partially-written frame.
+        uint32_t elapsed = nowMs - g_wakeListenStartMs;
+        size_t   filled  = ((size_t)elapsed * kRecordSampleRate / 1000)
+                           / kWakeFrameSamples;
+        if (filled > 0) filled -= 1;
+        static size_t s_fed = 0;  // frames fed this window; reset on close
+        const int16_t* pcm = reinterpret_cast<const int16_t*>(
+            mic.wavData() + kWavHeaderBytes);
+        while (s_fed < filled) {
+          float rms = 0;
+          {
+            const int16_t* f = pcm + s_fed * kWakeFrameSamples;
+            float acc = 0;
+            for (size_t i = 0; i < kWakeFrameSamples; ++i)
+              acc += (float)f[i] * (float)f[i];
+            rms = sqrtf(acc / (float)kWakeFrameSamples);
+          }
+          auto ev = g_openVad.onFrame(rms);
+          ++s_fed;
+          if (ev == stkchan::WakeVad::Event::Closed ||
+              ev == stkchan::WakeVad::Event::Overflow) { stopNow = true; break; }
+        }
+        if (elapsed >= kWakeOpenMaxMs) stopNow = true;
+        if (stopNow) s_fed = 0;  // reset for the next window
+        if (!stopNow) break;
+      } else {
+        bool tooLong = (nowMs - g_pressStartMs) >= kMaxRecordMs;
+        stopNow = g_releaseFlag || tooLong;
+        if (stopNow) g_releaseFlag = false;
       }
+      if (!stopNow) break;
+      g_wakeOpenedListen = false;
+      mic.stop();
+      if (mic.wavSize() < 1024) { enterError(kErrMicEmpty, "doubt"); break; }
+      face.setExpression(std::string("neutral"));
+      display.showStatusOverlay("thinking...", 0xFFE0);
+      g_state = State::THINKING_STT;
       break;
     }
 
@@ -256,6 +326,21 @@ void tickStateMachine(uint32_t nowMs) {
       if (g_audioDoneFlag) {
         g_audioDoneFlag = false;
         motion.stopSpeechBob();
+        if (g_openListenAfterAck) {
+          g_openListenAfterAck = false;
+          // Open a wake-listening window — like a press, but VAD-terminated.
+          face.setExpression(std::string("neutral"));
+          display.showStatusOverlay("listening...", 0x07E0);
+          if (!mic.start()) { enterError(kErrMicEmpty, "doubt"); break; }
+          g_wakeOpenedListen  = true;
+          g_wakeListenStartMs = nowMs;
+          stkchan::WakeVadConfig wcfg;
+          wcfg.closeSilenceFrames = (int)(kWakeOpenSilenceMs / 30);  // ~800 ms
+          wcfg.maxFrames          = (int)(kWakeOpenMaxMs / 30);
+          g_openVad = stkchan::WakeVad(wcfg);
+          g_state = State::LISTENING;
+          break;
+        }
         face.setExpression(std::string("neutral"));
         display.clearOverlay();
         g_state = State::IDLE;

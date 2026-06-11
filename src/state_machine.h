@@ -29,6 +29,12 @@ void onAudioDone();   // AudioPlayer onPlayDone callback target
 // FSM is busy (not IDLE). Call from the main loop task only.
 bool requestExternalSpeak(const String& text, const char* exprTag);
 
+// Wake-word entry point (WakeListener). IDLE-only; returns false otherwise.
+// Non-empty remainder → straight to THINKING_CHAT with it as the transcript.
+// Empty remainder → speak kWakeAck, then open a VAD-terminated listening
+// window (no press-release needed).
+bool onWakeDetected(const String& remainder);
+
 State currentState();
 
 }  // namespace stkchan
