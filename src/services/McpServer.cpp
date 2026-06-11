@@ -324,6 +324,35 @@ void registerTools() {
         }});
 }
 
+// MCP clients (e.g. Claude Desktop) send "Accept: application/json,
+// text/event-stream". ESPAsyncWebServer 3.x classifies any request whose
+// Accept contains "text/event-stream" as RCT_EVENT, and
+// AsyncCallbackWebHandler::canHandle requires request->isHTTP() — which
+// excludes RCT_EVENT — so the stock server.on() POST route 404s for every
+// real MCP client.
+//
+// Fix: subclass AsyncWebHandler directly. canHandle() matches POST /mcp
+// regardless of the Accept-derived connection-type classification, bypassing
+// the isHTTP() gate. isRequestHandlerTrivial() returns false so the framework
+// calls handleBody() for body accumulation (WebRequest.cpp lines ~219, ~366).
+//
+// Note: a GET /mcp with that Accept header would also be RCT_EVENT and skip
+// the 405 route below — it will 404. That is acceptable; clients don't GET.
+class McpPostHandler : public AsyncWebHandler {
+public:
+    bool canHandle(AsyncWebServerRequest* request) const override {
+        return request->method() == HTTP_POST && request->url() == "/mcp";
+    }
+    void handleRequest(AsyncWebServerRequest* request) override {
+        onMcpRequest(request);
+    }
+    void handleBody(AsyncWebServerRequest* request, uint8_t* data, size_t len,
+                    size_t index, size_t total) override {
+        onMcpBody(request, data, len, index, total);
+    }
+    bool isRequestHandlerTrivial() const override { return false; }
+};
+
 }  // namespace
 
 // ── Public API ──────────────────────────────────────────────────────────────
@@ -336,9 +365,13 @@ void mcpAttach(AsyncWebServer& server) {
         toolsRegistered = true;
     }
 
-    server.on("/mcp", HTTP_POST, onMcpRequest, nullptr, onMcpBody);
+    // One-time alloc: McpPostHandler matches POST /mcp regardless of the
+    // Accept-derived RCT classification (see class comment above).
+    server.addHandler(new McpPostHandler());
 
     // Streamable HTTP without SSE: no server-initiated stream to GET.
+    // (A GET with Accept: text/event-stream would be RCT_EVENT and skip this
+    // route too — it will 404, which is acceptable; clients never GET /mcp.)
     server.on("/mcp", HTTP_GET, [](AsyncWebServerRequest* req) {
         req->send(405);
     });
