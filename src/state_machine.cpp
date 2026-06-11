@@ -211,6 +211,10 @@ void tickStateMachine(uint32_t nowMs) {
         size_t   filled  = ((size_t)elapsed * kRecordSampleRate / 1000)
                            / kWakeFrameSamples;
         if (filled > 0) filled -= 1;
+        // Clamp to MicRecorder's PCM capacity (mirror of WakeListener's
+        // processNewFrames_ clamp) — a stalled tick must not walk past it.
+        size_t maxFrames = (kRecordMaxBytes / sizeof(int16_t)) / kWakeFrameSamples;
+        if (filled > maxFrames) filled = maxFrames;
         static size_t s_fed = 0;  // frames fed this window; reset on close
         const int16_t* pcm = reinterpret_cast<const int16_t*>(
             mic.wavData() + kWavHeaderBytes);

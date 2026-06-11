@@ -6,6 +6,8 @@
 #include "../config.h"
 #include "../services/NvsStore.h"
 #include "../vision/PresenceSensor.h"
+#include "../app/WakeListener.h"
+#include "../hal/MicRecorder.h"
 
 namespace stkchan {
 
@@ -68,6 +70,11 @@ bool OtaService::begin() {
         // esp-dl inference reads model weights from flash and stalls against
         // the OTA writer's cache-disabled erase/write bursts -> failed upload.
         presence.setScanEnabled(false);
+        // Same blocking-upload reasoning for the mics: the wake listener's
+        // continuous capture (and any in-flight press recording) must release
+        // I2S0 before the cache-disabled flash bursts. pause() is idempotent.
+        wakeListener.pause();
+        if (mic.isActive()) mic.stop();
         delay(100);  // let an in-flight capture/inference drain
         resetProgressLog();
     });
