@@ -158,7 +158,11 @@ void onMcpBody(AsyncWebServerRequest* request, uint8_t* data, size_t len,
 // (GET), 403 (Origin).
 void onMcpRequest(AsyncWebServerRequest* request) {
     McpBody* body = static_cast<McpBody*>(request->_tempObject);
-    if (body && body->rejected) return;  // 413/500 already sent
+
+    // Fix #4: body struct malloc failed in onMcpBody (sent 500 already); bail.
+    if (!body) return;
+
+    if (body->rejected) return;  // 413/500 already sent
 
     // Origin check: header absent → OK (non-browser client).
     if (request->hasHeader("Origin") &&
@@ -169,8 +173,8 @@ void onMcpRequest(AsyncWebServerRequest* request) {
     }
 
     // Empty/absent body parses as malformed JSON → -32700 envelope (HTTP 200).
-    const char* buf = (body && body->buf) ? body->buf : "";
-    size_t      len = body ? body->len : 0;
+    const char* buf = body->buf ? body->buf : "";
+    size_t      len = body->len;
 
     std::string out;
     McpOutcome  outcome = g_mcp.handle(buf, len, out, &g_psramAlloc);
@@ -178,9 +182,38 @@ void onMcpRequest(AsyncWebServerRequest* request) {
 
     if (outcome == McpOutcome::kNotification) {
         request->send(202);
-    } else {
-        request->send(200, "application/json", out.c_str());
+        return;
     }
+
+    // Fix #2: route the HTTP response buffer through PSRAM (beginResponse_P)
+    // so it never touches the internal heap after g_mcp.handle() returns.
+    //
+    // ESPAsyncWebServer's onDisconnect() stores EXACTLY ONE handler
+    // (WebRequest.cpp: `_onDisconnectfn = fn` — a single std::function field;
+    // a second call silently replaces the first). The body-buffer free was
+    // registered in onMcpBody; it already ran above via freeBodyBuf(), so the
+    // slot is safe to reuse — but to be defensive we fold both concerns into a
+    // single lambda registered NOW (after freeBodyBuf so body->buf is null and
+    // the double-free guard in freeBodyBuf is harmless if the disconnect fires
+    // concurrently).
+    char* respBuf = static_cast<char*>(ps_malloc(out.size()));
+    if (!respBuf) {
+        // ps_malloc failed: fall back to Arduino String copy (correctness over
+        // PSRAM budget — better to answer than to crash).
+        request->send(200, "application/json", out.c_str());
+        return;
+    }
+    memcpy(respBuf, out.c_str(), out.size());
+
+    // Register the single disconnect handler BEFORE send() so the buffer is
+    // always reclaimed even if the client drops during transmission.
+    request->onDisconnect([respBuf]() { free(respBuf); });
+
+    AsyncWebServerResponse* res = request->beginResponse_P(
+        200, "application/json",
+        reinterpret_cast<const uint8_t*>(respBuf), out.size());
+    request->send(res);
+    // respBuf freed by the onDisconnect lambda above when the connection closes.
 }
 
 // ── Firmware tools (spec §4) ────────────────────────────────────────────────
@@ -214,11 +247,18 @@ void registerTools() {
             // Byte-limit check BEFORE pushing — never silently truncate
             // (UTF-8 must not be split mid-sequence).
             if (strlen(t) > 240) { r = "invalid:text exceeds 240 bytes"; return false; }
+            // Validate the optional expression against the 6-tag enum; invalid
+            // tags are caught here before reaching pushSay (fix #3).
+            const char* expr = a["expression"] | "happy";
+            if (!validExprTag(expr)) {
+                r = "invalid:unknown expression tag";
+                return false;
+            }
             if (currentState() != State::IDLE) {
                 r = "robot is mid-conversation - try again shortly";
                 return false;
             }
-            if (!controlBridge.pushSay(t, a["expression"] | "happy")) {
+            if (!controlBridge.pushSay(t, expr)) {
                 r = "queue full";
                 return false;
             }
@@ -284,6 +324,15 @@ void registerTools() {
             // /api/debug/presence expose); doc allocated from PSRAM.
             JsonDocument doc(&g_psramAlloc);
             doc["present"]  = presence.present();
+            // score: same presenceDebugStatus() call used by /api/debug/presence
+            // (fix #1 — vision module exposes it identically).
+#if STKCHAN_PRESENCE
+            {
+                uint32_t inferMs, infers; int det, cands; float score, c1top;
+                presenceDebugStatus(inferMs, infers, det, score, cands, c1top);
+                doc["score"] = score;
+            }
+#endif
             doc["fsm"]      = (int)currentState();
             doc["yaw"]      = servos.currentYaw();
             doc["pitch"]    = servos.currentPitch();
