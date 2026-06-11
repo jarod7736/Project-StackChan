@@ -51,10 +51,11 @@ bool ControlBridge::pushVolume(int pct) {
     return push(c);
 }
 
-bool ControlBridge::pushSay(const char* text) {
+bool ControlBridge::pushSay(const char* text, const char* expr) {
     ControlCommand c{};
     c.type = CtrlCmd::SAY;
     strncpy(c.text, text ? text : "", sizeof(c.text) - 1);
+    strncpy(c.expr, (expr && expr[0]) ? expr : "happy", sizeof(c.expr) - 1);
     return push(c);
 }
 
@@ -87,7 +88,7 @@ void ControlBridge::tick() {
             }
             case CtrlCmd::SAY: {
                 // Reuse the FSM speak path; ignored if a voice turn is busy.
-                if (!requestExternalSpeak(String(c.text), "happy")) {
+                if (!requestExternalSpeak(String(c.text), c.expr)) {
                     Serial.println("[ControlBridge] say ignored (FSM busy)");
                 }
                 break;
