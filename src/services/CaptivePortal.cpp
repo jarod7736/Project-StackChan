@@ -13,6 +13,7 @@
 #include "../hal/AudioPlayer.h"
 #include "../hal/Servos.h"
 #include "../state_machine.h"
+#include "../vision/PresenceSensor.h"
 
 namespace stkchan {
 
@@ -444,6 +445,23 @@ void registerRoutes() {
     g_server.on("/api/control/volume",     HTTP_POST, handleCtrlVolume);
     g_server.on("/api/control/say",        HTTP_POST, handleCtrlSay);
     g_server.on("/api/control/state",      HTTP_GET,  handleCtrlState);
+#if STKCHAN_PRESENCE
+    // Presence diagnostics: live detector stats as lightweight JSON.
+    g_server.on("/api/debug/presence", HTTP_GET, [](AsyncWebServerRequest* req) {
+        uint32_t inferMs, infers; int det, cands; float score, c1top;
+        presenceDebugStatus(inferMs, infers, det, score, cands, c1top);
+        JsonDocument doc;
+        doc["infers"]  = infers;
+        doc["inferMs"] = inferMs;
+        doc["cands"]   = cands;
+        doc["c1top"]   = c1top;
+        doc["det"]     = det;
+        doc["score"]   = score;
+        doc["present"] = presence.present();
+        String out; serializeJson(doc, out);
+        req->send(200, "application/json", out);
+    });
+#endif
 
     // Static UI from LittleFS — registered LAST so it only catches non-API
     // paths and never stat-checks the filesystem for /api/* requests.

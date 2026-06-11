@@ -292,7 +292,11 @@ void loop() {
   // the face, and goes sleepy when the desk empties — but never interrupts a
   // turn. Capture pauses whenever we're not IDLE (frees camera/CPU/power).
   {
-    bool presenceIdle = (currentState() == State::IDLE) && !menu.isActive();
+    // Also pause during OTA: esp-dl inference reads model weights from flash,
+    // which stalls against the OTA writer's cache-disabled erase/write bursts
+    // and can fail the upload.
+    bool presenceIdle =
+        (currentState() == State::IDLE) && !menu.isActive() && !ota.isActive();
     presence.setScanEnabled(presenceIdle);
     presence.tick(now);
     if (presenceIdle) {

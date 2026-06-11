@@ -5,6 +5,7 @@
 
 #include "../config.h"
 #include "../services/NvsStore.h"
+#include "../vision/PresenceSensor.h"
 
 namespace stkchan {
 
@@ -62,6 +63,12 @@ bool OtaService::begin() {
         const char* type = (ArduinoOTA.getCommand() == U_FLASH) ? "flash" : "fs";
         Serial.printf("[OTA] start type=%s\n", type);
         g_active = true;
+        // Must happen HERE, not in the main loop: ArduinoOTA.handle() blocks
+        // for the whole upload, so loop() never runs again to pause scanning.
+        // esp-dl inference reads model weights from flash and stalls against
+        // the OTA writer's cache-disabled erase/write bursts -> failed upload.
+        presence.setScanEnabled(false);
+        delay(100);  // let an in-flight capture/inference drain
         resetProgressLog();
     });
 

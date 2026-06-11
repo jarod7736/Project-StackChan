@@ -58,4 +58,10 @@ class PresenceSensor {
 
 extern PresenceSensor presence;
 
+#if STKCHAN_PRESENCE
+// Latest inference stats for the /api/debug/presence diagnostics endpoint.
+void presenceDebugStatus(uint32_t& inferMs, uint32_t& infers, int& det,
+                         float& score, int& cands, float& c1top);
+#endif
+
 }  // namespace stkchan
