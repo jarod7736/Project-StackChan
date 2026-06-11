@@ -1,7 +1,9 @@
 // test/test_mcp_protocol/test_mcp_protocol.cpp
 #include <unity.h>
 #include "services/McpProtocol.h"
-using stkchan::McpProtocol; using stkchan::McpTool; using stkchan::McpOutcome;
+using stkchan::McpProtocol;
+using stkchan::McpTool;
+using stkchan::McpOutcome;
 
 static McpProtocol makeServer(bool toolOk = true) {
   McpProtocol p;
@@ -35,8 +37,9 @@ void test_initialize_unknown_version_responds_latest() {  // -> 2025-06-18
 }
 void test_notification_gets_202_even_when_unknown() {
   auto p = makeServer(); std::string out;
+  const char* msg = R"({"jsonrpc":"2.0","method":"notifications/cancelled"})";
   TEST_ASSERT_EQUAL((int)McpOutcome::kNotification,
-    (int)p.handle(R"({"jsonrpc":"2.0","method":"notifications/cancelled"})", 58, out));
+    (int)p.handle(msg, strlen(msg), out));
   TEST_ASSERT_EQUAL(0, (int)out.size());
 }
 void test_tools_list_contains_schema() {

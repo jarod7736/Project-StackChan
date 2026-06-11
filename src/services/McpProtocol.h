@@ -12,7 +12,7 @@ namespace stkchan {
 struct McpTool {
   const char* name;
   const char* description;
-  const char* schemaJson;  // JSON Schema object literal for inputParams
+  const char* schemaJson;  // JSON Schema literal written to "inputSchema" in tools/list
   std::function<bool(JsonVariantConst args, std::string& result)> handler;
 };
 

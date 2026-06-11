@@ -49,44 +49,22 @@ McpOutcome McpProtocol::handle(const char* body, size_t len, std::string& out,
   // 1. Parse the request JSON.
   // -----------------------------------------------------------------------
   JsonDocument req;
-  // ArduinoJson v7: if alloc is provided, pass it; otherwise use default.
-  // Unfortunately JsonDocument's constructor that accepts Allocator* is the
-  // same signature — we duplicate the deserialize call to keep it clean.
   DeserializationError err;
   if (alloc) {
-    JsonDocument reqAlloc(alloc);
-    err = deserializeJson(reqAlloc, body, len);
-    if (err) {
-      // Parse error — build minimal error doc with the custom allocator.
-      JsonDocument resp(alloc);
-      resp["jsonrpc"] = "2.0";
-      resp["id"] = nullptr;
-      renderError(resp, -32700, "parse error");
-      toStr(resp, out);
-      return McpOutcome::kJson;
-    }
-    // Move parsed data into req by re-parsing (deep copy via set).
-    // Simpler: just fall through to the non-alloc path for the logic — we
-    // already have reqAlloc. Use a reference trick.
-    //
-    // Actually the cleanest approach: always parse into the alloc doc and
-    // alias it through a JsonVariant for reading, then build resp with alloc.
-    // Restructure: goto a shared lambda won't work cleanly. Instead just use
-    // an inner lambda via std::function for the response-building phase.
-    //
-    // Simplest correct approach: parse into local doc, build resp with alloc
-    // if available. Repeat deserialize for req only once.
-    req = std::move(reqAlloc);
+    JsonDocument tmp(alloc);
+    err = deserializeJson(tmp, body, len);
+    req = std::move(tmp);
   } else {
     err = deserializeJson(req, body, len);
-    if (err) {
-      JsonDocument resp;
-      resp["jsonrpc"] = "2.0";
-      resp["id"] = nullptr;
-      renderError(resp, -32700, "parse error");
-      toStr(resp, out);
-      return McpOutcome::kJson;
-    }
+  }
+  if (err) {
+    JsonDocument resp;
+    if (alloc) resp = JsonDocument(alloc);
+    resp["jsonrpc"] = "2.0";
+    resp["id"] = nullptr;
+    renderError(resp, -32700, "parse error");
+    toStr(resp, out);
+    return McpOutcome::kJson;
   }
 
   // -----------------------------------------------------------------------
