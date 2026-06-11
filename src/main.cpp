@@ -25,6 +25,7 @@
 #include "motion/MotionDirector.h"
 #include "state_machine.h"
 #include "app/ControlBridge.h"
+#include "app/WakeListener.h"
 #include "vision/PresenceSensor.h"
 #include "prompts/greetings.h"
 
@@ -187,6 +188,10 @@ void setup() {
     Serial.println("WARN: mic alloc failed");
   }
 
+  if (!wakeListener.begin()) {
+    Serial.println("WARN: wake listener init failed (continuing without wake)");
+  }
+
   // Provisioning gate (v2): no SSID1 in NVS → wait for USB-serial creds.
   // No hotspot. tools/provision-serial.py (or a serial monitor) sends a
   // JSON line; we persist + reboot.
@@ -286,6 +291,7 @@ void loop() {
   connectivity.tick(now);
   motion.tick(now);
   controlBridge.tick();   // apply queued web-control commands on this task
+  wakeListener.tick(now);
 
 #if STKCHAN_PRESENCE
   // Presence is advisory and IDLE-only: it perks up + greets on arrival, tracks
