@@ -8,6 +8,7 @@
 #include <WiFi.h>
 
 #include "../config.h"
+#include "McpServer.h"
 #include "NvsStore.h"
 #include "../app/ControlBridge.h"
 #include "../hal/AudioPlayer.h"
@@ -462,6 +463,10 @@ void registerRoutes() {
         req->send(200, "application/json", out);
     });
 #endif
+
+    // MCP endpoint (LAN mode only) — POST /mcp + 405 GET. Same constraint
+    // as the API routes: must be registered BEFORE the static catch-all.
+    if (g_lan_mode) mcpAttach(g_server);
 
     // Static UI from LittleFS — registered LAST so it only catches non-API
     // paths and never stat-checks the filesystem for /api/* requests.
