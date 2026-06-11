@@ -14,6 +14,8 @@
 #include <ESPAsyncWebServer.h>
 #include <M5Unified.h>
 #include <WiFi.h>
+#include <cstring>
+#include <cstdlib>
 
 #include "McpProtocol.h"
 #include "../app/ControlBridge.h"
@@ -159,7 +161,7 @@ void onMcpBody(AsyncWebServerRequest* request, uint8_t* data, size_t len,
 void onMcpRequest(AsyncWebServerRequest* request) {
     McpBody* body = static_cast<McpBody*>(request->_tempObject);
 
-    // Fix #4: body struct malloc failed in onMcpBody (sent 500 already); bail.
+    // body struct malloc failed in onMcpBody (sent 500 already); bail.
     if (!body) return;
 
     if (body->rejected) return;  // 413/500 already sent
@@ -185,35 +187,12 @@ void onMcpRequest(AsyncWebServerRequest* request) {
         return;
     }
 
-    // Fix #2: route the HTTP response buffer through PSRAM (beginResponse_P)
-    // so it never touches the internal heap after g_mcp.handle() returns.
-    //
-    // ESPAsyncWebServer's onDisconnect() stores EXACTLY ONE handler
-    // (WebRequest.cpp: `_onDisconnectfn = fn` — a single std::function field;
-    // a second call silently replaces the first). The body-buffer free was
-    // registered in onMcpBody; it already ran above via freeBodyBuf(), so the
-    // slot is safe to reuse — but to be defensive we fold both concerns into a
-    // single lambda registered NOW (after freeBodyBuf so body->buf is null and
-    // the double-free guard in freeBodyBuf is harmless if the disconnect fires
-    // concurrently).
-    char* respBuf = static_cast<char*>(ps_malloc(out.size()));
-    if (!respBuf) {
-        // ps_malloc failed: fall back to Arduino String copy (correctness over
-        // PSRAM budget — better to answer than to crash).
-        request->send(200, "application/json", out.c_str());
-        return;
-    }
-    memcpy(respBuf, out.c_str(), out.size());
-
-    // Register the single disconnect handler BEFORE send() so the buffer is
-    // always reclaimed even if the client drops during transmission.
-    request->onDisconnect([respBuf]() { free(respBuf); });
-
-    AsyncWebServerResponse* res = request->beginResponse_P(
-        200, "application/json",
-        reinterpret_cast<const uint8_t*>(respBuf), out.size());
-    request->send(res);
-    // respBuf freed by the onDisconnect lambda above when the connection closes.
+    // AsyncBasicResponse (used by send(200, …)) copies the body into its own
+    // String on construction and frees it when the response completes —
+    // provably safe lifetime, no manual buffer needed. The transient copy
+    // (≤4 KB internal heap) is freed before the next request; the JsonDocuments
+    // — the dominant allocation — are PSRAM-backed, which is the real budget.
+    request->send(200, "application/json", out.c_str());
 }
 
 // ── Firmware tools (spec §4) ────────────────────────────────────────────────

@@ -90,7 +90,7 @@ New module `src/services/McpServer.{h,cpp}`:
 `Allocator` backed by `ps_malloc` (PSRAM), as do the accumulation and serialized
 output buffers. Transient internal-heap cost per request must stay under ~2 KB;
 `tools/list` (the largest response, ~2–4 KB serialized) must not allocate it
-from internal heap. The protocol core's transient serialization std::string (~2–4 KB internal, freed within the request) is accepted; the HTTP response buffer itself is PSRAM via beginResponse_P.
+from internal heap. The protocol core's transient serialization std::string and the HTTP library's response copy (each ≤4 KB internal, freed within the request) are accepted; the JsonDocuments — the dominant allocation — are PSRAM-backed.
 
 **Thread-safety:** handlers run on the async_tcp task. All effects route through
 the `ControlBridge` queue (executed on the main task). `get_status` reads only
