@@ -20,6 +20,6 @@ std::string normalizeTranscript(const std::string& s);
 // normalized wake phrase's length) is within `maxEdits` edit distance of the
 // normalized wake phrase. remainder = original transcript after that prefix.
 WakeMatchResult matchWake(const std::string& transcript,
-                          const std::string& wakePhrase, int maxEdits = 2);
+                          const std::string& wakePhrase, int maxEdits = 1);
 
 }  // namespace stkchan

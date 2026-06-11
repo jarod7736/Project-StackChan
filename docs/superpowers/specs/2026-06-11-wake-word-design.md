@@ -71,8 +71,8 @@ Mic and speaker are mutually exclusive (M5Unified; see `MicRecorder::stop()` /
 
 - Normalize: lowercase, strip everything but [a-z0-9] → "Hey, Stack Chan! what's up"
   → "heystackchanwhatsup".
-- Match: edit distance ≤ 2 between the normalized wake phrase and the transcript's
-  normalized prefix of the same length (absorbs Whisper variants: "hey stackchan",
+- Match: edit distance ≤ 1 between the normalized wake phrase and the transcript's
+  normalized prefix of the same length (tightened from ≤2 during implementation: all real Whisper variants normalize to distance 0–1, while ≤2 admitted false-accepts like 'haystack chair') (absorbs Whisper variants: "hey stackchan",
   "hey stack chan", "hey, Stack-chan").
 - Returns `{matched, remainder}` where remainder is the original (un-normalized)
   transcript text after the matched prefix, trimmed.

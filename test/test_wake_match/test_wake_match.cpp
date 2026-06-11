@@ -50,6 +50,16 @@ static void test_too_many_edits_rejected() {
   TEST_ASSERT_FALSE(matchWake("hey snack man", kWake).matched);
 }
 
+static void test_haystack_chair_false_accept_regression() {
+  // dist("haystackcha(i)", "heystackchan") == 2 — admitted at maxEdits=2,
+  // correctly rejected at the default 1. Real-world phrase, real risk.
+  TEST_ASSERT_FALSE(matchWake("haystack chair", kWake).matched);
+}
+
+static void test_single_edit_mistranscription_still_matches() {
+  TEST_ASSERT_TRUE(matchWake("Hey Stack Chen, hello there", kWake).matched);
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
   RUN_TEST(test_normalize_strips_punct_and_case);
@@ -58,5 +68,7 @@ int main(int, char**) {
   RUN_TEST(test_remainder_is_original_text);
   RUN_TEST(test_non_wake_speech_rejected);
   RUN_TEST(test_too_many_edits_rejected);
+  RUN_TEST(test_haystack_chair_false_accept_regression);
+  RUN_TEST(test_single_edit_mistranscription_still_matches);
   return UNITY_END();
 }
