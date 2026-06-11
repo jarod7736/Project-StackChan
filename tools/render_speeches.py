@@ -38,7 +38,10 @@ CONST_RE = re.compile(
 
 
 def unescape(s: str) -> str:
-    return s.encode().decode("unicode_escape")
+    # ascii-strict: unicode_escape round-trips through latin-1 and would
+    # silently mojibake non-ASCII phrases → wrong hash → clip never matches
+    # on-device. Fail loudly at extraction time instead.
+    return s.encode("ascii", errors="strict").decode("unicode_escape")
 
 
 def fnv1a32(data: bytes) -> int:
@@ -65,7 +68,8 @@ def extract_phrases() -> dict:
     block = re.search(r"kGreetings\[\]\s*=\s*\{(.*?)\};", greet_src, re.S)
     if not block:
         sys.exit("ERROR: kGreetings[] block not found in greetings.h")
-    for i, m in enumerate(re.finditer(r'"((?:[^"\\]|\\.)*)"', block.group(1))):
+    block_text = re.sub(r"//[^\n]*", "", block.group(1))  # strip // comments
+    for i, m in enumerate(re.finditer(r'"((?:[^"\\]|\\.)*)"', block_text)):
         phrases[f"kGreetings[{i}]"] = unescape(m.group(1))
     return phrases
 
