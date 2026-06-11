@@ -9,6 +9,11 @@
 #include "../hal/AudioPlayer.h"
 #include "../services/NvsStore.h"
 
+#include <LittleFS.h>
+
+#include "../services/ClipId.h"
+#include "../services/OtaService.h"
+
 namespace stkchan {
 
 namespace {
@@ -147,6 +152,37 @@ uint8_t* fetchMp3ToPsram(const String& provider, const String& text,
     return buf;
 }
 
+// ── Pre-rendered clip playback ─────────────────────────────────────────────
+// If a clip exists for this exact text (see services/ClipId.h), read it from
+// LittleFS into a transient PSRAM buffer and hand it to audio.play() — the
+// same buffered fetch-fully-then-play shape as the cloud path (AXP invariant:
+// never overlap I/O with the audio amp; see fetchMp3ToPsram above).
+// Returns true iff playback started. Any failure returns false and the
+// caller falls through to cloud TTS — clips can only improve behavior.
+bool tryPlayClip(const String& text) {
+    if (OtaService::isActive()) return false;  // FS reads stall the OTA writer
+    String path(clipPathForText(text.c_str()).c_str());
+    File f = LittleFS.open(path, "r");
+    if (!f) return false;                       // no clip (or FS unmounted)
+    size_t len = f.size();
+    if (len == 0 || len > stkchan::kMp3MaxBytes) { f.close(); return false; }
+    auto* buf = static_cast<uint8_t*>(ps_malloc(len));
+    if (!buf) { f.close(); return false; }
+    size_t got = f.read(buf, len);
+    f.close();
+    // audio.play() copies into its own PSRAM buffer; free ours right after.
+    bool ok = (got == len) && audio.play(buf, got);
+    free(buf);
+    if (ok) {
+        Serial.printf("[TtsClient] clip hit %s (%u B)\n", path.c_str(),
+                      (unsigned)len);
+    } else {
+        Serial.printf("[TtsClient] clip %s unplayable, falling back\n",
+                      path.c_str());
+    }
+    return ok;
+}
+
 }  // namespace
 
 // --------------------------------------------------------------------------
@@ -155,6 +191,13 @@ void TtsClient::synth(const String& text, std::function<void(bool)> onDone) {
     if (text.length() == 0) {
         Serial.println("[TtsClient] synth: empty text");
         onDone(false);
+        return;
+    }
+
+    // Pre-rendered clip? Instant, free, offline-safe. Falls through to cloud
+    // on any miss. Spec: docs/superpowers/specs/2026-06-11-stock-clips-design.md
+    if (tryPlayClip(text)) {
+        onDone(true);  // playback started — same contract as the cloud path
         return;
     }
 
