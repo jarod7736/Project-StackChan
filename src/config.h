@@ -31,6 +31,13 @@ constexpr const char* kNvsChatModel = "chat_model";
 constexpr const char* kNvsBrainHost = "brain_host";  // oc-personal agent runner
 constexpr const char* kNvsBrainKey  = "brain_key";   // bearer for the agent (optional)
 constexpr const char* kNvsBrainKw   = "brain_kw";    // optional CSV stem override
+// Advisor tool (Anthropic Messages API): casual turns route through a fast
+// EXECUTOR model paired with a stronger ADVISOR consulted mid-generation when
+// adv_key is set. Empty adv_key => feature dark, casual stays on chat_host.
+constexpr const char* kNvsAdvHost   = "adv_host";    // Anthropic base URL
+constexpr const char* kNvsAdvKey    = "adv_key";     // x-api-key (gates the path)
+constexpr const char* kNvsAdvExec   = "adv_exec";    // executor model id
+constexpr const char* kNvsAdvModel  = "adv_model";   // advisor model id
 constexpr const char* kNvsSttUrl    = "stt_url";
 constexpr const char* kNvsSttModel  = "stt_model";
 constexpr const char* kNvsOaiKey    = "oai_key";
@@ -82,6 +89,19 @@ constexpr const char* kBrainStems[] = {
     "my email", "inbox", "my notes",
 };
 constexpr size_t kBrainStemCount = sizeof(kBrainStems) / sizeof(kBrainStems[0]);
+
+// === Advisor tool (Anthropic Messages API) ===
+// Pairs a fast executor with a stronger advisor model the executor consults
+// mid-generation (see docs/superpowers/specs/...-advisor-tool-design.md). The
+// path is dark until adv_key is provisioned. Defaults: Haiku executor + Opus
+// advisor — the "step up in intelligence from Haiku alone" configuration.
+constexpr const char* kDefaultAdvisorHost  = "https://api.anthropic.com";
+constexpr const char* kDefaultAdvisorExec  = "claude-haiku-4-5-20251001";
+constexpr const char* kDefaultAdvisorModel = "claude-opus-4-8";
+constexpr const char* kAnthropicVersion    = "2023-06-01";  // anthropic-version
+// Cap advisor output (thinking+text) per call. 2048 is the documented sweet
+// spot: ~7x shorter advice, near-zero truncation, no measured quality loss.
+constexpr int kAdvisorMaxTokens = 2048;
 
 // === NTP / Time ===
 // POSIX TZ string (US Central with DST). Override at provisioning time if needed.

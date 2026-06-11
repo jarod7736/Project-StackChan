@@ -24,6 +24,10 @@ class ChatClient {
   //   model="oc-personal" + Bearer brain_key, a minimal one-shot payload (no
   //   persona, no history — the agent owns its own context). History untouched.
   //
+  // When adv_key is provisioned, a casual (brainMode=false) turn instead routes
+  // to the Anthropic Messages API with the advisor tool (fast executor + strong
+  // advisor); it keeps history exactly like the casual path.
+  //
   // Safe to call from a background task (reads NVS, no shared mutable state
   // beyond the casual ring buffer which brain mode doesn't touch).
   bool send(const String& userMsg, String& out, bool brainMode = false);
@@ -34,6 +38,10 @@ class ChatClient {
   size_t head_  = 0;        // next write index
   size_t count_ = 0;
   void push_(const String& role, const String& content);
+
+  // Casual turn via the Anthropic advisor tool (executor+advisor). Updates
+  // history on success. Gated by adv_key in send().
+  bool sendViaAdvisor_(const String& userMsg, String& out);
 };
 
 extern ChatClient chat;
