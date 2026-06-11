@@ -39,32 +39,42 @@ at runtime, so render them once on the host and ship them on LittleFS.
 
 ## 2. Device side
 
-New module `src/services/ClipStore.{h,cpp}`:
+New module `src/services/ClipId.{h,cpp}`:
 
 - **Pure core, native-testable** (no Arduino/FS dependencies): `uint32_t fnv1a32(const
-  char* s, size_t len)` and path construction (`/clips/%08x.mp3`). Follows the
-  `McpProtocol` pattern of keeping logic unity-testable under `pio test -e native`.
-- **Thin device layer:** `bool has(const String& text)` — LittleFS existence check
-  (LittleFS is already mounted by CaptivePortal; the check is idempotent/cheap), and
-  `String pathFor(const String& text)`.
+  char* s, size_t len)` and `std::string clipPathForText(const char* text)`
+  (`/clips/%08x.mp3`). Follows the `McpProtocol` pattern of keeping logic unity-testable
+  under `pio test -e native`.
+- **Thin device layer:** a `tryPlayClip(const String&)` helper inside `TtsClient.cpp`
+  (LittleFS open → PSRAM read → `audio.play()`; LittleFS is already mounted by
+  CaptivePortal, and a failed open simply falls through to cloud).
 
-`TtsClient::synth()` gains a short pre-check before the cloud path:
+`TtsClient::synth()` gains a short pre-check before the cloud path: read the whole clip
+from LittleFS into a transient PSRAM buffer, then hand it to the existing
+`audio.play(buf, len)`.
+
+**Amendment (plan-time):** the brainstorm sketched `playStream(AudioFileSourceLittleFS)`,
+but `TtsClient`'s buffered download-then-play shape is a deliberate AXP over-current fix
+(fetch fully, close, *then* play — see the `fetchMp3ToPsram` comment). Buffered clip reads
+reuse that exact proven path: clips are 20–60 KB so the transient PSRAM copy is trivial,
+no file handle stays open during playback, and the clip path becomes byte-identical to the
+cloud path after fetch — **no AudioPlayer changes and no new ESP8266Audio types**.
 
 ```cpp
-if (!ota.isActive() && clips.has(text)) {
-    auto* src = new AudioFileSourceLittleFS(clips.pathFor(text).c_str());
-    if (audio.playStream(src)) { onDone(true); return; }
-    // playStream failed → src already owned/deleted by AudioPlayer; fall through
-}
+// anonymous-namespace helper in TtsClient.cpp
+bool tryPlayClip(const String& text);  // read /clips/<hash>.mp3 → PSRAM → audio.play()
+
+// in synth(), after the empty-text check:
+if (tryPlayClip(text)) { onDone(true); return; }
 // existing cloud TTS path unchanged
 ```
 
-- `AudioPlayer::playStream()` already accepts any `AudioFileSource*`, takes ownership, and
-  drives `onPlayDone` — **no AudioPlayer changes**.
 - The FSM contract is preserved: `onDone(true)` = playback started; SPEAKING → IDLE still
   driven only by `onPlayDone`.
-- **OTA guard:** when `ota.isActive()`, skip the clip path (LittleFS reads stall the OTA
-  flash writer — same reason presence scanning pauses during OTA).
+- **OTA guard:** when `OtaService::isActive()`, skip the clip path (LittleFS reads stall
+  the OTA flash writer — same reason presence scanning pauses during OTA).
+- Pure core lives in `src/services/ClipId.{h,cpp}` (`fnv1a32`, `clipPathForText`) — no
+  Arduino deps, added to the native `build_src_filter` like `McpProtocol`.
 
 ### Error handling
 
@@ -72,8 +82,8 @@ Every failure degrades to today's behavior — clips can only improve things:
 
 | Failure | Behavior |
 |---|---|
-| Clip file missing / FS not mounted | `has()` false → cloud TTS |
-| Clip corrupt / decoder refuses | `playStream()` false → cloud TTS (log it) |
+| Clip file missing / FS not mounted | open fails → cloud TTS |
+| Short read / `ps_malloc` fails / `play()` refuses | `tryPlayClip()` false → cloud TTS (log it) |
 | Offline and no clip | existing `onDone(false)` error path |
 
 ## 3. Host side — `tools/render_speeches.py`
