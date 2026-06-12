@@ -49,7 +49,9 @@ clr_long    = 6.0;   clr_short = 9.0;
 wall = 2.5;  top_t = feet_recess + 2.0;  bot_t = 2.5;
 
 /* ---------- Bottom-plate screws (M2) ---------- */
-pscrew_xy = 29.0;  pboss_d = 7.0;  pboss_h = 12.0;
+/* bosses run the full cavity height (merge into the top plate) and web into
+   the corner chamfer walls — pboss_h is set to in_h in Derived below */
+pscrew_xy = 29.0;  pboss_d = 7.0;
 pscrew_pilot = 1.6;  pscrew_clear = 2.4;  pscrew_csk = 4.4;
 
 /* ---------- Power: DC barrel jack in back (+Y) wall ---------- */
@@ -66,6 +68,7 @@ in_l  = sq; in_w = sq;
 in_h  = standoff_h + pcb_t + hdr_up;
 out_l = in_l + 2*wall; out_w = in_w + 2*wall;
 H     = in_h + top_t;
+pboss_h = in_h;        // boss tops fuse with the top plate
 jack_z = standoff_h + pcb_t + jack_z_off;
 function reg_cham(s) = s / (2 + sqrt(2));
 
@@ -106,9 +109,14 @@ module body(){
       // side wire slot (extra routing)
       translate([-out_l/2-0.6,-wire_slot_w/2,3]) cube([wall+1.2,wire_slot_w,wire_slot_h]);
     }
-    // 4 corner bosses for the bottom-plate screws
+    // 4 corner bosses for the bottom-plate screws: full cavity height, webbed
+    // into the corner chamfer wall (boss edge sits 0.75 mm off it otherwise)
     for(p=pscrew_pts) translate([p[0],p[1],0]) difference(){
-      cylinder(d=pboss_d,h=pboss_h);
+      union(){
+        cylinder(d=pboss_d,h=pboss_h);
+        rotate([0,0,atan2(p[1],p[0])])
+          translate([0,-pboss_d/2,0]) cube([6,pboss_d,pboss_h]);
+      }
       translate([0,0,-0.1]) cylinder(d=pscrew_pilot,h=pboss_h+0.2);
     }
   }
