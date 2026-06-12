@@ -2,6 +2,8 @@
 
 > 📷 Prefer pictures? See the **[Illustrated Assembly guide](ASSEMBLY-ILLUSTRATED.md)**
 > — exploded view + a render for every step, generated from the real STLs.
+> ⚠️ Its pedestal renders predate the 2026-06 recess rework (the pedestal now
+> mates the vendored v1.0 `feet_SG90M`, not the Takao feet shown there).
 
 This is the build we're using: the **"stack-chan_takao_base"** shell (the upstream
 "SG90 case" set by Takao Akaki, via `mongonta0716/3DPrinter_Models`), driven by
@@ -19,7 +21,7 @@ Source: `mongonta0716/3DPrinter_Models/stackchan_sg90_case_takao_version`
 | `stackchan_takao_bracket_v2.5`   | Servo bracket — holds **both servos** (rectangular pockets): pan (lower) + tilt (upper). |
 | `stackchan_takao_feet`           | Base feet (54 × 50 × 8 mm) — two pads + a center hub with the **round-horn screw pattern** (shared by MG90S/SG90). The pan servo horn screws here; the body pans on the feet. Central slot routes the servo cables down. |
 | `stackchan_takao_hat_cat_CoreS3` | Optional cat-ear hat (CoreS3 fitment). |
-| `…/pedestal-*`                   | Our optional electronics base (PCA9685 + barrel jack) the feet nest on. See `pedestal.scad`. |
+| `…/pedestal-*`                   | Our optional electronics base (PCA9685 + barrel jack). **`pedestal-sg90`** mates the vendored v1.0 `feet_SG90M` (48 × 37, screw-down — see step 7); the older generic `pedestal.scad` is unchanged. |
 
 Print note: this set is toleranced for **resin**. On FDM/PLA, open the servo
 pockets / screw holes slightly or scale those features ~102–103%.
@@ -56,9 +58,18 @@ pockets / screw holes slightly or scale those features ~102–103%.
 6. **Wiring.** Pan → PCA9685 ch0, tilt → ch1. PCA9685 I²C + power to the CoreS3
    (Port A Grove `Wire`, or M-Bus `Wire1` G43/G44 per `Servos.cpp`). Servo V+
    from the barrel jack.
-7. **Electronics base (optional).** Drop the printed **feet into the pedestal's
-   top recess**; the PCA9685 + barrel jack live inside the pedestal, cables pass
-   up through the feet slot. See `pedestal.scad`.
+7. **Electronics base (optional).** `pedestal-sg90.scad` now mates the
+   **vendored v1.0 case feet** (`../case_SG90/feet_SG90M`, 48 × 37 mm — print the
+   **M variant**, which has the 4 pilot holes; `feet_MG90S2M` for the MG90S
+   build). It no longer fits the 54 × 50 Takao feet. Assembly:
+   1. Feed the servo cables/connectors down through the pedestal's center hole
+      and back slot **before** seating the feet.
+   2. Drop the feet into the top recess, **cable slot toward the barrel jack**
+      (the offset recess only allows this orientation).
+   3. With the bottom plate off, drive **4 × M2×8 pan-head screws from inside
+      the cavity** up into the feet's pilot holes.
+   4. The pan-horn screw stays reachable from inside through the Ø22 center
+      hole. Then mount the PCA9685 plate as usual.
 8. **Hat** (optional) on top.
 
 ## Movement / care
