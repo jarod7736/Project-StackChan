@@ -3,6 +3,8 @@
 #include <unity.h>
 #include "app/WakeMatch.h"
 
+using stkchan::matchWakeVariants;
+
 using stkchan::normalizeTranscript;
 using stkchan::matchWake;
 
@@ -60,8 +62,30 @@ static void test_single_edit_mistranscription_still_matches() {
   TEST_ASSERT_TRUE(matchWake("Hey Stack Chen, hello there", kWake).matched);
 }
 
+static void test_variants_accept_live_whisper_mishearings() {
+  // Real transcripts collected from the robot 2026-06-11:
+  auto a = matchWakeVariants("Hey, Stat Chan.", kWake);
+  TEST_ASSERT_TRUE(a.matched);
+  auto b = matchWakeVariants("Hey, Stack Jam.", kWake);
+  TEST_ASSERT_TRUE(b.matched);
+  auto c = matchWakeVariants("Hey, Stack Jam. What time is it?", kWake);
+  TEST_ASSERT_TRUE(c.matched);
+  TEST_ASSERT_EQUAL_STRING("What time is it?", c.remainder.c_str());
+}
+
+static void test_variants_still_reject_noise() {
+  // Real noise hallucinations collected from the robot 2026-06-11:
+  TEST_ASSERT_FALSE(matchWakeVariants(
+      "Go to Beadaholique.com for all of your beading supplies needs!", kWake).matched);
+  TEST_ASSERT_FALSE(matchWakeVariants("Thank you for watching.", kWake).matched);
+  TEST_ASSERT_FALSE(matchWakeVariants("bzzzzzzzzzzzzzzzzzzzzz", kWake).matched);
+  TEST_ASSERT_FALSE(matchWakeVariants("haystack chair", kWake).matched);
+}
+
 int main(int, char**) {
   UNITY_BEGIN();
+  RUN_TEST(test_variants_accept_live_whisper_mishearings);
+  RUN_TEST(test_variants_still_reject_noise);
   RUN_TEST(test_normalize_strips_punct_and_case);
   RUN_TEST(test_exact_match_no_remainder);
   RUN_TEST(test_whisper_variants_match);

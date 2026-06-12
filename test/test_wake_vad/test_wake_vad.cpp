@@ -20,6 +20,7 @@ static WakeVadConfig cfg() {
   c.floorAlpha         = 0.5f;   // fast adaptation for testing
   c.floorInit          = 100.0f;
   c.floorMin           = 50.0f;
+  c.warmupFrames       = 0;      // most tests exercise steady-state behavior
   return c;
 }
 
@@ -88,6 +89,37 @@ static void test_floor_never_below_min() {
   TEST_ASSERT_TRUE(v.noiseFloor() >= 50.0f);
 }
 
+static void test_warmup_frames_ignored_entirely() {
+  // Mic warm-up: first N frames after (re)start are near-zero. They must
+  // neither adapt the floor nor count toward a trip (live bug 2026-06-11:
+  // warm-up zeros dragged the floor to floorMin -> threshold below room
+  // noise -> perpetual trip/STT loop -> internal heap exhaustion).
+  WakeVadConfig c = cfg();
+  c.warmupFrames = 10;
+  WakeVad v(c);
+  for (int i = 0; i < 10; ++i)
+    TEST_ASSERT_TRUE(v.onFrame(0.0f) == WakeVad::Event::None);
+  TEST_ASSERT_EQUAL_FLOAT(100.0f, v.noiseFloor());  // floor untouched
+  // Loud frames during warm-up must not have counted toward tripFrames:
+  WakeVad v2(c);
+  for (int i = 0; i < 9; ++i) v2.onFrame(500.0f);   // all inside warm-up
+  TEST_ASSERT_FALSE(v2.tripped());
+}
+
+static void test_warmup_resets_with_reset() {
+  WakeVadConfig c = cfg();
+  c.warmupFrames = 5;
+  WakeVad v(c);
+  for (int i = 0; i < 5; ++i) v.onFrame(0.0f);      // consume warm-up
+  for (int i = 0; i < 3; ++i) v.onFrame(500.0f);    // trip normally
+  TEST_ASSERT_TRUE(v.tripped());
+  v.reset();
+  // After reset (new capture), warm-up zeros again must not move the floor.
+  float before = v.noiseFloor();
+  for (int i = 0; i < 5; ++i) v.onFrame(0.0f);
+  TEST_ASSERT_EQUAL_FLOAT(before, v.noiseFloor());
+}
+
 static void test_reset_rearms() {
   WakeVad v(cfg());
   for (int i = 0; i < 3; ++i) v.onFrame(500.0f);
@@ -109,6 +141,8 @@ int main(int, char**) {
   RUN_TEST(test_overflow_at_cap);
   RUN_TEST(test_floor_adapts_only_on_quiet);
   RUN_TEST(test_floor_never_below_min);
+  RUN_TEST(test_warmup_frames_ignored_entirely);
+  RUN_TEST(test_warmup_resets_with_reset);
   RUN_TEST(test_reset_rearms);
   return UNITY_END();
 }

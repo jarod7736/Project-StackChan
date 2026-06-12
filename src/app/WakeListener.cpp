@@ -65,8 +65,11 @@ void WakeListener::pause() {
 
 void WakeListener::startCapture_() {
   // Same I2S handoff as MicRecorder::start(): speaker must release I2S0
-  // first or spk_task crashes on the next play.
-  M5.Speaker.end();
+  // first or spk_task crashes on the next play. Guarded: calling end() on an
+  // already-down speaker corrupts I2S driver state (observed live:
+  // "i2s_driver_uninstall: I2S port 1 has not installed" every 4 s restart,
+  // then static playback).
+  if (M5.Speaker.isEnabled()) M5.Speaker.end();
   M5.Mic.setSampleRate(kRecordSampleRate);
   if (!M5.Mic.record(pcm_, capSamples_, kRecordSampleRate)) {
     Serial.println("[Wake] M5.Mic.record failed");
@@ -112,7 +115,19 @@ void WakeListener::processNewFrames_(uint32_t nowMs) {
 
   while (processedFrames_ < filledFrames) {
     const int16_t* f = pcm_ + processedFrames_ * kWakeFrameSamples;
-    WakeVad::Event ev = g_vad.onFrame(frameRms(f, kWakeFrameSamples));
+    float rms = frameRms(f, kWakeFrameSamples);
+    // DIAG v2: block-max RMS over each 32-frame (~1 s) block — shows speech
+    // peaks the instantaneous sampling missed.
+    static float s_blockMax = 0;
+    if (rms > s_blockMax) s_blockMax = rms;
+    if ((processedFrames_ & 31) == 31) {
+      Serial.printf("[Wake] DIAG max=%.0f floor=%.0f thresh=%.0f frame=%u%s\n",
+                    s_blockMax, g_vad.noiseFloor(), g_vad.noiseFloor() * 2.0f,
+                    (unsigned)processedFrames_,
+                    g_vad.tripped() ? " TRIPPED" : "");
+      s_blockMax = 0;
+    }
+    WakeVad::Event ev = g_vad.onFrame(rms);
     ++processedFrames_;
 
     if (ev == WakeVad::Event::Tripped) {
@@ -128,11 +143,22 @@ void WakeListener::processNewFrames_(uint32_t nowMs) {
     }
   }
 
-  // Buffer exhausted without a speech window → seamless restart.
-  if (processedFrames_ >= totalFrames - 1 && !g_vad.tripped()) {
-    M5.Mic.end();
-    capturing_ = false;
-    startCapture_();  // floor persists; VAD run state resets inside
+  // Buffer exhausted. A trip near the window end can never see Closed (no
+  // more frames arrive) — without the tripped branch the restart guard
+  // blocked forever and the listener went permanently deaf (observed live).
+  if (processedFrames_ >= totalFrames - 1) {
+    if (g_vad.tripped()) {
+      // Close the window like an Overflow: submit what we have.
+      size_t first = tripFrame_ * kWakeFrameSamples;
+      size_t end   = processedFrames_ * kWakeFrameSamples;
+      pause();
+      submitWindow_(first, end);
+    } else {
+      // Seamless restart. floor persists; VAD run state resets inside.
+      M5.Mic.end();
+      capturing_ = false;
+      startCapture_();
+    }
   }
 }
 
@@ -154,7 +180,7 @@ void WakeListener::submitWindow_(size_t firstSample, size_t endSample) {
     return;  // silent failure by design
   }
 
-  auto m = matchWake(std::string(transcript.c_str()),
+  auto m = matchWakeVariants(std::string(transcript.c_str()),
                      std::string(wakeWord_.c_str()));
   if (!m.matched) {
     Serial.printf("[Wake] no match: \"%s\"\n", transcript.c_str());

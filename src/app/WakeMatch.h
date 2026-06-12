@@ -22,4 +22,11 @@ std::string normalizeTranscript(const std::string& s);
 WakeMatchResult matchWake(const std::string& transcript,
                           const std::string& wakePhrase, int maxEdits = 1);
 
+// Variant-aware wrapper: tries the configured phrase plus the known Whisper
+// mis-transcriptions of "Stack-chan" (live-collected 2026-06-11: "Stat Chan",
+// "Stack Jam"). Tight per-variant tolerance keeps false-accepts out while
+// absorbing Whisper's phonetic drift.
+WakeMatchResult matchWakeVariants(const std::string& transcript,
+                                  const std::string& wakePhrase);
+
 }  // namespace stkchan

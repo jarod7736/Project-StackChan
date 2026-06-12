@@ -75,4 +75,23 @@ WakeMatchResult matchWake(const std::string& transcript,
   return {true, rem};
 }
 
+WakeMatchResult matchWakeVariants(const std::string& transcript,
+                                  const std::string& wakePhrase) {
+  WakeMatchResult r = matchWake(transcript, wakePhrase);
+  if (r.matched) return r;
+  // Live-collected Whisper mis-hearings of "hey stack chan". Each is matched
+  // at the same tight tolerance as the canonical phrase.
+  static const char* kVariants[] = {
+      "hey stat chan",   // observed 2026-06-11 ("Hey, Stat Chan.")
+      "hey stack jam",   // observed 2026-06-11 ("Hey, Stack Jam.")
+      "hey stack chen",
+      "hey stack john",
+  };
+  for (const char* v : kVariants) {
+    r = matchWake(transcript, v);
+    if (r.matched) return r;
+  }
+  return {false, ""};
+}
+
 }  // namespace stkchan
