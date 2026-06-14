@@ -219,6 +219,14 @@ void loop() {
   face.tick(now);
   wifi.tick();
 
+  // Top-right debug readout: live servo pitch/yaw. Refreshed ~4 Hz so it tracks
+  // moves without spamming the LVGL label every loop().
+  static uint32_t s_lastServoDbgMs = 0;
+  if (now - s_lastServoDbgMs >= 250) {
+    s_lastServoDbgMs = now;
+    face.setServoDebug(servos.currentYaw(), servos.currentPitch());
+  }
+
   // Discreet face status (battery + WiFi), refreshed ~every 2 s. Battery via
   // the AXP2101 (M5.Power); WiFi from the live link state.
   static uint32_t s_lastStatusMs  = 0;

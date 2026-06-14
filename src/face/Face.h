@@ -14,6 +14,10 @@ class Face {
   // Discreet status readout in the top-left corner: WiFi link + battery.
   // batteryPct < 0 means "unknown" (icon only). Called throttled from loop().
   void setStatus(int batteryPct, bool charging, bool wifiConnected);
+
+  // Debug readout in the top-right corner: live servo pitch/yaw (the firmware's
+  // current commanded values). Called throttled from loop().
+  void setServoDebug(int yaw, int pitch);
   std::string currentExpression() const { return currentTag_; }
 
   // Reveal the floating "Menu" button at the bottom of the face screen
