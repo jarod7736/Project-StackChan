@@ -18,14 +18,16 @@ class Servos {
   int currentYaw()   const { return yawDeg_; }
   int currentPitch() const { return pitchDeg_; }
 
-  // Yaw range: -45..+45. Pitch range: 0..+25 (mechanical limits). No down-travel
-  // at all on the assembled case: the chin sits right at the base, so forward
-  // requests (e.g. "sad" = -10, idle nods to -3) clamp to level. "Down" in
-  // expressions reads as returning-to-level from an up pose.
+  // Yaw range: -45..+45. Pitch range: -10..+45. +deg = head UP (clockwise);
+  // -deg = head down (counterclockwise). After the pivot rebuild (MG90S in the
+  // MG90S2 bracket + new servo holder freed the binding), the chin clears the
+  // base down to ~-10 (bench-validated 2026-06-16), so expression tilts like
+  // "sad" (-10) and idle nods (-3) now land. +45 is the validated max-useful-up
+  // (enough to face a user seated above the camera).
   static constexpr int kYawMin    = -45;
   static constexpr int kYawMax    =  45;
-  static constexpr int kPitchMin  = 0;
-  static constexpr int kPitchMax  =  25;
+  static constexpr int kPitchMin  = -10;
+  static constexpr int kPitchMax  =  45;
 
  private:
   int yawDeg_   = 0;
