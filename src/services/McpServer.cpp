@@ -266,10 +266,10 @@ void registerTools() {
 
     g_mcp.addTool({"move_head",
         "Point the robot's head. yaw: -45..45 deg (positive = left), "
-        "pitch: -2..45 deg (positive = up).",
+        "pitch: -10..45 deg (positive = up).",
         R"({"type":"object","properties":{
             "yaw":{"type":"integer","minimum":-45,"maximum":45},
-            "pitch":{"type":"integer","minimum":-2,"maximum":45}},
+            "pitch":{"type":"integer","minimum":-10,"maximum":45}},
             "required":["yaw","pitch"]})",
         [](JsonVariantConst a, std::string& r) {
             if (!a["yaw"].is<int>() ||
@@ -278,8 +278,8 @@ void registerTools() {
                 return false;
             }
             if (!a["pitch"].is<int>() ||
-                (a["pitch"].as<int>() < -2 || a["pitch"].as<int>() > 45)) {
-                r = "invalid:pitch out of range -2..45";
+                (a["pitch"].as<int>() < -10 || a["pitch"].as<int>() > 45)) {
+                r = "invalid:pitch out of range -10..45";
                 return false;
             }
             int yaw = a["yaw"].as<int>();
